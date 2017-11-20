@@ -67,7 +67,7 @@ B im
 
 PC = PC + im
 
-* IF: 分枝预测. 修改 next pc 的值 
+* IF: 分枝预测. 修改 next pc 的值. 插入一条 nop
 * IF/ID: -
 * Decode: -
 * ID/EXE: - 
@@ -80,7 +80,7 @@ BEQZ rx immediate
 
 if (rx == 0) pc += immediate
 
-* IF: 分枝预测. 预测是 true
+* IF: 分枝预测. 预测是 true. 插入一条 nop
 * IF/ID: -
 * Decode: -
 * ID/EXE: -
@@ -93,7 +93,7 @@ BNEZ rx immediate
 
 if (rx != 0) pc += immediate
 
-* IF: 预测是true.
+* IF: 预测是true. 插入一条 nop
 * IF/ID:  -
 * Decode: -
 * ID/EXE: -
@@ -102,94 +102,121 @@ if (rx != 0) pc += immediate
 * WB: 清空流水
 
 ## BTEQZ
+BTEQZ im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+if (T=0) PC += im
+
+* IF: 预测为true. 插入一条 nop 
+* IF/ID: -
+* Decode: -
+* ID/EXE: -
+* EXE: 不干活
+* EXE/WB: 读T寄存器的值. 向 stall ctrl 发修改 pc 的信号
+* WB: 清空流水
 
 ## CMP
+CMP rx ry
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+T = (rx != ry)
+
+* IF:  -
+* IF/ID:  -
+* Decode: 读寄存器 rx, ry
+* ID/EXE: 收 rx ry 的值
+* EXE: alu 进行运算, alu\_out\_ctrl 写T的值
+* EXE/WB: -
+* WB: -
 
 ## JR
+JR rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+pc = rx
+
+* IF: 插入一条 nop
+* IF/ID: -
+* Decode: 读寄存器 rx
+* ID/EXE: 接收 rx 的值
+* EXE: 传递 rx
+* EXE/WB: 修改 pc
+* WB: 清空流水
 
 ## LI
+LI rx im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+rx = im
+
+* IF:  -
+* IF/ID:  -
+* Decode: -
+* ID/EXE: -
+* EXE: 传递 im
+* EXE/WB: -
+* WB: 修改 rx
 
 ## LW
+LW rx ry im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+ry = mem[rx + im]
+
+* IF: -
+* IF/ID: -
+* Decode: 读寄存器 rx. 锁 rx
+* ID/EXE: 收取 rx, 向 stall ctrl 发 mem 信号. 卡住流水
+* EXE: 做加法, alu\_out指示读内存
+* EXE/WB: 轮询等 alu\_out 返回数据, 向 stall ctrl 解锁 mem
+* WB: 写寄存器
 
 ## LW\_SP
+LW\_SP rx im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+rx = mem[sp + im]
+
+* IF:  -
+* IF/ID:  -
+* Decode: 读特殊寄存器 sp
+* ID/EXE: 收取 sp, 向 stall ctrl 发 mem 信号 
+* EXE: 做加法, alu\_out 指示读内存
+* EXE/WB: 轮询等 alu\_out 返回数据. 向 stall ctrl 解锁 mem
+* WB: 写寄存器
 
 ## MFIH
+MFIH rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+rx = ih
+
+* IF:  -
+* IF/ID:  -
+* Decode: 读特殊寄存器 ih, 锁 rx
+* ID/EXE: 收 ih
+* EXE: 传递 ih
+* EXE/WB: 解锁 rx
+* WB: 写寄存器
 
 ## MFPC
+MFPC rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+rx = pc
+
+* IF:  -
+* IF/ID:  -
+* Decode: 锁rx
+* ID/EXE: -
+* EXE: 传递 pc
+* EXE/WB: 解锁 rx
+* WB: 写寄存器
 
 ## MTIH
+MTIH rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+ih = rx
+
+* IF:  -
+* IF/ID:  -
+* Decode: 读 rx, 锁 rx, ih
+* ID/EXE: 收 rx
+* EXE: 传递 rx
+* EXE/WB: 解锁 rx, ih
+* WB: 写 ih
 
 ## MTSP
 
