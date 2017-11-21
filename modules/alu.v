@@ -76,7 +76,7 @@ module alu(
 					{flag,res} <= {1'b0,op1};
 				end
 				else if (opn[10:0] == 11'b00000100000) begin //JRRA
-					{flag,res} <= {1'b1,16'b0};
+					{flag,res} <= {1'b1,op1};
 				end
 				else if (opn[4:0] == 5'b00111) begin //SRAV
 					{flag,res} <= {1'b0,op1>>>op2};

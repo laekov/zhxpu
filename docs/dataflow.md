@@ -1,4 +1,18 @@
-## ADDIU 
+zhxpu 控制器描述
+===
+## 概述
+### 寄存器锁
+Decode 向锁发信号, 表示该条指令需要写某个寄存器. 后续如需使用该寄存器, 则卡住. 在 EXE/WB 处解锁.
+
+Decode 向锁发读取信号, 表示需要读该寄存器. 由 stall ctrl 判断是否需要将此条指令卡住.
+
+### 时钟结构
+通过独立的模块实现降频和发信号.
+
+考虑特殊结构`set_back`. 即在一个时钟周期后向信号源发一个时钟信号来促使其恢复原有信号. (用于写内存等处)
+
+## 分指令过程描述
+### ADDIU 
 ADDIU Rx immediate
 
 Rx += immediate
@@ -11,7 +25,7 @@ Rx += immediate
 * EXE/WB: 向 stall ctrl 发送寄存器解锁信号.
 * WB: 写寄存器
 
-## ADDIU3
+### ADDIU3
 ADDIU3 Rx Ry Im
 
 Ry = Rx + Im
@@ -24,7 +38,7 @@ Ry = Rx + Im
 * EXE/WB: 向 stall ctrl 发送寄存器解锁信号.
 * WB: 写寄存器
 
-## ADDSP
+### ADDSP
 ADDSP im
 
 SP += im
@@ -37,7 +51,7 @@ SP += im
 * EXE/WB:  向 stall ctrl 发解锁信号
 * WB: 写寄存器
 
-## ADDU
+### ADDU
 ADDU rx ry rz
 
 Rz = Rx + Ry
@@ -50,7 +64,7 @@ Rz = Rx + Ry
 * EXE/WB: 解锁
 * WB: 写寄存器
 
-## AND
+### AND
 AND Rx Ry
 Rx &= Ry
 
@@ -62,7 +76,7 @@ Rx &= Ry
 * EXE/WB: 解锁
 * WB: 写寄存器
 
-## B
+### B
 B im
 
 PC = PC + im
@@ -75,7 +89,7 @@ PC = PC + im
 * EXE/WB: 向 stall ctrl 发修改 pc 的信号
 * WB: stall ctrl 清空流水线
 
-## BEQZ
+### BEQZ
 BEQZ rx immediate
 
 if (rx == 0) pc += immediate
@@ -88,7 +102,7 @@ if (rx == 0) pc += immediate
 * EXE/WB: 向 stall ctrl 发修改 pc 的信号
 * WB:  清空流水
 
-## BNEZ
+### BNEZ
 BNEZ rx immediate
 
 if (rx != 0) pc += immediate
@@ -101,7 +115,7 @@ if (rx != 0) pc += immediate
 * EXE/WB: 向 stall ctrl 发修改 pc 的信号
 * WB: 清空流水
 
-## BTEQZ
+### BTEQZ
 BTEQZ im
 
 if (T=0) PC += im
@@ -114,7 +128,7 @@ if (T=0) PC += im
 * EXE/WB: 读T寄存器的值. 向 stall ctrl 发修改 pc 的信号
 * WB: 清空流水
 
-## CMP
+### CMP
 CMP rx ry
 
 T = (rx != ry)
@@ -127,7 +141,7 @@ T = (rx != ry)
 * EXE/WB: -
 * WB: -
 
-## JR
+### JR
 JR rx
 
 pc = rx
@@ -140,7 +154,7 @@ pc = rx
 * EXE/WB: 修改 pc
 * WB: 清空流水
 
-## LI
+### LI
 LI rx im
 
 rx = im
@@ -153,7 +167,7 @@ rx = im
 * EXE/WB: -
 * WB: 修改 rx
 
-## LW
+### LW
 LW rx ry im
 
 ry = mem[rx + im]
@@ -166,7 +180,7 @@ ry = mem[rx + im]
 * EXE/WB: 轮询等 alu\_out 返回数据, 向 stall ctrl 解锁 mem
 * WB: 写寄存器
 
-## LW\_SP
+### LW\_SP
 LW\_SP rx im
 
 rx = mem[sp + im]
@@ -179,7 +193,7 @@ rx = mem[sp + im]
 * EXE/WB: 轮询等 alu\_out 返回数据. 向 stall ctrl 解锁 mem
 * WB: 写寄存器
 
-## MFIH
+### MFIH
 MFIH rx
 
 rx = ih
@@ -192,7 +206,7 @@ rx = ih
 * EXE/WB: 解锁 rx
 * WB: 写寄存器
 
-## MFPC
+### MFPC
 MFPC rx
 
 rx = pc
@@ -205,7 +219,7 @@ rx = pc
 * EXE/WB: 解锁 rx
 * WB: 写寄存器
 
-## MTIH
+### MTIH
 MTIH rx
 
 ih = rx
@@ -218,133 +232,172 @@ ih = rx
 * EXE/WB: 解锁 rx, ih
 * WB: 写 ih
 
-## MTSP
+### MTSP
+MTSP Rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+sp = rx
 
-## NOP
+* IF: -
+* IF/ID: -
+* Decode: 读 rx, 查询 rx, 锁 sp
+* ID/EXE: 收 rx
+* EXE: 传递 rx
+* EXE/WB: 解锁 rx, sp
+* WB: 写 sp
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+### NOP
+NOP
 
-## OR
+啥都不干
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+* IF: -
+* IF/ID: -
+* Decode: -
+* ID/EXE: -
+* EXE: -
+* EXE/WB: -
+* WB: -
 
-## SLL
+### OR
+OR rx ry
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+rx |= ry
 
-## SRA
+* IF:  -
+* IF/ID:  -
+* Decode: 读 rx, ry, 锁 rx
+* ID/EXE: 收 rx
+* EXE: 算或
+* EXE/WB: 解锁 rx
+* WB:  写 rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+### SLL
+SLL rx ry im
 
-## SUBU
+rx = ry << im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+* IF: -
+* IF/ID:  -
+* Decode: 读 ry, 锁 rx
+* ID/EXE: 收 ry
+* EXE: 算位移
+* EXE/WB: 解锁 rx
+* WB: 写 rx
 
-## SW
+### SRA
+SRA rx ry im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+rx = ry >> im
 
-## SW\_SP
+* IF: -
+* IF/ID:  -
+* Decode: 读 ry, 锁 rx
+* ID/EXE: 收 ry
+* EXE: 算位移
+* EXE/WB: 解锁 rx
+* WB: 写 rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+### SUBU
+subu rx ry rz
 
-## JALR
+rz = rx - ry
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+* IF: -
+* IF/ID: - 
+* Decode: 读 rx, ry, 锁 rz
+* ID/EXE: 收 rx, ry
+* EXE: 算减法
+* EXE/WB: 解锁 rz
+* WB: 写 rz
 
-## JRRA
+### SW
+sw rx ry im
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+mem[rx + im] = ry
 
-## MOVE
+* IF: -
+* IF/ID:  -
+* Decode: 读 rx, ry
+* ID/EXE: 收 rx, ry
+* EXE: 算加法, alu out ctrl 写内存
+* EXE/WB: -
+* WB: -
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+### SW\_SP
+`sw_sp rx im`
 
-## SRL
+mem[sp + im] = rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+* IF: -
+* IF/ID: -
+* Decode: 读 sp
+* ID/EXE: 收 sp
+* EXE: 算加法, alu out ctrl 写内存
+* EXE/WB: -
+* WB: -
 
-## SRAV
+### JALR
+jalr rx
 
-* IF: 
-* IF/ID: 
-* Decode:
-* ID/EXE:
-* EXE:
-* EXE/WB:
-* WB: 
+ra = pc + 1, pc = rx
+
+* IF: -
+* IF/ID: -
+* Decode: 锁 ra, 读 rx
+* ID/EXE: 收 rx
+* EXE: 传递 rx
+* EXE/WB: 解锁 ra
+* WB: 写 pc, ra
+
+### JRRA
+jrra
+
+pc = ra
+
+* IF: -
+* IF/ID:  -
+* Decode: 读 ra
+* ID/EXE: 收 ra
+* EXE: 传 ra
+* EXE/WB: -
+* WB: 修改 pc
+
+### MOVE
+move rx ry
+
+rx = ry
+
+* IF:  -
+* IF/ID:  -
+* Decode: 读 ry, 锁 rx
+* ID/EXE: 收 ry
+* EXE: 传递 ry
+* EXE/WB: 解锁 rx
+* WB: 写 rx
+
+### SRL
+srl rx ry im
+
+rx = ry >> im
+
+* IF: -
+* IF/ID:  -
+* Decode: 读 ry, 锁 rx
+* ID/EXE: 收 ry
+* EXE: 算位移
+* EXE/WB: 解锁 rx
+* WB: 写 rx
+
+### SRAV
+srav rx ry
+
+ry = ry >> rx
+
+* IF: -
+* IF/ID:  -
+* Decode: 读 rx, ry, 锁 ry
+* ID/EXE: 收 rx, ry
+* EXE: 算位移
+* EXE/WB: 解锁 ry
+* WB: 写 ry
 
