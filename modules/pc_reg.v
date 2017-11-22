@@ -20,18 +20,23 @@
 //////////////////////////////////////////////////////////////////////////////////
 module pc_reg(
 		input clk,
-		inout rst,
+		input hold,
+		input set_pc,
+		input [15:0] set_pc_addr,
+		input pc_enabled,
 		output [`RegValue] pc
     );
 
 	always @(posedge clk) begin
 		if (rst == `Reseting) begin
 			pc <= `ZeroValue;
-		end
-		else begin
+		end else (!hold) begin
 			pc <= pc + `SizePerIns;
 		end
 	end
 
+	always @(posedge set_pc) begin
+		pc <= set_pc_addr;
+	end
 
 endmodule
