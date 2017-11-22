@@ -18,6 +18,6 @@ module alu_out_ctrl(
 		end else if (mem_rd) begin
 			mem_read <= 1'b1;
 		end
-	end;
-end module;
+	end
+endmodule
 

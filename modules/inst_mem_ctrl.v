@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "define.v"
 // A version for demonstration 
 module inst_mem_ctrl(
 	input addr[`RegAddr],

@@ -18,6 +18,8 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "define.v"
+
 module register(
 	input clk,
 	input rst,
@@ -39,7 +41,7 @@ module register(
 
 	always @(posedge clk) begin
 		if (rst != `Reseting) begin
-			if (writable == `Writeable and write_addr != `ZeroReg) begin
+			if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin
 				regs[write_addr] <= write_value;
 			end
 		end
@@ -53,7 +55,7 @@ module register(
 			if (read_addr1 == `ZeroReg) begin
 				read_value1 <= `ZeroValue;
 			end
-			else if (read_addr1 == write_addr and writable == `Writeable) begin
+			else if ((read_addr1 == write_addr) && (writable == `Writeable)) begin
 				read_value1 <= write_value;
 			end
 			else begin
@@ -73,7 +75,7 @@ module register(
 			if (read_addr2 == `ZeroReg) begin
 				read_value2 <= `ZeroValue;
 			end
-			else if (read_addr2 == write_addr and writable == `Writeable) begin
+			else if ((read_addr2 == write_addr) && (writable == `Writeable)) begin
 				read_value2 <= write_value;
 			end
 			else begin
