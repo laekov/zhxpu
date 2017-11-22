@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module clock_ctrl(
     input raw_clk,
-	output reg clk
+	output reg clk,
 	output reg pclk
     );
 

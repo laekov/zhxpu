@@ -18,12 +18,14 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "define.v"
+
 module decoder(
 	input rst,
 	inout [15:0] op,
 
 	output readable1,
-	output [`RegAddr] read_addr1,
+	output wire[`RegAddr] read_addr1,
 
 	output readble2,
 	output [`RegAddr] read_addr2,
@@ -56,7 +58,7 @@ module decoder(
 				end
 				else if (opn[10:8] == 3'b000) begin // BTEQZ
 				end
-				else if (opn[10:8] == 3'b100 and opn[4:0] == 5'b00000) begin // MTSP
+				else if ((opn[10:8] == 3'b100) && (opn[4:0] == 5'b00000)) begin // MTSP
 				end
 			end
 			5'b11100: begin 
@@ -125,7 +127,7 @@ module decoder(
 				else if (opn[4:0] == 8'b00000001) begin //MTIH
 				end
 			end
-			5'b00001 begin
+			5'b00001: begin
 				if (opn[10:0] == 11'b10000000000) begin //NOP
 					readable1 <= 1'b0;
 
@@ -136,7 +138,7 @@ module decoder(
 					reg_write <= 1'b0;
 				end
 			end
-			5'b00110 begin
+			5'b00110: begin
 				if (opn[1:0] == 2'b00) begin //SLL
 					readable1 <= 1'b0;
 
@@ -153,11 +155,11 @@ module decoder(
 				else if (opn[1:0] == 2'b10) begin //SRL
 				end
 			end
-			5'b11011 begin //SW
+			5'b11011: begin //SW
 			end
-			5'b11010 begin //SW_SP
+			5'b11010: begin //SW_SP
 			end
-			5'b01111 begin
+			5'b01111: begin
 				if (opn[4:0] == 5'b00000) begin //MOVE
 					readable1 <= 1'b0;
 

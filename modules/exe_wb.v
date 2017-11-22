@@ -1,3 +1,5 @@
+`include "define.v"
+
 module exe_wb(
 	input [15:0] alu_res,
 	input alu_flag,
@@ -32,7 +34,7 @@ module exe_wb(
 				write_reg_addr <= reg_addr;
 				write_reg_data <= res;
 			end
-			5'b00110 begin
+			5'b00110: begin
 				if (opn[1:0] == 2'b00) begin //SLL
 					unlock_reg <= 1'b1;
 					unlock_reg_addr <= reg_addr;
@@ -50,7 +52,7 @@ module exe_wb(
 					write_reg_data <= res;
 				end
 			end
-			5'b01111 begin
+			5'b01111: begin
 				if (opn[4:0] == 5'b00000) begin //MOVE
 					unlock_reg <= 1'b1;
 					unlock_reg_addr <= reg_addr;
@@ -71,7 +73,7 @@ module exe_wb(
 				clear_flow <= 1'b1;
 				new_pc <= res;
 			end
-			5'b00001 begin
+			5'b00001: begin
 				if (opn[10:0] == 11'b10000000000) begin //NOP
 				end
 			end

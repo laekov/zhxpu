@@ -18,6 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "define.v"
 module pc_reg(
 		input clk,
 		input hold,
@@ -30,7 +31,7 @@ module pc_reg(
 	always @(posedge clk) begin
 		if (rst == `Reseting) begin
 			pc <= `ZeroValue;
-		end else (!hold) begin
+		end else if (!hold) begin
 			pc <= pc + `SizePerIns;
 		end
 	end

@@ -43,7 +43,7 @@ module alu(
 					if (op1 == 0) {flag,res} <= {1'b1,16'b0};
 					else {flag,res} <= {1'b0,16'b0};
 				end
-				else if (opn[10:8] == 3'b100 and opn[4:0] == 5'b00000) begin // MTSP
+				else if ((opn[10:8] == 3'b100) && (opn[4:0] == 5'b00000)) begin // MTSP
 					{flag,res} <= {1'b0,op1};
 				end
 			end
@@ -91,7 +91,7 @@ module alu(
 			end
 			5'b00101: begin //BNEZ
 				if (op1 != 0) {flag,res} <= {1'b1,16'b0};
-				else {flag,res} <= 1'b0,16'b0};
+				else {flag,res} <= {1'b0,16'b0};
 			end
 			5'b01101: begin //LI
 				{flag,res} <= {1'b0,op1};
@@ -110,12 +110,12 @@ module alu(
 					{flag,res} <= {1'b0,op1};
 				end
 			end
-			5'b00001 begin
+			5'b00001: begin
 				if (opn[10:0] == 11'b10000000000) begin //NOP
 					{flag,res} <= {1'b1,16'b0};
 				end
 			end
-			5'b00110 begin
+			5'b00110: begin
 				if (opn[1:0] == 2'b00) begin //SLL
 					if (op2 == 0) {flag,res} <= op1 << 8;
 					else {flag,res} <= op1 << op2;
@@ -129,13 +129,13 @@ module alu(
 					else {flag,res} <= {1'b0,op1 >> op2};
 				end
 			end
-			5'b11011 begin //SW
+			5'b11011: begin //SW
 				{flag,res} <= {1'b0,op1};
 			end
-			5'b11010 begin //SW_SP
+			5'b11010: begin //SW_SP
 				{flag,res} <= {1'b0,op1};
 			end
-			5'b01111 begin
+			5'b01111: begin
 				if (opn[4:0] == 5'b00000) begin //MOVE
 					{flag,res} <= {1'b0,op1};
 				end

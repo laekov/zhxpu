@@ -18,6 +18,8 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "define.v"
+
 module stall_ctrl(
 	    input wrie writable,
 	    input wire[`RegAddr] write_addr,

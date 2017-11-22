@@ -18,6 +18,8 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "define.v"
+
 module id_exe(
 	input clk,
 	input pclk,
@@ -41,9 +43,6 @@ module id_exe(
 	output [`RegValue] mem_write_value
     );
 
-	function [15:0] extend;
-		input 
-	endfunction
 
 	always @(posedge clk) begin
 		if (hold == 1'b1) begin
@@ -68,7 +67,7 @@ module id_exe(
 					end
 					else if (opn[10:8] == 3'b000) begin // BTEQZ
 					end
-					else if (opn[10:8] == 3'b100 and opn[4:0] == 5'b00000) begin // MTSP
+					else if ((opn[10:8] == 3'b100) && (opn[4:0] == 5'b00000)) begin // MTSP
 					end
 				end
 				5'b11100: begin 
@@ -106,7 +105,7 @@ module id_exe(
 					op2 <= 16'b0;
 				end
 				5'b01101: begin //LI
-					op1 <= {8'b0,opn[7:0];
+					op1 <= {8'b0,opn[7:0]};
 					op2 <= 16'b0;
 				end
 				5'b10011: begin // LW
@@ -119,13 +118,13 @@ module id_exe(
 					else if (opn[4:0] == 8'b00000001) begin //MTIH
 					end
 				end
-				5'b00001 begin
+				5'b00001: begin
 					if (opn[10:0] == 11'b10000000000) begin //NOP
 						op1 <= 16'b0;
 						op2 <= 16'b0;
 					end
 				end
-				5'b00110 begin
+				5'b00110: begin
 					if (opn[1:0] == 2'b00) begin //SLL
 						op1 <= read_value2;
 						op2 <= {13'b0,opn[4:2]};
@@ -135,11 +134,11 @@ module id_exe(
 					else if (opn[1:0] == 2'b10) begin //SRL
 					end
 				end
-				5'b11011 begin //SW
+				5'b11011: begin //SW
 				end
-				5'b11010 begin //SW_SP
+				5'b11010: begin //SW_SP
 				end
-				5'b01111 begin
+				5'b01111: begin
 					if (opn[4:0] == 5'b00000) begin //MOVE
 						op1 <= read_value2;
 						op2 <= 16'b0;
