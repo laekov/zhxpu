@@ -41,11 +41,9 @@ module id_exe(
 	output [`RegValue] mem_write_value
     );
 
-	always @(posedge pclk) begin
-		mem_write = 1'b0;
-		mem_read = 1'b0;
-		reg_write = 1'b0;
-	end
+	function [15:0] extend;
+		input 
+	endfunction
 
 	always @(posedge clk) begin
 		if (hold == 1'b1) begin
@@ -60,7 +58,8 @@ module id_exe(
 			case (opn[15:11])
 				5'b01001: begin // ADDIU
 					op1 <= read_value1;
-					op2 <= {8'b0,opn[7:0]};
+					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
+					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b01000: begin // ADDIU3
 				end
