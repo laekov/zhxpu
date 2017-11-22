@@ -20,9 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 module pc_reg(
 		input clk,
-		input rst,
-		output [15:0] 
+		inout rst,
+		output [`RegValue] pc
     );
+
+	always @(posedge clk) begin
+		if (rst == `Reseting) begin
+			pc <= `ZeroValue;
+		end
+		else begin
+			pc <= pc + `SizePerIns;
+		end
+	end
 
 
 endmodule
