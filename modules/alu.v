@@ -90,8 +90,8 @@ module alu(
 				else {flag,res} <= {1'b0,16'b0};
 			end
 			5'b00101: begin //BNEZ
-				if (op1 != 0) {flag,res} <= {1'b1,16'b0};
-				else {flag,res} <= {1'b0,16'b0};
+				if (op1 != 0) {flag,res} <= {1'b1, op2};
+				else {flag,res} <= {1'b0, op2};
 			end
 			5'b01101: begin //LI
 				{flag,res} <= {1'b0,op1};

@@ -78,12 +78,19 @@ module exe_wb(
 					write_reg_data <= alu_res;
 				end
 				5'b00101: begin //BNEZ
-					pc_switch_ctrl <= 1'b1;
-					clear_flow <= 1'b1;
-					new_pc <= alu_res;
+					write_reg_ctrl <= 1'b0;
+					if (alu_flag) begin
+						pc_switch_ctrl <= 1'b1;
+						clear_flow <= 1'b1;
+						new_pc <= pc_input + alu_res;
+					end else begin
+						pc_switch_ctrl <= 1'b0;
+						clear_flow <= 1'b0;
+					end
 				end
 				5'b00001: begin
 					if (opn[10:0] == 11'b10000000000) begin //NOP
+						write_reg_ctrl <= 1'b0;
 					end
 				end
 			endcase

@@ -117,7 +117,7 @@ module id_exe(
 				end
 				5'b00101: begin //BNEZ
 					op1 <= read_value1;
-					op2 <= 16'b0;
+					op2 <= { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] };
 				end
 				5'b01101: begin //LI
 					op1 <= {8'b0,opn[7:0]};
@@ -162,6 +162,5 @@ module id_exe(
 			endcase
 		end
 	end
-
 
 endmodule

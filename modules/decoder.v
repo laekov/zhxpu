@@ -23,11 +23,12 @@
 module decoder(
 	input rst,
 	inout [15:0] opn,
+//	input pclk,
 
-	output reg readable1,
+//	output reg //readable1,
 	output reg[`RegAddr] read_addr1,
 
-	output reg readable2,
+//	output reg //readable2,
 	output reg [`RegAddr] read_addr2,
 
 	output reg mem_read,
@@ -41,10 +42,10 @@ module decoder(
 	always @(*) begin
 		case (opn[15:11])
 			5'b01001: begin // ADDIU
-				readable1 <= 1'b1;
-				reg_addr <= opn[10:8];
+				//readable1 <= 1'b1;
+				read_addr1 <= opn[10:8];
 
-				readable2 <= 1'b0;
+				//readable2 <= 1'b0;
 
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;
@@ -63,10 +64,10 @@ module decoder(
 			end
 			5'b11100: begin 
 				if (opn[1:0] == 2'b01) begin// ADDU
-					readable1 <= 1'b1;
+					//readable1 <= 1'b1;
 					read_addr1 <= opn[10:8];
 
-					readable2 <= 1'b1;
+					//readable2 <= 1'b1;
 					read_addr2 <= opn[7:5];
 
 					mem_read <= 1'b0;
@@ -100,18 +101,18 @@ module decoder(
 			5'b00100: begin //BEQZ
 			end
 			5'b00101: begin //BNEZ
-				readable1 <= 1'b1;
+				//readable1 <= 1'b1;
 				read_addr1 <= opn[10:8];
 
-				readable2 <= 1'b0;
+				//readable2 <= 1'b0;
 
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;
 				reg_write <= 1'b0;
 			end
 			5'b01101: begin //LI
-				readable1 <= 1'b0;
-				readable2 <= 1'b0;
+				//readable1 <= 1'b0;
+				//readable2 <= 1'b0;
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;
 				reg_addr <= opn[10:8];
@@ -129,9 +130,9 @@ module decoder(
 			end
 			5'b00001: begin
 				if (opn[10:0] == 11'b10000000000) begin //NOP
-					readable1 <= 1'b0;
+					//readable1 <= 1'b0;
 
-					readable2 <= 1'b0;
+					//readable2 <= 1'b0;
 
 					mem_read <= 1'b0;
 					mem_write <= 1'b0;
@@ -140,9 +141,9 @@ module decoder(
 			end
 			5'b00110: begin
 				if (opn[1:0] == 2'b00) begin //SLL
-					readable1 <= 1'b0;
+					//readable1 <= 1'b0;
 
-					readable2 <= 1'b1;
+					//readable2 <= 1'b1;
 					read_addr2 <= opn[7:5];
 
 					mem_read <= 1'b0;
@@ -161,9 +162,9 @@ module decoder(
 			end
 			5'b01111: begin
 				if (opn[4:0] == 5'b00000) begin //MOVE
-					readable1 <= 1'b0;
+					//readable1 <= 1'b0;
 
-					readable2 <= 1'b1;
+					//readable2 <= 1'b1;
 					read_addr2 <= opn[7:5];
 
 					mem_read <= 1'b0;
@@ -174,7 +175,6 @@ module decoder(
 			end
 		endcase
 	end
-
 
 endmodule
 
