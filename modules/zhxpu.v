@@ -21,27 +21,28 @@ module zhxpu(
 	output wire [6:0] seg1,
 	output wire [6:0] seg2,
 	output wire [15:0] led,
-	output wire [22:0] flash_addr,
-	inout [15:0] flash_data,
-	output wire flash_byte,
-	output wire flash_vpen,
-	output wire flash_ce,
-	output wire flash_oe,
-	output wire flash_we,
-	output wire flash_rp,
+	//output wire [22:0] flash_addr,
+	//inout [15:0] flash_data,
+	//output wire flash_byte,
+	//output wire flash_vpen,
+	//output wire flash_ce,
+	//output wire flash_oe,
+	//output wire flash_we,
+	//output wire flash_rp,
 	// output wire [3:0] fpga_key,
-	inout [15:0] ram1_data,
-	inout [15:0] ram2_data,
-	output wire ram1_en,
-	output wire ram1_oe,
-	output wire ram1_rw,
-	output wire ram2_en,
-	output wire ram2_oe,
-	output wire ram2_rw,
-	output wire [17:0] ram1_addr,
-	output wire [17:0] ram2_addr,
-	input [15:0] sw,
-	input rst
+	//inout [15:0] ram1_data,
+	//inout [15:0] ram2_data,
+	//output wire ram1_en,
+	//output wire ram1_oe,
+	//output wire ram1_rw,
+	//output wire ram2_en,
+	//output wire ram2_oe,
+	//output wire ram2_rw,
+	//output wire [17:0] ram1_addr,
+	//output wire [17:0] ram2_addr,
+	//input [15:0] sw,
+	input rst,
+	input manual_clk
 );
 // Clock module
 	wire clk;
@@ -49,8 +50,31 @@ module zhxpu(
 
 	clock_ctrl __clock_ctrl(
 		.raw_clk(raw_clk),
+		.manual_clk(manual_clk),
+		.auto_en(rst),
 		.clk(clk),
 		.pclk(pclk)
+	);
+
+// Dig 
+	wire [3:0] dig1_data;
+	wire [3:0] dig2_data;
+
+	dig_ctrl __dig_ctrl_1(
+		.dig(dig1_data),
+		.light(seg1)
+	);
+	dig_ctrl __dig_ctrl_2(
+		.dig(dig1_data),
+		.light(seg2)
+	);
+
+// LED
+	wire [15:0] led_data;
+
+	led_ctrl __led_ctrl(
+		.data(led_data),
+		.light(led)
 	);
 
 // Stall ctrl module
@@ -115,6 +139,9 @@ module zhxpu(
 		.pc_enabled(pc_enabled),
 		.pc(if_pc)
 	);
+
+	assign dig1_data = if_pc[3:0];
+	assign dig2_data = if_pc[7:4];
 
 	wire [`RegValue] if_inst;
 
@@ -230,6 +257,8 @@ module zhxpu(
 		.write_reg_addr(reg_write_addr),
 		.write_reg_data(reg_write_data)
 	);
+
+	assign led_data = if_inst;
 
 endmodule
 

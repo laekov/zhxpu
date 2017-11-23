@@ -20,6 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 module clock_ctrl(
     input raw_clk,
+	input manual_clk,
+	input auto_en,
 	output reg clk,
 	output reg pclk
     );
@@ -31,13 +33,18 @@ module clock_ctrl(
 	reg [31:0] tmp;
 
 	always @(posedge raw_clk) begin
-		tmp = cur_cnt + 32'h00000001;
-		if (tmp == CLK_INTERVAL) begin
-			cur_cnt <= 32'h0;
-			clk = cur_status;
-			cur_status = !cur_status;
+		if (!auto_en) begin
+			tmp = cur_cnt + 32'h00000001;
+			if (tmp == CLK_INTERVAL) begin
+				cur_cnt = 32'h0;
+				clk = cur_status;
+				cur_status = !cur_status;
+			end else begin
+				cur_cnt = tmp;
+			end
+			pclk = (tmp == 32'h0000001);
 		end else begin
-			cur_cnt <= tmp;
+			clk = manual_clk;
 		end
 	end
 

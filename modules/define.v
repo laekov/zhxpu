@@ -4,7 +4,7 @@
 `define Writeable 1'b1
 
 `define ZeroValue 15'b0
-`define SizePerIns 4'h4
+`define SizePerIns 4'h1
 
 //Define of registers
 `define	RegAddr	2:0
