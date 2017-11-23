@@ -14,15 +14,118 @@ module zhxpu(
 	output wire flash_we,
 	output wire flash_rp
 );
+// Clock module
+	wire clk;
+	wire pclk;
 
-	wire [15:0] alu_opn;
+	clock_ctrl __clock_ctrl(
+		.raw_clk(raw_clk),
+		.clk(clk),
+		.pclk(pclk)
+	);
+
+// Stall ctrl module
+	wire hold;
+	wire stall_writable;
+	wire [`RegAddr] stall_write_addr;
+	wire stall_readable1;
+	wire [`RegAddr] stall_readable1_addr;
+	wire stall_readable2;
+	wire [`RegAddr] stall_readable2_addr;
+	wire stall_writed;
+	wire [`RegAddr] stall_writed_addr;
+
+	stall_ctrl __stall_ctrl(
+		.writable(stall_writable),
+		.write_addr(stall_write_addr),
+		.readable1(stall_readable1),
+		.read_addr1(stall_readable1_addr),
+		.readable2(stall_readable2),
+		.read_addr2(stall_readable2_addr),
+		.writed(stall_writed),
+		.writed_addr(stall_writed_addr),
+		.hold(hold)
+	);
+
+// Register module
+	wire reg_writable;
+	wire [`RegAddr] reg_write_addr;
+	wire [`RegValue] reg_write_value;
+	wire reg_readable1;
+	wire [`RegAddr] reg_read_addr1;
+	wire [`RegValue] reg_read_value1;
+	wire reg_readable2;
+	wire [`RegAddr] reg_read_addr2;
+	wire [`RegValue] reg_read_value2;
+
+	register __register(
+		.clk(clk),
+		.writable(reg_writable),
+		.write_addr(reg_write_addr),
+		.write_value(reg_write_value),
+		.readable1(reg_readable1),
+		.read_addr1(reg_read_addr1),
+		.read_value1(reg_read_value1),
+		.readable2(reg_readable2),
+		.read_addr2(reg_read_addr2),
+		.read_value2(reg_read_value2)
+	);
+
+// IF stage modules
+	wire set_pc;
+	wire [15:0] set_pc_addr;
+	//wire pc_enabled;
+	reg pc_enabled = 1'b1;
+	wire [`RegValue] if_pc;
+
+	pc_reg __pc_reg(	
+		.clk(clk),
+		.hold(hold),
+		.set_pc(set_pc),
+		.set_pc_addr(set_pc_addr),
+		.pc_enabled(pc_enabled),
+		.pc(if_pc)
+	);
+
+	wire [`RegValue] if_inst;
+
+	inst_mem_ctrl __inst_mem_ctrl(
+		.addr(if_pc),
+		.data(if_inst)
+	);
+
+// ID stage modules
+	wire [`RegValue] id_inst;
+	wire [`RegValue] id_pc;
+	wire id_mem_read;
+	wire id_mem_write;
+	wire id_reg_write;
+	wire [`RegAddr] id_reg_addr;
+
+	decoder __decoder(
+		.op(id_inst),
+		.readable1(stall_readable1),
+		.read_addr1(stall_readable1_addr),
+		.readable2(stall_readable2),
+		.read_addr2(stall_readable2_addr),
+		.mem_read(id_mem_read),
+		.mem_write(id_mem_write),
+		.reg_write(id_reg_write),
+		.reg_addr(id_reg_addr)
+	);
+
+// EXE stage modules
+	wire [`RegValue] exe_pc;
+	wire [`RegValue] exe_inst;
+	wire exe_reg_write;
+	wire [`RegAddr] exe_reg_addr;
 	wire [15:0] alu_op1;
 	wire [15:0] alu_op2;
 	wire [15:0] alu_res;
 	wire alu_flag;
 
 	alu __alu(
-		.opn(alu_opn),
+		.opn(exe_inst),
 		.op1(alu_op1),
 		.op2(alu_op2),
 		.res(alu_res),
@@ -32,10 +135,71 @@ module zhxpu(
 	wire exe_memwr_ctrl;
 	wire exe_memrd_ctrl;
 	wire [17:0] exe_mem_addr;
+
+	wire [15:0] wb_res;
+	wire wb_flag;
 	
 	alu_out_ctrl __alu_out_ctrl(
 		.res(alu_res),
 		.flag(alu_flag),
-		.memwr_ctrl
+		.res_out(wb_res),
+		.flag_out(wb_flag)
+	);
+
+// WB stage modules
+	wire flush;
+
+// IF/ID
+	if_id __if_id(
+		.hold(hold),
+		.pc_in(if_pc),
+		.clk(clk),
+		.inst_in(if_inst),
+		.pc_out(id_pc),
+		.inst_out(id_inst)
+	);
+
+// ID/EXE
+	id_exe __id_exe(
+		.clk(clk),
+		.pclk(pclk),
+		.mem_write(id_mem_write),
+		.mem_read(id_mem_read),
+		.reg_write(id_reg_write),
+		.reg_addr(id_reg_addr),
+		.mem_write_out(exe_memwr_ctrl),
+		.mem_read_out(exe_memrd_ctrl),
+		.reg_write_out(exe_reg_write),
+		.reg_addr_out(exe_reg_addr),
+		.read_value1(reg_read_value1),
+		.read_value2(reg_read_value2),
+		.hold(hold),
+		.pc(id_pc),
+		.opn(id_inst),
+		.pc_out(exe_pc),
+		.opn_out(exe_inst),
+		.op1(alu_op1),
+		.op2(alu_op2)
+	); // TODO mem write value not attached
+
+// EXE/WB
+	exe_wb __exe_wb(
+		.alu_res(wb_res),
+		.alu_flag(wb_flag),
+		.reg_wr(exe_reg_write),
+		.reg_addr(exe_reg_addr),
+		.opn(exe_inst),
+		.pc_input(exe_pc),
+		.clk(clk),
+		.pclk(pclk),
+		.pc_switch_ctrl(set_pc),
+		.new_pc(set_pc_addr),
+		.clear_flow(flush),
+		.unlock_reg(stall_writed),
+		.unlock_reg_addr(stall_writed_addr),
+		.write_reg_ctrl(reg_writable),
+		.write_reg_addr(reg_write_addr),
+		.write_reg_data(reg_write_data)
+	);
 
 endmodule
