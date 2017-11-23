@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+// TODO fix pc and pcout
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -25,18 +26,25 @@ module id_exe(
 	input pclk,
 	input rst,
 	
-	inout mem_write,
-	inout mem_read,
-	inout reg_write,
-	inout [`RegAddr] reg_addr,
+	input mem_write,
+	input mem_read,
+	input reg_write,
+	input [`RegAddr] reg_addr,
+
+	output mem_write_out,
+	output mem_read_out,
+	output reg_write_out,
+	output [`RegAddr] reg_addr_out,
 
 	input [`RegValue] read_value1,
 	input [`RegValue] read_value2,
 
 	input hold,
 	input [`RegValue] outd,
-	inout [`RegValue] pc,
+	input [`RegValue] pc,
 	input [`RegValue] opn,
+	output reg [`RegValue] pc_out,
+	output reg [`RegValue] opn_out,
 
 	output [`RegValue] op1,
 	output [`RegValue] op2,
