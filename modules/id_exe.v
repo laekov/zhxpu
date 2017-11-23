@@ -56,12 +56,19 @@ module id_exe(
 		if (hold == 1'b1) begin
 			op1 <= 16'b0;
 			op2 <= 16'b0;
-			mem_write = 1'b0;
-			mem_read = 1'b0;
-			reg_write = 1'b0;
-			opn = 16'b0000100000000000;
+			mem_write_out = 1'b0;
+			mem_read_out = 1'b0;
+			reg_write_out = 1'b0;
+			reg_addr_out = 'b0;
+			opn_out = 16'b0000100000000000;
 		end
 		else begin
+			opn_out <= opn;
+			pc_out <= pc;
+			mem_write_out <= mem_write;
+			mem_read_out <= mem_read;
+			reg_write_out <= reg_write;
+			reg_addr_out <= reg_addr;
 			case (opn[15:11])
 				5'b01001: begin // ADDIU
 					op1 <= read_value1;
