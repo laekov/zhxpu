@@ -22,18 +22,18 @@
 
 module decoder(
 	input rst,
-	inout [15:0] op,
+	inout [15:0] opn,
 
-	output readable1,
-	output wire[`RegAddr] read_addr1,
+	output reg readable1,
+	output reg[`RegAddr] read_addr1,
 
-	output readble2,
-	output [`RegAddr] read_addr2,
+	output reg readable2,
+	output reg [`RegAddr] read_addr2,
 
-	output mem_read,
-	output mem_write,
-	output reg_write,
-	output [`RegAddr] reg_addr
+	output reg mem_read,
+	output reg mem_write,
+	output reg reg_write,
+	output reg [`RegAddr] reg_addr
     );
 
 	
@@ -41,10 +41,10 @@ module decoder(
 	always @(*) begin
 		case (opn[15:11])
 			5'b01001: begin // ADDIU
-				readble1 <= 1'b1;
+				readable1 <= 1'b1;
 				reg_addr <= opn[10:8];
 
-				readble2 <= 1'b0;
+				readable2 <= 1'b0;
 
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;
@@ -63,7 +63,7 @@ module decoder(
 			end
 			5'b11100: begin 
 				if (opn[1:0] == 2'b01) begin// ADDU
-					readble1 <= 1'b1;
+					readable1 <= 1'b1;
 					read_addr1 <= opn[10:8];
 
 					readable2 <= 1'b1;
@@ -100,10 +100,10 @@ module decoder(
 			5'b00100: begin //BEQZ
 			end
 			5'b00101: begin //BNEZ
-				readble1 <= 1'b1;
-				reg_addr1 <= opn[10:8];
+				readable1 <= 1'b1;
+				read_addr1 <= opn[10:8];
 
-				readble2 <= 1'b0;
+				readable2 <= 1'b0;
 
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;

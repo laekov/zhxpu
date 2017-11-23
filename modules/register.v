@@ -30,63 +30,24 @@ module register(
 
 	input readable1,
 	input [`RegAddr] read_addr1,
-	output [`RegValue] read_value1,
+	output wire [`RegValue] read_value1,
 
-	input readble2,
+	input readable2,
 	input [`RegAddr] read_addr2,
-	output [`RegValue] read_value2
+	output wire [`RegValue] read_value2
     );
 
 	reg [`RegValue] regs[0:15];
 
-	always @(posedge clk) begin
-		if (rst != `Reseting) begin
-			if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin
-				regs[write_addr] <= write_value;
-			end
+	assign read_value1 =  ((read_addr1 == write_addr) && (writable == `Writeable)) ? write_value : regs[read_addr1];
+
+	assign read_value2 =  ((read_addr2 == write_addr) && (writable == `Writeable)) ? write_value : regs[read_addr2];
+
+	always @(posedge writable) begin	
+		if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin
+			regs[write_addr] <= write_value;
 		end
 	end
-
-	always @(*) begin
-		if (rst == `Reseting) begin
-			read_value1 <= `ZeroValue;
-		end
-		else if (readble1 == `Readable) begin
-			if (read_addr1 == `ZeroReg) begin
-				read_value1 <= `ZeroValue;
-			end
-			else if ((read_addr1 == write_addr) && (writable == `Writeable)) begin
-				read_value1 <= write_value;
-			end
-			else begin
-				read_value1 <= regs[read_addr1];
-			end
-		end
-		else  begin
-			read_value1 <= `ZeroValue;
-		end
-	end
-
-	always @(*) begin
-		if (rst == `Reseting) begin
-			read_value2 <= `ZeroValue;
-		end
-		else if (readble2 == `Readable) begin
-			if (read_addr2 == `ZeroReg) begin
-				read_value2 <= `ZeroValue;
-			end
-			else if ((read_addr2 == write_addr) && (writable == `Writeable)) begin
-				read_value2 <= write_value;
-			end
-			else begin
-				read_value2 <= regs[read_addr1];
-			end
-		end
-		else  begin
-			read_value2 <= `ZeroValue;
-		end
-	end
-
 
 endmodule
 

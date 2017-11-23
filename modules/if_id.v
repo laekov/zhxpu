@@ -4,8 +4,8 @@ module if_id(
 	input [15:0] pc_in,
 	input clk,
 	input [15:0] inst_in,
-	output [15:0] pc_out,
-	output [15:0] inst_out,
+	output reg [15:0] pc_out,
+	output reg [15:0] inst_out
 );
 	always @(posedge clk) begin
 		if (!hold) begin

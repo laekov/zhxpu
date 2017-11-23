@@ -1,9 +1,9 @@
 # PlanAhead Generated physical constraints 
 
-NET "FPGA_KEY0" LOC = U11;
-NET "FPGA_KEY1" LOC = U14;
-NET "FPGA_KEY2" LOC = V14;
-NET "FPGA_KEY3" LOC = V16;
+# NET "fpga_key[0]" LOC = U11;
+# NET "fpga_key[1]" LOC = U14;
+# NET "fpga_key[2]" LOC = V14;
+# NET "fpga_key[3]" LOC = V16;
 
 NET "seg1[0]" LOC = F8;
 NET "seg1[1]" LOC = E8;
@@ -183,4 +183,4 @@ NET "ram2_addr[15]" LOC = V9;
 NET "ram2_addr[16]" LOC = U16;
 NET "ram2_addr[17]" LOC = U15;
 
-NET "RST" LOC = U10;
+NET "rst" LOC = U10;

@@ -19,11 +19,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module alu(
-		input opn[15:0],
-		input op1[15:0],
-		input op2[15:0],
+		input [15:0] opn,
+		input [15:0] op1,
+		input [15:0] op2,
 
-		output reg res[15:0],
+		output reg [15:0] res,
 		output reg flag
     );
 

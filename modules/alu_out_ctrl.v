@@ -3,21 +3,21 @@
 // This module is not completed. RAM not supported
 
 module alu_out_ctrl(
-	input res[15:0],
+	input [15:0] res,
 	input flag,
 	input memwr_ctrl,
 	input memrd_ctrl,
-	input mem_addr[17:0],
+	input [17:0] mem_addr,
 	output reg mem_read,
-	output reg mem_addrl[17:0],
-	output reg mem_datal[17:0],
-	output reg res_out[15:0],
+	output reg [17:0] mem_addrl,
+	output reg [17:0] mem_datal,
+	output reg [15:0] res_out,
 	output reg flag_out
 );
 	always @(*) begin
-		if (mem_wr) begin
+		if (memwr_ctrl) begin
 			mem_read <= 1'b0;
-		end else if (mem_rd) begin
+		end else if (memrd_ctrl) begin
 			mem_read <= 1'b1;
 		end
 		res_out <= res;

@@ -31,10 +31,10 @@ module id_exe(
 	input reg_write,
 	input [`RegAddr] reg_addr,
 
-	output mem_write_out,
-	output mem_read_out,
-	output reg_write_out,
-	output [`RegAddr] reg_addr_out,
+	output reg mem_write_out,
+	output reg mem_read_out,
+	output reg reg_write_out,
+	output reg [`RegAddr] reg_addr_out,
 
 	input [`RegValue] read_value1,
 	input [`RegValue] read_value2,
@@ -46,9 +46,9 @@ module id_exe(
 	output reg [`RegValue] pc_out,
 	output reg [`RegValue] opn_out,
 
-	output [`RegValue] op1,
-	output [`RegValue] op2,
-	output [`RegValue] mem_write_value
+	output reg [`RegValue] op1,
+	output reg [`RegValue] op2,
+	output reg [`RegValue] mem_write_value
     );
 
 
@@ -56,11 +56,11 @@ module id_exe(
 		if (hold == 1'b1) begin
 			op1 <= 16'b0;
 			op2 <= 16'b0;
-			mem_write_out = 1'b0;
-			mem_read_out = 1'b0;
-			reg_write_out = 1'b0;
-			reg_addr_out = 'b0;
-			opn_out = 16'b0000100000000000;
+			mem_write_out <= 1'b0;
+			mem_read_out <= 1'b0;
+			reg_write_out <= 1'b0;
+			reg_addr_out <= 'b0;
+			opn_out <= 16'b0000100000000000;
 		end
 		else begin
 			opn_out <= opn;
