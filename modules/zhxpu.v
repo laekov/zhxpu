@@ -213,8 +213,6 @@ module zhxpu(
 		.pclk(pclk),
 		.inst_in(if_inst),
 		.pc_out(id_pc),
-		.readable1(reg_readable1),
-		.readable2(reg_readable2),
 		.inst_out(id_inst)
 	);
 
@@ -261,14 +259,14 @@ module zhxpu(
 		.write_reg_data(reg_write_value)
 	);
 
-	assign dig1_data = reg_debug_out[7:4];
+	assign dig1_data = exe_pc[3:0];
 	assign dig2_data = reg_debug_out[3:0];
 	//assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
-	assign led_data = { if_pc[3:0], reg_read_addr1, reg_readable1, reg_read_value1[3:0], wb_res[3:0] };
+	assign led_data = { reg_read_addr1, reg_readable1, reg_read_value1[3:0], reg_write_value[3:0], reg_write_addr, reg_writable };
 
 endmodule
 
