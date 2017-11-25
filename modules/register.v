@@ -51,7 +51,7 @@ module register(
 	//assign debug_out = { regs[1][3:0], regs[2][3:0], regs[3][3:0], regs[4][3:0] };
 	assign debug_out = reg1;
 
-	always @(negedge writable) begin	
+	always @(*) begin	
 		if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin
 			case (write_addr)
 				3'b001: begin reg1 <= write_value; end

@@ -34,6 +34,7 @@ module exe_wb(
 			wrra <= 1'b0;
 			//unlock_reg <= 1'b0;
 			write_reg_ctrl <= 1'b0;
+			write_reg_addr <= `ZeroReg;
 		end else begin
 			case (opn[15:11])
 				5'b01101: begin // LI
@@ -82,7 +83,7 @@ module exe_wb(
 					if (alu_flag) begin
 						pc_switch_ctrl <= 1'b1;
 						clear_flow <= 1'b1;
-						new_pc <= pc_input + alu_res;
+						new_pc <= pc_input + 16'h0001 + alu_res;
 					end else begin
 						pc_switch_ctrl <= 1'b0;
 						clear_flow <= 1'b0;

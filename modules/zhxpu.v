@@ -259,7 +259,7 @@ module zhxpu(
 		.write_reg_data(reg_write_value)
 	);
 
-	assign dig1_data = exe_pc[3:0];
+	assign dig1_data = reg_debug_out[7:4];
 	assign dig2_data = reg_debug_out[3:0];
 	//assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
