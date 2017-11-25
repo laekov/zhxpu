@@ -40,6 +40,7 @@ module id_exe(
 	input [`RegValue] read_value2,
 
 	input hold,
+	input flush,
 	input [`RegValue] outd,
 	input [`RegValue] pc,
 	input [`RegValue] opn,
@@ -52,8 +53,8 @@ module id_exe(
     );
 
 
-	always @(posedge clk) begin
-		if (hold == 1'b1) begin
+	always @(posedge clk or posedge flush) begin
+		if (flush == 1'b1) begin
 			op1 <= 16'b0;
 			op2 <= 16'b0;
 			mem_write_out <= 1'b0;

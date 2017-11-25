@@ -12,9 +12,6 @@ module exe_wb(
 	input [15:0]opn,
 	input clk,
 	input pclk,
-	output reg pc_switch_ctrl,
-	output reg [15:0] new_pc,
-	output reg clear_flow,
 	output reg wrsp,
 	output reg wrih,
 	output reg wrra,
@@ -27,8 +24,6 @@ module exe_wb(
 );
 	always @(posedge clk or posedge pclk) begin
 		if (pclk) begin
-			pc_switch_ctrl <= 1'b0;
-			clear_flow <= 1'b0;
 			wrsp <= 1'b0;
 			wrih <= 1'b0;
 			wrra <= 1'b0;
@@ -77,17 +72,6 @@ module exe_wb(
 					write_reg_ctrl <= 1'b1;
 					write_reg_addr <= reg_addr;
 					write_reg_data <= alu_res;
-				end
-				5'b00101: begin //BNEZ
-					write_reg_ctrl <= 1'b0;
-					if (alu_flag) begin
-						pc_switch_ctrl <= 1'b1;
-						clear_flow <= 1'b1;
-						new_pc <= pc_input + 16'h0001 + alu_res;
-					end else begin
-						pc_switch_ctrl <= 1'b0;
-						clear_flow <= 1'b0;
-					end
 				end
 				5'b00001: begin
 					if (opn[10:0] == 11'b10000000000) begin //NOP

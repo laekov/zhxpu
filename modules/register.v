@@ -28,6 +28,10 @@ module register(
 	input [`RegAddr] write_addr,
 	input [`RegValue] write_value,
 
+	input alu_writable,
+	input [`RegAddr] alu_write_addr,
+	input [`RegValue] alu_write_value,
+
 	input readable1,
 	input [`RegAddr] read_addr1,
 	output reg [`RegValue] read_value1,
@@ -67,7 +71,9 @@ module register(
 
 	//always @(write_addr, write_value, readable1, readable2, read_addr1, read_addr2) begin
 	always @(*) begin
-		if (writable && (write_addr == read_addr1)) begin
+		if (alu_writable && (alu_write_addr == read_addr1)) begin
+			read_value1 <= alu_write_value;
+		end else if (writable && (write_addr == read_addr1)) begin
 			read_value1 <= write_value;
 		end else begin
 			case (read_addr1)
@@ -83,7 +89,9 @@ module register(
 	end
 
 	always @(*) begin
-		if (writable && (write_addr == read_addr2)) begin
+		if (alu_writable && (alu_write_addr == read_addr2)) begin
+			read_value2 <= alu_write_value;
+		end else if (writable && (write_addr == read_addr2)) begin
 			read_value2 <= write_value;
 		end else begin
 			case (read_addr2)

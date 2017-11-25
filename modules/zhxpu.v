@@ -10,6 +10,7 @@
 `include "id_exe.v"
 `include "if_id.v"
 `include "inst_mem_ctrl.v"
+`include "jmp_ctrl.v"
 `include "led_ctrl.v"
 `include "pc_reg.v"
 `include "register.v"
@@ -110,6 +111,9 @@ module zhxpu(
 	wire reg_readable2;
 	wire [`RegAddr] reg_read_addr2;
 	wire [`RegValue] reg_read_value2;
+	wire alu_writable;
+	wire [`RegAddr] alu_write_addr;
+	wire [`RegValue] alu_write_value;
 
 	wire [`RegValue] reg_debug_out;
 
@@ -118,6 +122,9 @@ module zhxpu(
 		.writable(reg_writable),
 		.write_addr(reg_write_addr),
 		.write_value(reg_write_value),
+		.alu_writable(alu_writable),
+		.alu_write_addr(alu_write_addr),
+		.alu_write_value(alu_write_value),
 		.readable1(reg_readable1),
 		.read_addr1(reg_read_addr1),
 		.read_value1(reg_read_value1),
@@ -170,6 +177,15 @@ module zhxpu(
 		.reg_addr(id_reg_addr)
 	);
 
+	jmp_ctrl __jmp_ctrl(
+		.op1(reg_read_value1),
+		.op2(reg_read_value2),
+		.pc_in(id_pc),
+		.opn(id_inst),
+		.set_pc(set_pc),
+		.set_pc_value(set_pc_addr)
+	);
+
 // EXE stage modules
 	wire [`RegValue] exe_pc;
 	wire [`RegValue] exe_inst;
@@ -202,12 +218,17 @@ module zhxpu(
 		.flag_out(wb_flag)
 	);
 
+	assign alu_writable = exe_reg_write;
+	assign alu_write_addr = exe_reg_addr;
+	assign alu_write_data = wb_res;
+
 // WB stage modules
 	wire flush;
 
 // IF/ID
 	if_id __if_id(
 		.hold(hold),
+		//.flush(flush),
 		.pc_in(if_pc),
 		.clk(clk),
 		.pclk(pclk),
@@ -220,6 +241,7 @@ module zhxpu(
 	id_exe __id_exe(
 		.clk(clk),
 		.pclk(pclk),
+		//.flush(flush),
 		.mem_write(id_mem_write),
 		.mem_read(id_mem_read),
 		.reg_write(id_reg_write),
@@ -249,9 +271,6 @@ module zhxpu(
 		.pc_input(exe_pc),
 		.clk(clk),
 		.pclk(pclk),
-		.pc_switch_ctrl(set_pc),
-		.new_pc(set_pc_addr),
-		.clear_flow(flush),
 		//.unlock_reg(stall_writed),
 		//.unlock_reg_addr(stall_writed_addr),
 		.write_reg_ctrl(reg_writable),
@@ -259,14 +278,16 @@ module zhxpu(
 		.write_reg_data(reg_write_value)
 	);
 
-	assign dig1_data = reg_debug_out[7:4];
+	// assign dig1_data = reg_debug_out[7:4];
+	assign dig1_data = exe_pc;
 	assign dig2_data = reg_debug_out[3:0];
-	//assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
+	// assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
 	assign led_data = { reg_read_addr1, reg_readable1, reg_read_value1[3:0], reg_write_value[3:0], reg_write_addr, reg_writable };
+	// assign led_data = { if_pc[3:0], id_pc[3:0], exe_pc[3:0], set_pc, set_pc_addr[2:0] };
 
 endmodule
 

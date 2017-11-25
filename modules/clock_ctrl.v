@@ -26,7 +26,7 @@ module clock_ctrl(
 	output reg pclk
     );
 
-	localparam CLK_INTERVAL = 32'h001AF080;
+	localparam CLK_INTERVAL = 32'h00FAF080;
 	reg [31:0] cur_cnt = 32'h0;
 	reg cur_status = 1'b0;
 
