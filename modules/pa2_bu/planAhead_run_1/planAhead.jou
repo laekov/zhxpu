@@ -1,0 +1,83 @@
+#-----------------------------------------------------------
+# PlanAhead v14.7
+# Build 321239 by xbuild on Fri Sep 27 19:31:35 MDT 2013
+# Start of session at: Wed Nov 08 22:13:03 2017
+# Process ID: 2908
+# Log file: C:/work/cpu/pa2/planAhead_run_1/planAhead.log
+# Journal file: C:/work/cpu/pa2/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+start_gui
+source C:/work/cpu/pa2/pa.fromNetlist.tcl
+startgroup
+set_property package_pin U9 [get_ports CLK]
+endgroup
+startgroup
+set_property package_pin U10 [get_ports RST]
+endgroup
+startgroup
+set_property package_pin M15 [get_ports Ram1EN]
+endgroup
+startgroup
+set_property package_pin M16 [get_ports Ram1OE]
+endgroup
+startgroup
+set_property package_pin M18 [get_ports Ram1WE]
+endgroup
+startgroup
+set_property package_pin N10 [get_ports Ram2EN]
+endgroup
+startgroup
+set_property package_pin R9 [get_ports Ram2OE]
+endgroup
+startgroup
+set_property package_pin M9 [get_ports Ram2WE]
+endgroup
+startgroup
+set_property package_pin A14 [get_ports {light[15]}]
+endgroup
+startgroup
+set_property package_pin E13 [get_ports {light[14]}]
+endgroup
+startgroup
+set_property package_pin D13 [get_ports {light[13]}]
+endgroup
+startgroup
+set_property package_pin B13 [get_ports {light[12]}]
+endgroup
+startgroup
+set_property package_pin A13 [get_ports {light[11]}]
+endgroup
+startgroup
+set_property package_pin F12 [get_ports {light[10]}]
+endgroup
+startgroup
+set_property package_pin E12 [get_ports {light[9]}]
+endgroup
+startgroup
+set_property package_pin A12 [get_ports {light[8]}]
+endgroup
+startgroup
+set_property package_pin F11 [get_ports {light[7]}]
+endgroup
+startgroup
+set_property package_pin E11 [get_ports {light[6]}]
+endgroup
+startgroup
+set_property package_pin D11 [get_ports {light[5]}]
+endgroup
+startgroup
+set_property package_pin C11 [get_ports {light[4]}]
+endgroup
+startgroup
+set_property package_pin B11 [get_ports {light[3]}]
+endgroup
+startgroup
+set_property package_pin A11 [get_ports {light[2]}]
+endgroup
+startgroup
+set_property package_pin E10 [get_ports {light[1]}]
+endgroup
+startgroup
+set_property package_pin D10 [get_ports {light[0]}]
+endgroup
+save_constraints

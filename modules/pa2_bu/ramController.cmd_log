@@ -1,0 +1,231 @@
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+xst -intstyle ise -ifn "C:/work/cpu/pa2/ramController.xst" -ofn "C:/work/cpu/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2/ramController.xst" -ofn "D:/zhx/pa2/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+xst -intstyle ise -ifn "D:/zhx/pa2_bu/ramController.xst" -ofn "D:/zhx/pa2_bu/ramController.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ramController.ucf -p xc3s1200e-fg320-4 ramController.ngc ramController.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o ramController_map.ncd ramController.ngd ramController.pcf 
+par -w -intstyle ise -ol high -t 1 ramController_map.ncd ramController.ncd ramController.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml ramController.twx ramController.ncd -o ramController.twr ramController.pcf -ucf ramController.ucf 
+bitgen -intstyle ise -f ramController.ut ramController.ncd 

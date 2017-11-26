@@ -1,0 +1,197 @@
+xst -intstyle ise -ifn "C:/work/cpu/uart/uart.xst" -ofn "C:/work/cpu/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf 
+xst -intstyle ise -ifn "C:/work/cpu/uart/uart.xst" -ofn "C:/work/cpu/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 
+xst -intstyle ise -ifn "D:/zhx/uart/uart.xst" -ofn "D:/zhx/uart/uart.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc uart.ucf -p xc3s1200e-fg320-4 uart.ngc uart.ngd  
+map -intstyle ise -p xc3s1200e-fg320-4 -cm area -ir off -pr off -c 100 -o uart_map.ncd uart.ngd uart.pcf 
+par -w -intstyle ise -ol high -t 1 uart_map.ncd uart.ncd uart.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml uart.twx uart.ncd -o uart.twr uart.pcf -ucf uart.ucf 
+bitgen -intstyle ise -f uart.ut uart.ncd 

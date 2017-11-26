@@ -1,0 +1,3 @@
+verilog work "translator.v"
+verilog work "ram.v"
+verilog work "ramController.v"

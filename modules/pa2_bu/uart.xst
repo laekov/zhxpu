@@ -1,0 +1,5 @@
+set -tmpdir "C:/work/cpu/pa2/xst/projnav.tmp"
+set -xsthdpdir "C:/work/cpu/pa2/xst"
+elaborate
+-ifn uart.prj
+-ifmt mixed

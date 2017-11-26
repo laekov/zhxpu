@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=D:\zhx\pa2_bu\ramController.ncd
+OUTFILE=D:\zhx\pa2_bu\ramController.bit
+FAMILY=Spartan3E
+PART=xc3s1200e-4fg320
+WORKINGDIR=D:\zhx\pa2_bu
+LICENSE=ISE
+USER_INFO=135256_15690819_173552794_661
