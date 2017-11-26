@@ -15,6 +15,8 @@
 `include "pc_reg.v"
 `include "register.v"
 `include "stall_ctrl.v"
+`include "ram_controller.v"
+`include "ram_uart.v"
 
 module zhxpu(
     input raw_clk,
