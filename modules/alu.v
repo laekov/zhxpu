@@ -130,7 +130,7 @@ module alu(
 				end
 			end
 			5'b11011: begin //SW
-				{flag,res} <= {1'b0,op1};
+				{flag,res} <= op1+op2;
 			end
 			5'b11010: begin //SW_SP
 				{flag,res} <= {1'b0,op1};

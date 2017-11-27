@@ -49,7 +49,10 @@ module id_exe(
 
 	output reg [`RegValue] op1,
 	output reg [`RegValue] op2,
-	output reg [`RegValue] mem_write_value
+	output reg [`RegValue] mem_write_value,
+
+	output reg read_value1_output,
+	output reg read_value2_output
     );
 
 
@@ -125,6 +128,9 @@ module id_exe(
 					op2 <= 16'b0;
 				end
 				5'b10011: begin // LW
+					op1 <= read_value1;
+					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
+					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b10010: begin //LW_SP
 				end
@@ -151,6 +157,9 @@ module id_exe(
 					end
 				end
 				5'b11011: begin //SW
+					op1 <= read_value1;
+					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
+					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b11010: begin //SW_SP
 				end
