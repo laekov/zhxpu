@@ -57,7 +57,8 @@ module id_exe(
 
 
 	always @(posedge clk or posedge flush) begin
-		if (flush == 1'b1) begin
+		if (hold) begin
+		end else if (flush == 1'b1) begin
 			op1 <= 16'b0;
 			op2 <= 16'b0;
 			mem_write_out <= 1'b0;
@@ -65,8 +66,7 @@ module id_exe(
 			reg_write_out <= 1'b0;
 			reg_addr_out <= 'b0;
 			opn_out <= 16'b0000100000000000;
-		end
-		else begin
+		end else begin
 			opn_out <= opn;
 			pc_out <= pc;
 			mem_write_out <= mem_write;
