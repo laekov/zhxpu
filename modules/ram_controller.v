@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module ram_controller(
 	inout mem_rd,
+	inout mem_wr,
 	inout [`MemAddr] addr,
 	inout [`MemValue] data,
 
