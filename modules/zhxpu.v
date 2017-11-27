@@ -57,8 +57,8 @@ module zhxpu(
 	wire pclk;
 
 	clock_ctrl __clock_ctrl(
-		//.raw_clk(raw_clk),
-		.manual_clk(manual_clk),
+		.raw_clk(raw_clk),
+		//.manual_clk(manual_clk),
 		.auto_en(manual_clk),
 		.clk(clk),
 		.pclk(pclk)
@@ -326,7 +326,7 @@ module zhxpu(
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
-	assign led_data = { reg_read_addr1, reg_readable1, reg_read_value1[3:0], reg_write_value[3:0], reg_write_addr, hold };
+	assign led_data = { if_pc[3:0], id_pc[3:0], reg_read_value1[3:0], manual_clk, hold, clk, pclk };
 	// assign led_data = { if_pc[3:0], id_pc[3:0], exe_pc[3:0], set_pc, set_pc_addr[2:0] };
 
 endmodule
