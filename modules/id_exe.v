@@ -80,13 +80,20 @@ module id_exe(
 					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b01000: begin // ADDIU3
+					op1 <= read_value1;
+					if (opn[3:3] == 1'b1) op2 <= {12'b111111111111,opn[3:0]};
+					else op2 <= {12'b000000000000,opn[3:0]};
 				end
 				5'b01100: begin
 					if (opn[10:8] == 3'b011) begin // ADDSP
+						op1 <= read_value1;
+						if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
+						else op2 <= {8'b0,opn[7:0]};
 					end
 					else if (opn[10:8] == 3'b000) begin // BTEQZ
 					end
 					else if ((opn[10:8] == 3'b100) && (opn[4:0] == 5'b00000)) begin // MTSP
+						op1 <= read_value1;
 					end
 				end
 				5'b11100: begin 
@@ -95,24 +102,35 @@ module id_exe(
 						op2 <= read_value2;
 					end
 					else begin //SUBU
+						op1 <= read_value1;
+						op2 <= read_value2;
 					end
 				end
 				5'b11101: begin
 					if (opn[4:0] == 5'b01100) begin // AND
+						op1 <= read_value1;
+						op2 <= read_value2;
 					end
 					else if (opn[7:0] == 8'b00000000) begin // JR
 					end	
 					else if (opn[4:0] == 5'b01010) begin //CMP
+						op1 <= read_value1;
+						op2 <= read_value2;
 					end
 					else if (opn[7:0] == 8'b01000000) begin //MFPC
+						op1 <= pc;
 					end
 					else if (opn[4:0] == 5'b01101) begin //OR
+						op1 <= read_value1;
+						op2 <= read_value2;
 					end
 					else if (opn[7:0] == 8'b11000000) begin //JALR
 					end
 					else if (opn[10:0] == 11'b00000100000) begin //JRRA
 					end
 					else if (opn[4:0] == 5'b00111) begin //SRAV
+						op1 <= read_value1;
+						op2 <= read_value2;
 					end
 				end
 				5'b00010: begin // B
@@ -120,8 +138,6 @@ module id_exe(
 				5'b00100: begin //BEQZ
 				end
 				5'b00101: begin //BNEZ
-					op1 <= read_value1;
-					op2 <= { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] };
 				end
 				5'b01101: begin //LI
 					op1 <= {8'b0,opn[7:0]};
@@ -133,11 +149,16 @@ module id_exe(
 					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b10010: begin //LW_SP
+					op1 <= read_value1;
+					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
+					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b11110: begin
 					if (opn[7:0] == 8'b00000000) begin //MFIH
+						op1 <= read_value1;
 					end
 					else if (opn[4:0] == 8'b00000001) begin //MTIH
+						op1 <= read_value1;
 					end
 				end
 				5'b00001: begin
@@ -152,8 +173,12 @@ module id_exe(
 						op2 <= {13'b0,opn[4:2]};
 					end
 					else if (opn[1:0] == 2'b11) begin //SRA
+						op1 <= read_value2;
+						op2 <= {13'b0,opn[4:2]};
 					end
 					else if (opn[1:0] == 2'b10) begin //SRL
+						op1 <= read_value2;
+						op2 <= {13'b0,opn[4:2]};
 					end
 				end
 				5'b11011: begin //SW
@@ -162,6 +187,9 @@ module id_exe(
 					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b11010: begin //SW_SP
+					op1 <= read_value1;
+					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
+					else op2 <= {8'b0,opn[7:0]};
 				end
 				5'b01111: begin
 					if (opn[4:0] == 5'b00000) begin //MOVE

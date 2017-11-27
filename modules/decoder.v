@@ -41,66 +41,151 @@ module decoder(
 		case (opn[15:11])
 			5'b01001: begin // ADDIU
 				//readable1 <= 1'b1;
-				read_addr1 <= opn[10:8];
+				read_addr1 <= {1'b0,opn[10:8]};
 
 				//readable2 <= 1'b0;
 
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;
 				reg_write <= 1'b1;
-				reg_addr <= opn[10:8];
+				reg_addr <= {1'b0,opn[10:8]};
 			end
 			5'b01000: begin // ADDIU3
+				read_addr1 <= {1'b0,opn[10:8]};
+
+				mem_read <= 1'b0;
+				mem_write <= 1'b0;
+				reg_write <= 1'b1;
+				reg_addr <= {1'b0,opn[7:5]};
 			end
 			5'b01100: begin
 				if (opn[10:8] == 3'b011) begin // ADDSP
+					read_addr1 <= `SPReg;
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= `SPReg;
 				end
 				else if (opn[10:8] == 3'b000) begin // BTEQZ
+					read_addr1 <= `TReg;
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b0;
 				end
 				else if ((opn[10:8] == 3'b100) && (opn[4:0] == 5'b00000)) begin // MTSP
+					read_addr1 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= `SPReg;
 				end
 			end
 			5'b11100: begin 
 				if (opn[1:0] == 2'b01) begin// ADDU
 					//readable1 <= 1'b1;
-					read_addr1 <= opn[10:8];
+					read_addr1 <= {1'b0,opn[10:8]};
 
 					//readable2 <= 1'b1;
-					read_addr2 <= opn[7:5];
+					read_addr2 <= {1'b0,opn[7:5]};
 
 					mem_read <= 1'b0;
 					mem_write <= 1'b0;
 					reg_write <= 1'b1;
-					reg_addr <= opn[4:2];
+					reg_addr <= {1'b0,opn[4:2]};
 				end
 				else begin //SUBU
+					read_addr1 <= {1'b0,opn[10:8]};
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[4:2]};
 				end
 			end
 			5'b11101: begin
 				if (opn[4:0] == 5'b01100) begin // AND
+					read_addr1 <= {1'b0,opn[10:8]};
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 				else if (opn[7:0] == 8'b00000000) begin // JR
+					read_addr1 <= {1'b0,opn[10:8]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b0;
 				end	
 				else if (opn[4:0] == 5'b01010) begin //CMP
+					read_addr1 <= {1'b0,opn[10:8]};
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= `TReg;
 				end
 				else if (opn[7:0] == 8'b01000000) begin //MFPC
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 				else if (opn[4:0] == 5'b01101) begin //OR
+					read_addr1 <= {1'b0,opn[10:8]};
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 				else if (opn[7:0] == 8'b11000000) begin //JALR
+					read_addr1 <= {1'b0,opn[10:8]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b0;
 				end
 				else if (opn[10:0] == 11'b00000100000) begin //JRRA
+					read_addr1 <= `RAReg;
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b0;
 				end
 				else if (opn[4:0] == 5'b00111) begin //SRAV
+					read_addr1 <= {1'b0,opn[10:8]};
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[7:5]};
 				end
 			end
 			5'b00010: begin // B
+				mem_read <= 1'b0;
+				mem_write <= 1'b0;
+				reg_write <= 1'b0;
 			end
 			5'b00100: begin //BEQZ
+				read_addr1 <= {1'b0,opn[10:8]};
+
+				mem_read <= 1'b0;
+				mem_write <= 1'b0;
+				reg_write <= 1'b0;
 			end
 			5'b00101: begin //BNEZ
 				//readable1 <= 1'b1;
-				read_addr1 <= opn[10:8];
+				read_addr1 <= {1'b0,opn[10:8]};
 
 				//readable2 <= 1'b0;
 
@@ -113,23 +198,41 @@ module decoder(
 				//readable2 <= 1'b0;
 				mem_read <= 1'b0;
 				mem_write <= 1'b0;
-				reg_addr <= opn[10:8];
+				reg_addr <= {1'b0,opn[10:8]};
 				reg_write <= 1'b1;
 			end
 			5'b10011: begin // LW
-				read_addr1 <= opn[10:8];
+				read_addr1 <= {1'b0,opn[10:8]};
 
 				mem_read <= 1'b1;
 				mem_write <= 1'b0;
-				reg_addr <= opn[7:5];
+				reg_addr <= {1'b0,opn[7:5]};
 				reg_write <= 1'b1;
 			end
 			5'b10010: begin //LW_SP
+				read_addr1 <= `SPReg;
+
+				mem_read <= 1'b1;
+				mem_write <= 1'b0;
+				reg_write <= 1'b1;
+				reg_addr <= {1'b0,opn[10:8]};
 			end
 			5'b11110: begin
 				if (opn[7:0] == 8'b00000000) begin //MFIH
+					read_addr1 <= `IHReg;
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b1,opn[10:8]};
 				end
 				else if (opn[4:0] == 8'b00000001) begin //MTIH
+					read_addr1 <= {1'b0,opn[10:8]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= `IHReg;
 				end
 			end
 			5'b00001: begin
@@ -148,39 +251,56 @@ module decoder(
 					//readable1 <= 1'b0;
 
 					//readable2 <= 1'b1;
-					read_addr2 <= opn[7:5];
+					read_addr2 <= {1'b0,opn[7:5]};
 
 					mem_read <= 1'b0;
 					mem_write <= 1'b0;
 					reg_write <= 1'b1;
-					reg_addr <= opn[10:8];
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 				else if (opn[1:0] == 2'b11) begin //SRA
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 				else if (opn[1:0] == 2'b10) begin //SRL
+					read_addr2 <= {1'b0,opn[7:5]};
+
+					mem_read <= 1'b0;
+					mem_write <= 1'b0;
+					reg_write <= 1'b1;
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 			end
 			5'b11011: begin //SW
-				read_addr1 <= opn[10:8];
-				read_addr2 <= opn[7:5];
+				read_addr1 <= {1'b0,opn[10:8]};
+				read_addr2 <= {1'b0,opn[7:5]};
 
 				mem_read <= 1'b0;
 				mem_write <= 1'b1;
 				reg_write <= 1'b0;
 			end
 			5'b11010: begin //SW_SP
+				read_addr1 <= {1'b0,opn[10:8]};
+
+				mem_read <= 1'b0;
+				mem_write <= 1'b1;
+				reg_write <= 1'b0;
 			end
 			5'b01111: begin
 				if (opn[4:0] == 5'b00000) begin //MOVE
 					//readable1 <= 1'b0;
 
 					//readable2 <= 1'b1;
-					read_addr2 <= opn[7:5];
+					read_addr2 <= {1'b0,opn[7:5]};
 
 					mem_read <= 1'b0;
 					mem_write <= 1'b0;
 					reg_write <= 1'b1;
-					reg_addr <= opn[10:8];
+					reg_addr <= {1'b0,opn[10:8]};
 				end
 			end
 		endcase
