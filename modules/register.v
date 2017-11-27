@@ -81,7 +81,6 @@ module register(
 				4'b1010: begin reg10 <= write_value; end
 				4'b1011: begin reg11 <= write_value; end
 				4'b1100: begin reg12 <= write_value; end
-				4'b1101: begin reg13 <= write_value; end
 				4'b1110: begin reg14 <= write_value; end
 				4'b1111: begin reg15 <= write_value; end
 			endcase
