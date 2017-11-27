@@ -266,6 +266,7 @@ module zhxpu(
 
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
+		.mem_wr(exe_memwr_ctrl),
 		.addr(alu_res),
 		.data(exe_read_value2),
 		.ram_work_done(uart_work_done),
