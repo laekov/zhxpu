@@ -310,6 +310,7 @@ module zhxpu(
 		.pc_input(exe_pc),
 		.clk(clk),
 		.pclk(pclk),
+		.hold(hold),
 		//.unlock_reg(stall_writed),
 		//.unlock_reg_addr(stall_writed_addr),
 		.write_reg_ctrl(reg_writable),

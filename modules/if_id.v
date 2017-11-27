@@ -9,7 +9,8 @@ module if_id(
 	output reg [15:0] pc_out,
 	output reg [15:0] inst_out
 );
-	always @(posedge clk or posedge flush) begin
+
+	always @(posedge clk) begin
 		if (hold) begin
 		end else begin
 			inst_out <= inst_in;

@@ -51,21 +51,15 @@ module id_exe(
 	output reg [`RegValue] op2,
 	output reg [`RegValue] mem_write_value,
 
-	output reg read_value1_output,
-	output reg read_value2_output
+	output wire read_value1_output,
+	output wire read_value2_output
     );
 
+	assign read_value1_output = read_value1;
+	assign read_value2_output = read_value2;
 
-	always @(posedge clk or posedge flush) begin
+	always @(posedge clk) begin
 		if (hold) begin
-		end else if (flush == 1'b1) begin
-			op1 <= 16'b0;
-			op2 <= 16'b0;
-			mem_write_out <= 1'b0;
-			mem_read_out <= 1'b0;
-			reg_write_out <= 1'b0;
-			reg_addr_out <= 'b0;
-			opn_out <= 16'b0000100000000000;
 		end else begin
 			opn_out <= opn;
 			pc_out <= pc;
