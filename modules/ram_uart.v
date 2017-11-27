@@ -56,9 +56,9 @@ module ram_uart(
 
     );
 
-	reg Ram1Working;
-	reg Ram2Working;
-	reg UartWorking;
+//	reg Ram1Working;
+//	reg Ram2Working;
+//	reg UartWorking;
 
 	reg Ram1Writing;
 	reg Ram2Writing;
@@ -113,22 +113,11 @@ module ram_uart(
 
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
-			Ram1Working <= 1'b0;
-			Ram2Working <= 1'b0;
-			UartWorking <= 1'b0;
 			status <= IDLE;
 		end
 		else begin
 			if (need_to_work == 1'b1) begin
-				if (work_done == 1'b1) begin
-					Ram1Working <= 1'b0;
-					Ram2Working <= 1'b0;
-					UartWorking <= 1'b0;
-					status <= IDLE;
-				end
-				else begin
-					status <= next_status;
-				end
+				status <= next_status;
 			end
 			else begin
 				status <= next_status;
@@ -143,20 +132,22 @@ module ram_uart(
 			end
 
 			UART_READ1: begin
-				if (UartWorking == 1'b1) begin
-					if (mem_wr == 1'b1) next_status <= UART_WRITE1;
-					else begin
-						if (data_ready == 1'b1) next_status <= UART_READ2;
-						else next_status <= UART_READ1;
+				if (need_to_work == 1'b1) begin
+					if (mem_addr == `UartAddr) begin
+						if (mem_wr == 1'b1) next_status <= UART_WRITE1;
+						else begin
+							if (data_ready == 1'b1) next_status <= UART_READ2;
+							else next_status <= UART_READ1;
+						end
 					end
-				end
-				else if (Ram1Working == 1'b1) begin
-					if (mem_wr == 1'b1) next_status <= RAM1_WRITE1;
-					else next_status <= RAM1_READ1;
-				end
-				else if (Ram2Working == 1'b1) begin
-					if (mem_wr == 1'b1) next_status <= RAM2_WRITE1;
-					else next_status <= RAM2_READ1;
+					else if (mem_addr[15:15] == 1'b1) begin
+						if (mem_wr == 1'b1) next_status <= RAM1_WRITE1;
+						else next_status <= RAM1_READ1;
+					end
+					else begin
+						if (mem_wr == 1'b1) next_status <= RAM2_WRITE1;
+						else next_status <= RAM2_READ1;
+					end
 				end
 				else begin
 					if (data_ready == 1'b1) next_status <= UART_READ2;
@@ -216,8 +207,7 @@ module ram_uart(
 	end
 
 	always @(posedge need_to_work) begin
-		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
-			work_done <= 1'b0;
+	/*	if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
 			if (mem_addr == `UartAddr) begin
 				UartWorking <= 1'b1;
 				Ram1Working <= 1'b0;
@@ -236,11 +226,10 @@ module ram_uart(
 			end
 		end
 		else begin
-			work_done <= 1'b1;
 			Ram1Working <= 1'b0;
 			Ram2Working <= 1'b0;
 			UartWorking <= 1'b0;
-		end
+		end*/
 	end
 
 	always @(*) begin
@@ -269,7 +258,7 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 
-				UartWorking <= 1'b0;
+//				UartWorking <= 1'b0;
 			end
 			UART_READ2: begin
 				Ram1EN <= 1'b1;
@@ -310,7 +299,7 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 
-				UartWorking <= 1'b0;
+//				UartWorking <= 1'b0;
 			end
 			UART_READ5: begin
 				Ram1EN <= 1'b1;
@@ -338,6 +327,7 @@ module ram_uart(
 
 				result <= {temp_data1,UartData};
 				work_done <= 1'b1;
+//				UartWorking <= 1'b0;
 			end
 
 			UART_WRITE1: begin
@@ -470,6 +460,7 @@ module ram_uart(
 				wrn <= 1'b1;
 
 				work_done <= 1'b1;
+//				UartWorking <= 1'b0;
 			end
 
 			RAM1_READ1: begin
@@ -514,6 +505,7 @@ module ram_uart(
 				
 				result <= Ram1Data;
 				work_done <= 1'b1;
+//				Ram1Working <= 1'b0;
 			end
 
 			RAM1_WRITE1: begin
@@ -557,6 +549,7 @@ module ram_uart(
 				wrn <= 1'b1;
 				
 				work_done <= 1'b1;
+//				Ram1Working <= 1'b0;
 			end
 
 			RAM2_READ1: begin
@@ -601,6 +594,7 @@ module ram_uart(
 				
 				result <= Ram2Data;
 				work_done <= 1'b1;
+//				Ram2Working <= 1'b0;
 			end
 
 			RAM2_WRITE1: begin
@@ -644,6 +638,7 @@ module ram_uart(
 				wrn <= 1'b1;
 				
 				work_done <= 1'b1;
+//				Ram2Working <= 1'b0;
 			end
 		endcase
 	end
