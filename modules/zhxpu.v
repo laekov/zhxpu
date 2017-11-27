@@ -87,24 +87,10 @@ module zhxpu(
 
 // Stall ctrl module
 	wire hold;
-	wire stall_writable;
-	wire [`RegAddr] stall_write_addr;
-	wire stall_readable1;
-	wire [`RegAddr] stall_readable1_addr;
-	wire stall_readable2;
-	wire [`RegAddr] stall_readable2_addr;
-	wire stall_writed;
-	wire [`RegAddr] stall_writed_addr;
+	wire uart_need_to_work;
 
 	stall_ctrl __stall_ctrl(
-		.writable(stall_writable),
-		.write_addr(stall_write_addr),
-		.readable1(stall_readable1),
-		.read_addr1(stall_readable1_addr),
-		.readable2(stall_readable2),
-		.read_addr2(stall_readable2_addr),
-		.writed(stall_writed),
-		.writed_addr(stall_writed_addr),
+		.mem_op(uart_need_to_work),
 		.hold(hold)
 	);
 
@@ -231,7 +217,6 @@ module zhxpu(
 	assign alu_write_addr = exe_reg_addr;
 	assign alu_write_data = wb_res;
 
-	wire uart_need_to_work;
 	wire uart_work_done;
 	wire mem_work_done;
 	wire [`MemValue] uart_work_res;
@@ -266,6 +251,7 @@ module zhxpu(
 
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
+		.mem_wr(exe_memwr_ctrl),
 		.addr(alu_res),
 		.data(exe_read_value2),
 		.ram_work_done(uart_work_done),

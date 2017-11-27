@@ -21,20 +21,10 @@
 `include "define.v"
 
 module stall_ctrl(
-	    input wire writable,
-	    input wire[`RegAddr] write_addr,
+	input mem_op,
+	output wire hold
+);
 
-	    input wire readable1,
-	    input wire[`RegAddr] read_addr1,
-	
-    	input wire readable2,
-	    input wire[`RegAddr] read_addr2,
-        
-        input wire writed,
-        input wire[`RegAddr] writed_addr,
-        
-        output wire hold
-        );
+	assign hold = mem_op;
 
-		assign hold = 1'b0;
 endmodule
