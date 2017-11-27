@@ -33,28 +33,33 @@ module zhxpu(
 	//output wire flash_we,
 	//output wire flash_rp,
 	// output wire [3:0] fpga_key,
-	//inout [15:0] ram1_data,
-	//inout [15:0] ram2_data,
-	//output wire ram1_en,
-	//output wire ram1_oe,
-	//output wire ram1_rw,
-	//output wire ram2_en,
-	//output wire ram2_oe,
-	//output wire ram2_rw,
-	//output wire [17:0] ram1_addr,
-	//output wire [17:0] ram2_addr,
-	//input [15:0] sw,
+	inout [15:0] ram1_data,
+	inout [15:0] ram2_data,
+	output wire ram1_en,
+	output wire ram1_oe,
+	output wire ram1_rw,
+	output wire ram2_en,
+	output wire ram2_oe,
+	output wire ram2_rw,
+	output wire [17:0] ram1_addr,
+	output wire [17:0] ram2_addr,
+	input [15:0] sw,
 	input rst,
-	input manual_clk
+	input manual_clk,
+	input data_ready,
+	output rdn,
+	input tbre,
+	input tsre,
+	output wrn
 );
 // Clock module
 	wire clk;
 	wire pclk;
 
 	clock_ctrl __clock_ctrl(
-		.raw_clk(raw_clk),
+		//.raw_clk(raw_clk),
 		.manual_clk(manual_clk),
-		.auto_en(rst),
+		.auto_en(raw_clk),
 		.clk(clk),
 		.pclk(pclk)
 	);
@@ -196,6 +201,8 @@ module zhxpu(
 	wire [15:0] alu_op1;
 	wire [15:0] alu_op2;
 	wire [15:0] alu_res;
+	wire [15:0] exe_read_value1;
+	wire [15:0] exe_read_value2;
 	wire alu_flag;
 
 	alu __alu(
@@ -208,7 +215,7 @@ module zhxpu(
 
 	wire exe_memwr_ctrl;
 	wire exe_memrd_ctrl;
-	wire [17:0] exe_mem_addr;
+	wire [`RegValue] exe_mem_data;
 
 	wire [15:0] wb_res;
 	wire wb_flag;
@@ -223,6 +230,50 @@ module zhxpu(
 	assign alu_writable = exe_reg_write;
 	assign alu_write_addr = exe_reg_addr;
 	assign alu_write_data = wb_res;
+
+	wire uart_need_to_work;
+	wire uart_work_done;
+	wire mem_work_done;
+	wire [`MemValue] uart_work_res;
+	wire [`MemValue] mem_work_res;
+
+	ram_uart __ram_uart(
+		.clk(raw_clk),
+		.rst(rst),
+		.need_to_work(uart_need_to_work),
+		.mem_rd(exe_memrd_ctrl),
+		.mem_wr(exe_memwr_ctrl),
+		.mem_addr(alu_res),
+		.mem_value(exe_read_value2),
+		.Ram1Addr(ram1_addr),
+		.Ram1Data(ram1_data),
+		.Ram1OE(ram1_oe),
+		.Ram1WE(ram1_WE),
+		.Ram1EN(ram1_en),
+		.Ram2Addr(ram2_addr),
+		.Ram2Data(ram2_data),
+		.Ram2OE(ram2_oe),
+		.Ram2WE(ram2_WE),
+		.Ram2EN(ram2_en),
+		.data_ready(data_ready),
+		.rdn(rdn),
+		.tbre(tbre),
+		.tsre(tsre),
+		.wrn(wrn),
+		.work_done(uart_work_done),
+		.result(uart_work_res)
+	);
+
+	ram_controller __ram_controller(
+		.mem_rd(exe_memrd_ctrl),
+		.addr(alu_res),
+		.data(exe_read_value2),
+		.ram_work_done(uart_work_done),
+		.ram_feedback(uart_work_res),
+		.ram_need_to_work(uart_need_to_work),
+		.work_done(mem_work_done),
+		.feedback(mem_work_res)
+	);
 
 // WB stage modules
 	wire flush;
