@@ -13,9 +13,6 @@ module exe_wb(
 	input clk,
 	input pclk,
 	input hold,
-	output reg wrsp,
-	output reg wrih,
-	output reg wrra,
 	output reg unlock_reg,
 	output reg [`RegAddr] unlock_reg_addr,
 	output reg [`RegValue] sp_reg_data,
@@ -24,20 +21,14 @@ module exe_wb(
 	output reg [`RegValue] write_reg_data
 );
 
-	always @(posedge clk) begin
+	always @(posedge clk or posedge pclk) begin
 		if (pclk) begin
-			wrsp <= 1'b0;
-			wrih <= 1'b0;
-			wrra <= 1'b0;
-			//unlock_reg <= 1'b0;
 			write_reg_ctrl <= 1'b0;
 			write_reg_addr <= `ZeroReg;
 		end else if (hold) begin
 		end else begin
 			case (opn[15:11])
 				5'b01101: begin // LI
-					//unlock_reg <= 1'b1;
-					//unlock_reg_addr <= reg_addr;
 					write_reg_ctrl <= 1'b1;
 					write_reg_addr <= reg_addr;
 					write_reg_data <= alu_res;
