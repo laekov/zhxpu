@@ -87,10 +87,12 @@ module zhxpu(
 
 // Stall ctrl module
 	wire hold;
-	wire uart_need_to_work;
+	wire uart_work_done;
+	wire mem_op;
 
 	stall_ctrl __stall_ctrl(
-		.mem_op(uart_need_to_work),
+		.mem_op(mem_op),
+		.mem_done(uart_work_done),
 		.hold(hold)
 	);
 
@@ -215,10 +217,10 @@ module zhxpu(
 
 	assign alu_writable = exe_reg_write;
 	assign alu_write_addr = exe_reg_addr;
-	assign alu_write_data = wb_res;
+	assign alu_write_value = wb_res;
 
-	wire uart_work_done;
 	wire mem_work_done;
+	wire uart_need_to_work;
 	wire [`MemValue] uart_work_res;
 	wire [`MemValue] mem_work_res;
 
@@ -228,7 +230,7 @@ module zhxpu(
 		.need_to_work(uart_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
-		.mem_addr(alu_res),
+		.mem_addr({ 2'b0, alu_res }),
 		.mem_value(exe_read_value2),
 		.Ram1Addr(ram1_addr),
 		.Ram1Data(ram1_data),
@@ -291,6 +293,8 @@ module zhxpu(
 		.reg_addr_out(exe_reg_addr),
 		.read_value1(reg_read_value1),
 		.read_value2(reg_read_value2),
+		.read_value1_output(exe_read_value1),
+		.read_value2_output(exe_read_value2),
 		.hold(hold),
 		.pc(id_pc),
 		.opn(id_inst),
@@ -299,6 +303,7 @@ module zhxpu(
 		.op1(alu_op1),
 		.op2(alu_op2)
 	); // TODO mem write value not attached
+	assign mem_op = exe_memwr_ctrl || exe_memrd_ctrl;
 
 // EXE/WB
 	exe_wb __exe_wb(
@@ -311,24 +316,24 @@ module zhxpu(
 		.clk(clk),
 		.pclk(pclk),
 		.hold(hold),
-		//.unlock_reg(stall_writed),
-		//.unlock_reg_addr(stall_writed_addr),
 		.write_reg_ctrl(reg_writable),
 		.write_reg_addr(reg_write_addr),
-		.write_reg_data(reg_write_value)
+		.write_reg_data(reg_write_value),
+		.mem_read_value(mem_work_res)
 	);
 
 	// assign dig1_data = reg_debug_out[7:4];
-	assign dig1_data = exe_pc;
-	assign dig2_data = reg_debug_out[3:0];
+	assign dig1_data = exe_pc; 
+	assign dig2_data = alu_op2[3:0];
 	// assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_write_value[3:0], hold, if_pc[3:0] };
-	assign led_data = reg_debug_out;
-	// assign led_data = { if_pc[3:0], id_pc[3:0], exe_pc[3:0], set_pc, set_pc_addr[2:0] };
+	// assign led_data = reg_debug_out;
+	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
+	assign led_data = { exe_read_value2[7:0], mem_work_res[3:0], uart_work_done, mem_work_done, hold, uart_need_to_work };
 
 endmodule
 

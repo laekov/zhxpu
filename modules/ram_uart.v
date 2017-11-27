@@ -29,13 +29,15 @@ module ram_uart(
 	input [`MemAddr] mem_addr,
 	input [`MemValue] mem_value,
 
-	output reg [`MemAddr] Ram1Addr,
+	output wire [`MemAddr] Ram1Addr,
+	// output reg [`MemAddr] Ram1Addr,
 	inout wire [`MemValue] Ram1Data,
 	output reg Ram1OE,
 	output reg Ram1WE,
 	output reg Ram1EN,
 
-	output reg [`MemAddr] Ram2Addr,
+	output wire [`MemAddr] Ram2Addr,
+	// output reg [`MemAddr] Ram2Addr,
 	inout wire [`MemValue] Ram2Data,
 	output reg Ram2OE,
 	output reg Ram2WE,
@@ -69,7 +71,9 @@ module ram_uart(
 	reg [`UartValue] temp_data2;
 	
 	assign Ram1Data = Ram1Writing?mem_value:16'bz;
+	assign Ram1Addr = mem_addr;
 	assign Ram2Data = Ram2Writing?mem_value:16'bz;
+	assign Ram2Addr = mem_addr;
 	assign UartData = UartWriting?temp_data:8'bz;
 
 	localparam IDLE = 8'b00000000;
@@ -477,7 +481,7 @@ module ram_uart(
 				
 				work_done <= 1'b0;
 				Ram1Writing <= 1'b0;
-				Ram1Addr <= mem_addr;
+				// Ram1Addr <= mem_addr;
 			end
 			RAM1_READ2: begin
 				Ram1EN <= 1'b0;
@@ -522,7 +526,7 @@ module ram_uart(
 				
 				work_done <= 1'b0;
 				Ram1Writing <= 1'b1;
-				Ram1Addr <= mem_addr;
+				// Ram1Addr <= mem_addr;
 			end
 			RAM1_WRITE2: begin
 				Ram1EN <= 1'b0;
@@ -566,7 +570,7 @@ module ram_uart(
 				
 				work_done <= 1'b0;
 				Ram2Writing <= 1'b0;
-				Ram2Addr <= mem_addr;
+				// Ram2Addr <= mem_addr;
 			end
 			RAM2_READ2: begin
 				Ram1EN <= 1'b1;
@@ -611,7 +615,7 @@ module ram_uart(
 				
 				work_done <= 1'b0;
 				Ram2Writing <= 1'b1;
-				Ram2Addr <= mem_addr;
+				// Ram2Addr <= mem_addr;
 			end
 			RAM2_WRITE2: begin
 				Ram1EN <= 1'b1;

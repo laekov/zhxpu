@@ -11,22 +11,16 @@ module inst_mem_ctrl(
 				data <= 16'h690a;
 			end
 			4'h2: begin
-				data <= 16'h6b90;
+				data <= 16'h6b80;
 			end
 			4'h3: begin
-				data <= 16'h3360;
-			end
-			4'h4: begin
 				data <= 16'hdb20;
 			end
-			4'h5: begin
+			4'h4: begin
 				data <= 16'h0800;
 			end
-			4'h6: begin
+			4'h5: begin
 				data <= 16'h9b40;
-			end
-			4'h7: begin
-				data <= 16'h17fa;
 			end
 			default: begin
 				data <= 16'h0800;

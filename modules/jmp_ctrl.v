@@ -15,7 +15,7 @@ module jmp_ctrl(
 		case (opn[15:11])
 			5'b00010: begin //B
 				set_pc <= 1'b1;
-				set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] }; 
+				set_pc_value <= pc_in + { ((opn[10:10] == 1'b1) ? 5'b11111 : 5'b00000), opn[10:0] }; 
 				write_RA <= 1'b0;
 			end
 			5'b00101: begin //BNEZ
@@ -39,16 +39,17 @@ module jmp_ctrl(
 					end
 					write_RA <= 1'b0;
 				end
+				else begin
+					set_pc <= 1'b0;
+					set_pc_value <= 16'b0;
+				end
 			end
 			5'b11101: begin
 				if (opn[7:0] == 8'b00000000) begin // JR
 					set_pc <= 1'b1;
 					set_pc_value <= op1;
 					write_RA <= 1'b0;
-				end
-			end
-			5'b11101: begin
-				if (opn[7:0] == 8'b11000000) begin //JALR
+				end else if (opn[7:0] == 8'b11000000) begin //JALR
 					set_pc <= 1'b1;
 					set_pc_value <= op1;
 
@@ -60,6 +61,10 @@ module jmp_ctrl(
 					set_pc_value <= op1;
 
 					write_RA <= 1'b0;
+				end
+				else begin
+					set_pc <= 1'b0;
+					set_pc_value <= 1'b0;
 				end
 			end
 			5'b00100: begin //BEQZ
@@ -76,7 +81,7 @@ module jmp_ctrl(
 			end
 			default: begin
 				set_pc <= 1'b0;
-				set_pc_value <= 16'b0;
+				set_pc_value <= 16'b1;
 				write_RA <= 1'b0;
 			end
 		endcase

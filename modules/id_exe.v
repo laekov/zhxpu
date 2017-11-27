@@ -51,12 +51,10 @@ module id_exe(
 	output reg [`RegValue] op2,
 	output reg [`RegValue] mem_write_value,
 
-	output wire read_value1_output,
-	output wire read_value2_output
+	output reg [`RegValue] read_value1_output,
+	output reg [`RegValue] read_value2_output
     );
 
-	assign read_value1_output = read_value1;
-	assign read_value2_output = read_value2;
 
 	always @(posedge clk) begin
 		if (hold) begin
@@ -67,6 +65,8 @@ module id_exe(
 			mem_read_out <= mem_read;
 			reg_write_out <= reg_write;
 			reg_addr_out <= reg_addr;
+			read_value1_output <= read_value1;
+			read_value2_output <= read_value2;
 			case (opn[15:11])
 				5'b01001: begin // ADDIU
 					op1 <= read_value1;
@@ -139,8 +139,8 @@ module id_exe(
 				end
 				5'b10011: begin // LW
 					op1 <= read_value1;
-					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
-					else op2 <= {8'b0,opn[7:0]};
+					if (opn[4:4] == 1'b1) op2 <= {11'b11111111111,opn[4:0]};
+					else op2 <= {11'b0,opn[4:0]};
 				end
 				5'b10010: begin //LW_SP
 					op1 <= read_value1;
@@ -177,8 +177,8 @@ module id_exe(
 				end
 				5'b11011: begin //SW
 					op1 <= read_value1;
-					if (opn[7:7] == 1'b1) op2 <= {8'b11111111,opn[7:0]};
-					else op2 <= {8'b0,opn[7:0]};
+					if (opn[4:4] == 1'b1) op2 <= {11'b11111111111,opn[4:0]};
+					else op2 <= {11'b0,opn[4:0]};
 				end
 				5'b11010: begin //SW_SP
 					op1 <= read_value1;

@@ -18,7 +18,8 @@ module exe_wb(
 	output reg [`RegValue] sp_reg_data,
 	output reg write_reg_ctrl,
 	output reg [`RegAddr] write_reg_addr,
-	output reg [`RegValue] write_reg_data
+	output reg [`RegValue] write_reg_data,
+	input [`RegValue] mem_read_value
 );
 
 	always @(posedge clk or posedge pclk) begin
@@ -72,7 +73,28 @@ module exe_wb(
 						write_reg_ctrl <= 1'b0;
 					end
 				end
+				5'b10011: begin // LW
+					write_reg_ctrl <= 1'b1;
+					write_reg_addr <= reg_addr;
+					write_reg_data <= mem_read_value;
+				end
+				5'b10010: begin //LW_SP
+					write_reg_ctrl <= 1'b1;
+					write_reg_addr <= reg_addr;
+					write_reg_data <= mem_read_value;
+				end
+				5'b11011: begin //SW
+					write_reg_ctrl <= 1'b0;
+					write_reg_addr <= `ZeroReg;
+					write_reg_data <= 16'b0;
+				end
+				5'b11010: begin //SW_SP
+					write_reg_ctrl <= 1'b0;
+					write_reg_addr <= `ZeroReg;
+					write_reg_data <= 16'b0;
+				end
+
 			endcase
 		end
 	end
-endmodule
+	endmodule
