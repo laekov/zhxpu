@@ -26,18 +26,26 @@ module ram_controller(
 
 	input ram_work_done,
 	input [`MemValue] ram_feedback,
+	input [`RegValue] pc,
 
 	output reg ram_need_to_work,
 	output reg work_done,
 	output reg [`MemValue] feedback
     );
 
+	reg [`RegValue] done_pc;
+
 	always @(*) begin
 		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
 			if (ram_work_done == 1'b1) begin
-				feedback <= ram_feedback;
-				work_done <= 1'b1;
-				ram_need_to_work <= 1'b0;
+				if (pc == done_pc) begin
+					feedback <= ram_feedback;
+					work_done <= 1'b1;
+					ram_need_to_work <= 1'b0;
+				end else begin
+					work_done <= 1'b0;
+					ram_need_to_work <= 1'b1;
+				end
 			end
 			else begin
 				work_done <= 1'b0;
@@ -49,7 +57,9 @@ module ram_controller(
 		end
 	end
 
-
+	always @(posedge ram_work_done) begin
+		done_pc <= pc;
+	end
 
 endmodule
 

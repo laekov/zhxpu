@@ -12,7 +12,7 @@
 `define UartAddr 18'h8500
 `define UartValue 7:0
 
-`define RamFrequency 24:0
+`define RamFrequency 22:0
 
 //Define of registers
 `define	RegAddr	3:0

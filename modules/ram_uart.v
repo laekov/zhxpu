@@ -133,6 +133,21 @@ module ram_uart(
 			cnt <= next_cnt;
 			if (cnt == 0) begin
 				status <= next_status;
+				case (next_status)
+					UART_READ6: work_done <= 1'b1;
+					UART_WRITE10: work_done <= 1'b1;
+					RAM1_WRITE3: work_done <= 1'b1;
+					RAM2_WRITE3: work_done <= 1'b1;
+					RAM1_READ3: work_done <= 1'b1;
+					RAM2_READ3: work_done <= 1'b1;
+
+					UART_WRITE1: work_done <= 1'b0;
+					UART_READ2:  work_done <= 1'b0;
+					RAM1_WRITE1: work_done <= 1'b0;
+					RAM2_WRITE1: work_done <= 1'b0;
+					RAM1_READ1: work_done <= 1'b0;
+					RAM2_READ1: work_done <= 1'b0;
+				endcase
 			end
 		end
 	end
@@ -205,7 +220,7 @@ module ram_uart(
 
 			RAM1_WRITE1 : next_status <= RAM1_WRITE2;
 			RAM1_WRITE2 : next_status <= RAM1_WRITE3;
-			RAM1_WRITE3 : next_status <= RAM1_WRITE4;
+			RAM1_WRITE3 : next_status <= IDLE;
 			RAM1_WRITE4 : next_status <= IDLE;
 
 			RAM2_READ1: next_status <= RAM2_READ2;
@@ -214,7 +229,7 @@ module ram_uart(
 
 			RAM2_WRITE1 : next_status <= RAM2_WRITE2;
 			RAM2_WRITE2 : next_status <= RAM2_WRITE3;
-			RAM2_WRITE3 : next_status <= RAM2_WRITE4;
+			RAM2_WRITE3 : next_status <= IDLE;
 			RAM2_WRITE4 : next_status <= IDLE;
 
 			default: next_status <= IDLE;
@@ -286,7 +301,6 @@ module ram_uart(
 
 				rdn <= 1'b0;
 				wrn <= 1'b1;
-				work_done <= 1'b0;
 			end
 			UART_READ3: begin
 				Ram1EN <= 1'b1;
@@ -341,7 +355,6 @@ module ram_uart(
 				wrn <= 1'b1;
 
 				result <= {temp_data1,UartData};
-				work_done <= 1'b1;
 //				UartWorking <= 1'b0;
 			end
 
@@ -358,7 +371,6 @@ module ram_uart(
 				wrn <= 1'b1;
 
 				temp_data <= mem_value[15:8];
-				work_done <= 1'b0;
 			end
 			UART_WRITE2: begin
 				Ram1EN <= 1'b1;
@@ -474,7 +486,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 
-				work_done <= 1'b1;
 //				UartWorking <= 1'b0;
 			end
 
@@ -490,7 +501,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				
-				work_done <= 1'b0;
 				Ram1Writing <= 1'b0;
 				// Ram1Addr <= mem_addr;
 			end
@@ -519,7 +529,6 @@ module ram_uart(
 				wrn <= 1'b1;
 				
 				result <= Ram1Data;
-				work_done <= 1'b1;
 //				Ram1Working <= 1'b0;
 			end
 
@@ -535,7 +544,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				
-				work_done <= 1'b0;
 				Ram1Writing <= 1'b1;
 				// Ram1Addr <= mem_addr;
 			end
@@ -563,7 +571,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				
-				work_done <= 1'b1;
 //				Ram1Working <= 1'b0;
 			end
 			RAM1_WRITE4: begin
@@ -591,7 +598,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				
-				work_done <= 1'b0;
 				Ram2Writing <= 1'b0;
 				// Ram2Addr <= mem_addr;
 			end
@@ -620,7 +626,6 @@ module ram_uart(
 				wrn <= 1'b1;
 				
 				result <= Ram2Data;
-				work_done <= 1'b1;
 //				Ram2Working <= 1'b0;
 			end
 
@@ -636,7 +641,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				
-				work_done <= 1'b0;
 				Ram2Writing <= 1'b1;
 				// Ram2Addr <= mem_addr;
 			end
@@ -664,7 +668,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				
-				work_done <= 1'b1;
 //				Ram2Working <= 1'b0;
 			end
 			RAM2_WRITE4: begin

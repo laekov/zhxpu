@@ -257,6 +257,7 @@ module zhxpu(
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
+		.pc(exe_pc),
 		.addr(alu_res),
 		.data(exe_read_value2),
 		.ram_work_done(uart_work_done),
@@ -326,8 +327,8 @@ module zhxpu(
 	);
 
 	// assign dig1_data = reg_debug_out[7:4];
-	assign dig1_data = exe_pc; 
-	assign dig2_data = alu_op2[3:0];
+	assign dig1_data = reg_debug_out[11:8]; 
+	assign dig2_data = reg_debug_out[3:0]; 
 	// assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
@@ -336,7 +337,7 @@ module zhxpu(
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_write_value[3:0], hold, if_pc[3:0] };
 	// assign led_data = reg_debug_out;
 	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
-	assign led_data = { ram_status, uart_work_done, uart_need_to_work, mem_work_done, mem_work_done, hold, mem_op, 2'b0 };
+	assign led_data = { exe_pc[7:0], uart_need_to_work, mem_work_done, hold, mem_op, mem_work_res[3:0] };
 
 endmodule
 

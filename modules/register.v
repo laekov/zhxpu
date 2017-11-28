@@ -64,7 +64,7 @@ module register(
 	reg [`RegValue] reg15;
 
 	//assign debug_out = { regs[1][3:0], regs[2][3:0], regs[3][3:0], regs[4][3:0] };
-	assign debug_out = reg3;
+	assign debug_out = { reg4[7:0], reg5[7:0] };
 
 	always @(*) begin	
 		if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin
