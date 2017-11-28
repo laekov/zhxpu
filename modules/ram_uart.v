@@ -53,8 +53,10 @@ module ram_uart(
 	input tsre,
 	output reg wrn,
 
-	output reg work_done,
-	output reg [`MemValue] result
+	output wire uart_work_done,
+	output reg [`MemValue] result,
+
+	output wire [7:0] status_out
 
     );
 
@@ -62,6 +64,8 @@ module ram_uart(
 //	reg Ram2Working;
 //	reg UartWorking;
 
+	reg work_done;
+	assign uart_work_done = work_done;
 	reg Ram1Writing;
 	reg Ram2Writing;
 	reg UartWriting;
@@ -103,6 +107,7 @@ module ram_uart(
 	localparam RAM1_WRITE1 = 8'b01100001;
 	localparam RAM1_WRITE2 = 8'b01100010;
 	localparam RAM1_WRITE3 = 8'b01100011;
+	localparam RAM1_WRITE4 = 8'b01100100;
 
 	localparam RAM2_READ1 = 8'b10010001;
 	localparam RAM2_READ2 = 8'b10010010;
@@ -111,8 +116,10 @@ module ram_uart(
 	localparam RAM2_WRITE1 = 8'b10100001;
 	localparam RAM2_WRITE2 = 8'b10100010;
 	localparam RAM2_WRITE3 = 8'b10100011;
+	localparam RAM2_WRITE4 = 8'b10100100;
 	
 	reg [7:0] status;
+	assign status_out = status;
 	reg [7:0] next_status;
 
 	reg [`RamFrequency] cnt;
@@ -124,7 +131,7 @@ module ram_uart(
 		end
 		else begin
 			cnt <= next_cnt;
-			if (cnt == 5'b0) begin
+			if (cnt == 0) begin
 				status <= next_status;
 			end
 		end
@@ -198,7 +205,8 @@ module ram_uart(
 
 			RAM1_WRITE1 : next_status <= RAM1_WRITE2;
 			RAM1_WRITE2 : next_status <= RAM1_WRITE3;
-			RAM1_WRITE3 : next_status <= IDLE;
+			RAM1_WRITE3 : next_status <= RAM1_WRITE4;
+			RAM1_WRITE4 : next_status <= IDLE;
 
 			RAM2_READ1: next_status <= RAM2_READ2;
 			RAM2_READ2: next_status <= RAM2_READ3;
@@ -206,7 +214,8 @@ module ram_uart(
 
 			RAM2_WRITE1 : next_status <= RAM2_WRITE2;
 			RAM2_WRITE2 : next_status <= RAM2_WRITE3;
-			RAM2_WRITE3 : next_status <= IDLE;
+			RAM2_WRITE3 : next_status <= RAM2_WRITE4;
+			RAM2_WRITE4 : next_status <= IDLE;
 
 			default: next_status <= IDLE;
 		endcase
@@ -557,6 +566,18 @@ module ram_uart(
 				work_done <= 1'b1;
 //				Ram1Working <= 1'b0;
 			end
+			RAM1_WRITE4: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				Ram2EN <= 1'b1;
+				Ram2OE <= 1'b1;
+				Ram2WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
 
 			RAM2_READ1: begin
 				Ram1EN <= 1'b1;
@@ -646,6 +667,20 @@ module ram_uart(
 				work_done <= 1'b1;
 //				Ram2Working <= 1'b0;
 			end
+			RAM2_WRITE4: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				Ram2EN <= 1'b1;
+				Ram2OE <= 1'b1;
+				Ram2WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+
+
 		endcase
 	end
 

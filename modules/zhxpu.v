@@ -88,11 +88,12 @@ module zhxpu(
 // Stall ctrl module
 	wire hold;
 	wire uart_work_done;
+	wire mem_work_done;
 	wire mem_op;
 
 	stall_ctrl __stall_ctrl(
 		.mem_op(mem_op),
-		.mem_done(uart_work_done),
+		.mem_done(mem_work_done),
 		.hold(hold)
 	);
 
@@ -219,10 +220,11 @@ module zhxpu(
 	assign alu_write_addr = exe_reg_addr;
 	assign alu_write_value = wb_res;
 
-	wire mem_work_done;
 	wire uart_need_to_work;
 	wire [`MemValue] uart_work_res;
 	wire [`MemValue] mem_work_res;
+
+	wire [7:0] ram_status;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
@@ -247,7 +249,8 @@ module zhxpu(
 		.tbre(tbre),
 		.tsre(tsre),
 		.wrn(wrn),
-		.work_done(uart_work_done),
+		.uart_work_done(uart_work_done),
+		.status_out(ram_status),
 		.result(uart_work_res)
 	);
 
@@ -333,7 +336,7 @@ module zhxpu(
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_write_value[3:0], hold, if_pc[3:0] };
 	// assign led_data = reg_debug_out;
 	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
-	assign led_data = { exe_read_value2[7:0], mem_work_res[3:0], uart_work_done, mem_work_done, hold, uart_need_to_work };
+	assign led_data = { ram_status, uart_work_done, uart_need_to_work, mem_work_done, mem_work_done, hold, mem_op, 2'b0 };
 
 endmodule
 
