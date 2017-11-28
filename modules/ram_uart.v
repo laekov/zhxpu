@@ -115,21 +115,23 @@ module ram_uart(
 	reg [7:0] status;
 	reg [7:0] next_status;
 
+	reg [`RamFrequency] cnt;
+	reg [`RamFrequency] next_cnt;
+
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
 		end
 		else begin
-			if (need_to_work == 1'b1) begin
-				status <= next_status;
-			end
-			else begin
+			cnt <= next_cnt;
+			if (cnt == 5'b0) begin
 				status <= next_status;
 			end
 		end
 	end
 
 	always @(*) begin
+		next_cnt <= cnt + 1;
 		case (status)
 			IDLE: begin
 				next_status <= UART_READ1;
