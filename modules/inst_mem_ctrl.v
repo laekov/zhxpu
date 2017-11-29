@@ -9,7 +9,7 @@ module inst_mem_ctrl(
 		case (addr[3:0])
 			4'h1: data <= 16'h690a;
 			4'h2: data <= 16'h6a0c;
-			4'h3: data <= 16'h6b90;
+			4'h3: data <= 16'h6b91;
 			4'h4: data <= 16'h3360;
 			4'h5: data <= 16'hdb20;
 			4'h6: data <= 16'hdb44;

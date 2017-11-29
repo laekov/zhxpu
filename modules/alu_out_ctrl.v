@@ -8,7 +8,7 @@ module alu_out_ctrl(
 	input memwr_ctrl,
 	input memrd_ctrl,
 	input [17:0] mem_addr,
-	output reg mem_read,
+	input [15:0] mem_res,
 	output reg [17:0] mem_addrl,
 	output reg [17:0] mem_datal,
 	output reg [15:0] res_out,
@@ -16,11 +16,12 @@ module alu_out_ctrl(
 );
 	always @(*) begin
 		if (memwr_ctrl) begin
-			mem_read <= 1'b0;
+			res_out <= res;
 		end else if (memrd_ctrl) begin
-			mem_read <= 1'b1;
+			res_out <= mem_res;
+		end else begin
+			res_out <= res;
 		end
-		res_out <= res;
 		flag_out <= flag;
 	end
 endmodule

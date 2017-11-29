@@ -114,7 +114,7 @@ module zhxpu(
 	wire [`RegValue] reg_debug_out;
 
 	register __register(
-		.clk(clk),
+		.clk(raw_clk),
 		.writable(reg_writable),
 		.write_addr(reg_write_addr),
 		.write_value(reg_write_value),
@@ -208,12 +208,16 @@ module zhxpu(
 
 	wire [15:0] wb_res;
 	wire wb_flag;
+	wire [`MemValue] mem_work_res;
 	
 	alu_out_ctrl __alu_out_ctrl(
 		.res(alu_res),
 		.flag(alu_flag),
+		.memwr_ctrl(exe_memwr_ctrl),
+		.memrd_ctrl(exe_memrd_ctrl),
 		.res_out(wb_res),
-		.flag_out(wb_flag)
+		.flag_out(wb_flag),
+		.mem_res(mem_work_res)
 	);
 
 	assign alu_writable = exe_reg_write;
@@ -222,7 +226,6 @@ module zhxpu(
 
 	wire uart_need_to_work;
 	wire [`MemValue] uart_work_res;
-	wire [`MemValue] mem_work_res;
 
 	wire [7:0] ram_status;
 
@@ -306,7 +309,7 @@ module zhxpu(
 		.opn_out(exe_inst),
 		.op1(alu_op1),
 		.op2(alu_op2)
-	); // TODO mem write value not attached
+	); 
 	assign mem_op = exe_memwr_ctrl || exe_memrd_ctrl;
 
 // EXE/WB
@@ -327,7 +330,7 @@ module zhxpu(
 	);
 
 	// assign dig1_data = reg_debug_out[7:4];
-	assign dig1_data = reg_debug_out[11:8]; 
+	assign dig1_data = reg_debug_out[7:4]; 
 	assign dig2_data = reg_debug_out[3:0]; 
 	// assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
@@ -335,9 +338,9 @@ module zhxpu(
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_write_value[3:0], hold, if_pc[3:0] };
-	// assign led_data = reg_debug_out;
+	assign led_data = { 16'b0 };
 	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
-	assign led_data = { exe_pc[7:0], uart_need_to_work, mem_work_done, hold, mem_op, mem_work_res[3:0] };
+	// assign led_data = { id_inst[15:11], reg_read_addr2[2:0], reg_read_value2[3:0], reg_write_value[3:0] };
 
 endmodule
 

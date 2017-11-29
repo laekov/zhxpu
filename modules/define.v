@@ -9,10 +9,10 @@
 `define MemValue 15:0
 `define MemAddr 17:0
 `define MemAddrB 18:0
-`define UartAddr 18'h8500
+`define UartAddr 18'hbf00
 `define UartValue 7:0
 
-`define RamFrequency 22:0
+`define RamFrequency 0:0
 
 //Define of registers
 `define	RegAddr	3:0

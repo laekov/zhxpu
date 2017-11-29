@@ -149,11 +149,432 @@ module ram_uart(
 					RAM2_READ1: work_done <= 1'b0;
 
 					UART_READ3: temp_data1 <= UartData;
-					UART_READ6: result <= {temp_data1,UartData};
-					RAM1_READ3: result <= Ram1Data;
-					RAM2_READ3: result <= Ram2Data;
+				//	UART_READ6: result <= {temp_data1,UartData};
+				//	RAM1_READ3: result <= Ram1Data;
+				//	RAM2_READ3: result <= Ram2Data;
 				endcase
 			end
+			case (status)
+				IDLE: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				UART_READ1: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+	//				UartWorking <= 1'b0;
+				end
+				UART_READ2: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b0;
+					wrn <= 1'b1;
+				end
+				UART_READ3: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+				end
+				UART_READ4: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+	//				UartWorking <= 1'b0;
+				end
+				UART_READ5: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b0;
+					wrn <= 1'b1;
+				end
+				UART_READ6: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+					result <= {temp_data1,UartData};
+	//				UartWorking <= 1'b0;
+				end
+	
+				UART_WRITE1: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+					temp_data <= mem_value[15:8];
+				end
+				UART_WRITE2: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b0;
+	
+					UartWriting <= 1'b1;
+				end
+				UART_WRITE3: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				UART_WRITE4: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				UART_WRITE5: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				UART_WRITE6: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+					temp_data <= mem_value[7:0];
+				end
+				UART_WRITE7: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b0;
+	
+					UartWriting <= 1'b1;
+				end
+				UART_WRITE8: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				UART_WRITE9: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				UART_WRITE10: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+	
+	//				UartWorking <= 1'b0;
+				end
+	
+				RAM1_READ1: begin
+					Ram1EN <= 1'b0;
+					Ram1OE <= 1'b0;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+					Ram1Writing <= 1'b0;
+					// Ram1Addr <= mem_addr;
+				end
+				RAM1_READ2: begin
+					Ram1EN <= 1'b0;
+					Ram1OE <= 1'b0;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				RAM1_READ3: begin
+					Ram1EN <= 1'b0;
+					Ram1OE <= 1'b0;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+					result <= Ram1Data;
+	//				Ram1Working <= 1'b0;
+				end
+	
+				RAM1_WRITE1: begin
+					Ram1EN <= 1'b0;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+					Ram1Writing <= 1'b1;
+					// Ram1Addr <= mem_addr;
+				end
+				RAM1_WRITE2: begin
+					Ram1EN <= 1'b0;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b0;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				RAM1_WRITE3: begin
+					Ram1EN <= 1'b0;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+	//				Ram1Working <= 1'b0;
+				end
+				RAM1_WRITE4: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+	
+				RAM2_READ1: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b0;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+					Ram2Writing <= 1'b0;
+					// Ram2Addr <= mem_addr;
+				end
+				RAM2_READ2: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b0;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				RAM2_READ3: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b0;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+					result <= Ram2Data;
+//				Ram2Working <= 1'b0;
+				end
+	
+				RAM2_WRITE1: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+					Ram2Writing <= 1'b1;
+					// Ram2Addr <= mem_addr;
+				end
+				RAM2_WRITE2: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b0;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				RAM2_WRITE3: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+					
+	//				Ram2Working <= 1'b0;
+				end
+				RAM2_WRITE4: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					Ram2EN <= 1'b1;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+	
+			endcase
+	
 		end
 	end
 
@@ -219,7 +640,7 @@ module ram_uart(
 			end
 			UART_WRITE10: next_status <= IDLE;
 
-			RAM1_READ1: next_status <= RAM1_READ2;
+			RAM1_READ1: next_status <= RAM1_READ3;
 			RAM1_READ2: next_status <= RAM1_READ3;
 			RAM1_READ3: next_status <= IDLE;
 
@@ -228,7 +649,7 @@ module ram_uart(
 			RAM1_WRITE3 : next_status <= IDLE;
 			RAM1_WRITE4 : next_status <= IDLE;
 
-			RAM2_READ1: next_status <= RAM2_READ2;
+			RAM2_READ1: next_status <= RAM2_READ3;
 			RAM2_READ2: next_status <= RAM2_READ3;
 			RAM2_READ3: next_status <= IDLE;
 
@@ -266,431 +687,6 @@ module ram_uart(
 			UartWorking <= 1'b0;
 		end*/
 	end
-
-	always @(*) begin
-		case (status)
-			IDLE: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			UART_READ1: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-//				UartWorking <= 1'b0;
-			end
-			UART_READ2: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b0;
-				wrn <= 1'b1;
-			end
-			UART_READ3: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-			end
-			UART_READ4: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-//				UartWorking <= 1'b0;
-			end
-			UART_READ5: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b0;
-				wrn <= 1'b1;
-			end
-			UART_READ6: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-				//result <= {temp_data1,UartData};
-//				UartWorking <= 1'b0;
-			end
-
-			UART_WRITE1: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-				temp_data <= mem_value[15:8];
-			end
-			UART_WRITE2: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b0;
-
-				UartWriting <= 1'b1;
-			end
-			UART_WRITE3: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			UART_WRITE4: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			UART_WRITE5: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			UART_WRITE6: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-				temp_data <= mem_value[7:0];
-			end
-			UART_WRITE7: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b0;
-
-				UartWriting <= 1'b1;
-			end
-			UART_WRITE8: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			UART_WRITE9: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			UART_WRITE10: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-
-//				UartWorking <= 1'b0;
-			end
-
-			RAM1_READ1: begin
-				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-				Ram1Writing <= 1'b0;
-				// Ram1Addr <= mem_addr;
-			end
-			RAM1_READ2: begin
-				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b0;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			RAM1_READ3: begin
-				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-				//result <= Ram1Data;
-//				Ram1Working <= 1'b0;
-			end
-
-			RAM1_WRITE1: begin
-				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-				Ram1Writing <= 1'b1;
-				// Ram1Addr <= mem_addr;
-			end
-			RAM1_WRITE2: begin
-				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b0;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			RAM1_WRITE3: begin
-				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-//				Ram1Working <= 1'b0;
-			end
-			RAM1_WRITE4: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-
-			RAM2_READ1: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-				Ram2Writing <= 1'b0;
-				// Ram2Addr <= mem_addr;
-			end
-			RAM2_READ2: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b0;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			RAM2_READ3: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-				//result <= Ram2Data;
-//				Ram2Working <= 1'b0;
-			end
-
-			RAM2_WRITE1: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-				Ram2Writing <= 1'b1;
-				// Ram2Addr <= mem_addr;
-			end
-			RAM2_WRITE2: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b0;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-			RAM2_WRITE3: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-				
-//				Ram2Working <= 1'b0;
-			end
-			RAM2_WRITE4: begin
-				Ram1EN <= 1'b1;
-				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
-
-				Ram2EN <= 1'b1;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-
-				rdn <= 1'b1;
-				wrn <= 1'b1;
-			end
-
-
-		endcase
-	end
-
 
 
 endmodule
