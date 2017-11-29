@@ -87,7 +87,8 @@ module zhxpu(
 
 // Stall ctrl module
 	wire hold;
-	wire uart_work_done;
+	wire ram1_work_done;
+	wire ram2_work_done;
 	wire mem_work_done;
 	wire mem_op;
 
@@ -224,15 +225,17 @@ module zhxpu(
 	assign alu_write_addr = exe_reg_addr;
 	assign alu_write_value = wb_res;
 
-	wire uart_need_to_work;
-	wire [`MemValue] uart_work_res;
+	wire ram1_need_to_work;
+	wire ram2_need_to_work;
+	wire [`MemValue] ram1_work_res;
+	wire [`MemValue] ram2_work_res;
 
 	wire [7:0] ram_status;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.rst(rst),
-		.need_to_work(uart_need_to_work),
+		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
 		.mem_addr({ 2'b0, alu_res }),
@@ -242,19 +245,35 @@ module zhxpu(
 		.Ram1OE(ram1_oe),
 		.Ram1WE(ram1_rw),
 		.Ram1EN(ram1_en),
-		.Ram2Addr(ram2_addr),
-		.Ram2Data(ram2_data),
-		.Ram2OE(ram2_oe),
-		.Ram2WE(ram2_rw),
-		.Ram2EN(ram2_en),
 		.data_ready(data_ready),
 		.rdn(rdn),
 		.tbre(tbre),
 		.tsre(tsre),
 		.wrn(wrn),
-		.uart_work_done(uart_work_done),
+		.uart_work_done(ram1_work_done),
 		.status_out(ram_status),
-		.result(uart_work_res)
+		.result(ram1_work_res)
+	);
+
+	ram2 __ram2(
+		.clk(raw_clk),
+		.rst(rst),
+		.need_to_work_if(),
+		.need_to_work_exe(ram2_need_to_work),
+		.mem_rd(exe_memrd_ctrl),
+		.mem_wr(exe_memwr_ctrl),
+		.mem_addr_if(),
+		.mem_addr_exe({2'b0,alu_res}),
+		.mem_value_exe(exe_read_value2),
+		.Ram2Addr(ram2_addr),
+		.Ram2Data(ram2_data),
+		.Ram2OE(ram2_oe),
+		.Ram2WE(ram2_rw),
+		.Ram2EN(ram2_en),
+		.if_work_done(),
+		.exe_work_done(ram2_work_done),
+		.if_result(),
+		.exe_result(ram2_work_res)
 	);
 
 	ram_controller __ram_controller(
@@ -263,9 +282,12 @@ module zhxpu(
 		.pc(exe_pc),
 		.addr(alu_res),
 		.data(exe_read_value2),
-		.ram_work_done(uart_work_done),
-		.ram_feedback(uart_work_res),
-		.ram_need_to_work(uart_need_to_work),
+		.ram1_work_done(ram1_work_done),
+		.ram1_feedback(ram1_work_res),
+		.ram1_need_to_work(ram1_need_to_work),
+		.ram2_work_done(ram2_work_done),
+		.ram2_feedback(ram2_work_res),
+		.ram2_need_to_work(ram2_need_to_work),
 		.work_done(mem_work_done),
 		.feedback(mem_work_res)
 	);
