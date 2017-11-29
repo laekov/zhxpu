@@ -15,6 +15,7 @@ module flash(
 	output reg flash_oe,
 	output reg flash_we,
 	output reg [15:0] data,
+	output reg flash_ready,
 	output wire [7:0] status_out
 );
 	localparam FLASH_IDLE = 8'b00000001;
@@ -67,6 +68,7 @@ module flash(
 					end
 				end
 				FLASH_READ1: begin
+					flash_ready <= 1'b1;
 					flash_we <= 1'b0;
 					temp_data <= 16'h00ff;
 					flash_addr <= { addr, 1'b0 };
@@ -88,6 +90,7 @@ module flash(
 				end
 				FLASH_READ5: begin
 					flash_oe <= 1'b0;
+					flash_ready <= 1'b1;
 					status <= next_status;
 				end
 				default: begin
