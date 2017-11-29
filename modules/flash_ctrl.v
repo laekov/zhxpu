@@ -2,7 +2,7 @@
 
 `define CLK_CNT 14:0
 
-module flash(
+module flash_ctrl(
 	input clk,
 	input [22:1] addr,
 	input read_ctrl,

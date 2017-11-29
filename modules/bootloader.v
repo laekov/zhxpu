@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-`include "flash.v"
 `include "define.v"
 
 module bootloader(

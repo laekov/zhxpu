@@ -2,7 +2,7 @@
 `include "alu.v"
 `include "alu_out_ctrl.v"
 `include "bootloader.v"
-`include "flash.v"
+`include "flash_ctrl.v"
 `include "clock_ctrl.v"
 `include "decoder.v"
 `include "define.v"
@@ -27,14 +27,14 @@ module zhxpu(
 	output wire [6:0] seg1,
 	output wire [6:0] seg2,
 	output wire [15:0] led,
-	//output wire [22:0] flash_addr,
-	//inout [15:0] flash_data,
-	//output wire flash_byte,
-	//output wire flash_vpen,
-	//output wire flash_ce,
-	//output wire flash_oe,
-	//output wire flash_we,
-	//output wire flash_rp,
+	output wire [22:0] flash_addr,
+	inout [15:0] flash_data,
+	output wire flash_byte,
+	output wire flash_vpen,
+	output wire flash_ce,
+	output wire flash_oe,
+	output wire flash_we,
+	output wire flash_rp,
 	// output wire [3:0] fpga_key,
 	inout [15:0] ram1_data,
 	inout [15:0] ram2_data,
@@ -88,7 +88,42 @@ module zhxpu(
 		.light(led)
 	);
 
-	wire initializing = 1'b0;
+// Bootloader
+	wire initializing;
+	wire boot_done_out;
+	wire flash_ready;
+	wire [15:0] mflash_data;
+	wire [22:1] mflash_addr;
+	wire [15:0] init_data;
+	wire [15:0] init_addr;
+	wire flash_read_ctrl;
+	bootloader __bootloader(
+		.flash_ready(flash_ready),
+		.flash_data(mflash_data),
+		.data(init_data),
+		.read_ctrl(flash_read_ctrl),
+		.caddr_out(mflash_addr),
+		.write_ctrl(init_mem_wr),
+		.boot_done_out(boot_done_out),
+		.maddr_out(init_addr)
+	);
+	assign initializing = !boot_done_out;
+
+	flash_ctrl __flash_ctrl(
+		.clk(raw_clk2),
+		.addr(flash_addr),
+		.read_ctrl(flash_read_ctrl),
+		.flash_addr(flash_addr),
+		.flash_data(flash_data),
+		.flash_byte(flash_byte),
+		.flash_vpen(flash_vpen),
+		.flash_ce(flash_ce),
+		.flash_rp(flash_rp),
+		.flash_oe(flash_oe),
+		.flash_we(flash_we),
+		.data(mflash_data),
+		.flash_ready(flash_ready)
+	);
 
 // Stall ctrl module
 	wire hold;
@@ -287,7 +322,6 @@ module zhxpu(
 		.exe_result(ram2_work_res)
 	);
 
-	wire initializing;
 	wire [`RegValue] ram_data;
 	wire [`RegValue] ram_addr;
 
@@ -298,7 +332,7 @@ module zhxpu(
 		.exe_addr(alu_res),
 		.exe_data(exe_read_value2),
 		.addr_out(ram_addr),
-		.data_out(ram_data),
+		.data_out(ram_data)
 	);
 
 	ram_controller __ram_controller(
