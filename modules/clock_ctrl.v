@@ -26,7 +26,7 @@ module clock_ctrl(
 	output reg pclk
     );
 
-	localparam CLK_INTERVAL = 32'h000AF080;
+	localparam CLK_INTERVAL = 32'h007AF080;
 	//localparam CLK_INTERVAL = 32'h00000008;
 	reg [31:0] cur_cnt = 32'h0;
 	reg cur_status = 1'b0;
@@ -34,7 +34,7 @@ module clock_ctrl(
 	reg [31:0] tmp;
 
 	always @(posedge raw_clk) begin
-		if (auto_en) begin
+		if (!auto_en) begin
 			tmp = cur_cnt + 32'h00000001;
 			if (tmp >= CLK_INTERVAL) begin
 				cur_cnt = 32'h0;

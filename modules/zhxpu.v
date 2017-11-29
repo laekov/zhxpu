@@ -423,14 +423,7 @@ module zhxpu(
 	// assign dig1_data = reg_debug_out[7:4];
 	assign dig1_data = if_pc[7:4];
 	assign dig2_data = if_pc[3:0];
-	// assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
-	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
-	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
-	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
-	// assign led_data = if_inst;
-	assign led_data = { flash_ready, flash_read_ctrl, init_mem_wr, boot_done_out, flash_data[3:0], mflash_data[3:0], init_data[3:0] };
-	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
-	// assign led_data = { id_inst[15:11], reg_read_addr2[2:0], reg_read_value2[3:0], reg_write_value[3:0] };
+	assign led_data = if_inst;
 
 endmodule
 
