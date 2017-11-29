@@ -17,6 +17,7 @@
 `include "stall_ctrl.v"
 `include "ram_controller.v"
 `include "ram_uart.v"
+`include "ram2.v"
 
 module zhxpu(
     input raw_clk,
@@ -148,10 +149,16 @@ module zhxpu(
 	);
 
 	wire [`RegValue] if_inst;
+	wire ram2_need_to_work_if;
+	wire ram2_work_done_if;
+	wire [`MemValue] ram2_work_res_if;
 
 	inst_mem_ctrl __inst_mem_ctrl(
 		.addr(if_pc),
-		.data(if_inst)
+		.data(if_inst),
+		.ram_need_to_work(ram2_need_to_work_if),
+		.ram_work_done(ram2_work_done_if),
+		.ram_feed_back(ram2_work_res_if)
 	);
 
 // ID stage modules
@@ -258,11 +265,11 @@ module zhxpu(
 	ram2 __ram2(
 		.clk(raw_clk),
 		.rst(rst),
-		.need_to_work_if(),
+		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
-		.mem_addr_if(),
+		.mem_addr_if(if_pc),
 		.mem_addr_exe({2'b0,alu_res}),
 		.mem_value_exe(exe_read_value2),
 		.Ram2Addr(ram2_addr),
@@ -270,9 +277,9 @@ module zhxpu(
 		.Ram2OE(ram2_oe),
 		.Ram2WE(ram2_rw),
 		.Ram2EN(ram2_en),
-		.if_work_done(),
+		.if_work_done(ram2_work_done_if),
 		.exe_work_done(ram2_work_done),
-		.if_result(),
+		.if_result(ram2_work_res_if),
 		.exe_result(ram2_work_res)
 	);
 

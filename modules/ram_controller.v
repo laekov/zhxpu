@@ -38,6 +38,8 @@ module ram_controller(
     );
 
 	reg [`RegValue] done_pc;
+	
+	assign ram_work_done = ram1_work_done || ram2_work_done;
 
 	always @(*) begin
 		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
@@ -87,7 +89,7 @@ module ram_controller(
 		end
 	end
 
-	always @(posedge ram1_work_done or posedge ram2_work_done) begin
+	always @(posedge ram_work_done) begin
 		done_pc <= pc;
 	end
 

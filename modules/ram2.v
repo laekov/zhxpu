@@ -31,23 +31,21 @@ module ram2(
 	input [`MemAddr] mem_addr_exe,
 	input [`MemValue] mem_value_exe,
 
-	output wire [`MemAddr] Ram2Addr,
+	output reg [`MemAddr] Ram2Addr,
 	inout wire [`MemValue] Ram2Data,
 	output reg Ram2OE,
 	output reg Ram2WE,
 	output reg Ram2EN,
 
-	output wire if_work_done,
-	output wire exe_work_done,
+	output reg if_work_done,
+	output reg exe_work_done,
 	output reg [`MemValue] if_result,
 	output reg [`MemValue] exe_result,
 
 	output wire [7:0] status_out
 
     );
-
-	reg work_done;
-	assign uart_work_done = work_done;
+	 
 	reg Ram2Writing;
 
 	assign Ram2Data = Ram2Writing?mem_value_exe:16'bz;
