@@ -62,7 +62,7 @@ module ram_uart(
 
 //	reg Ram1Working;
 //	reg Ram2Working;
-//	reg UartWorking;
+	reg UartWorking;
 
 	reg work_done;
 	assign uart_work_done = work_done;
@@ -74,11 +74,11 @@ module ram_uart(
 	reg [`UartValue] temp_data1;
 	reg [`UartValue] temp_data2;
 	
-	assign Ram1Data = Ram1Writing?mem_value:16'bz;
 	assign Ram1Addr = mem_addr;
-	assign Ram2Data = Ram2Writing?mem_value:16'bz;
 	assign Ram2Addr = mem_addr;
 	assign UartData = UartWriting?temp_data:8'bz;
+	assign Ram1Data = UartWorking?{8'b0, UartData}:(Ram1Writing?mem_value:16'bz);
+	assign Ram2Data = Ram2Writing?mem_value:16'bz;
 
 	localparam IDLE = 8'b00000000;
 	
@@ -179,7 +179,7 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b1;
 	
-	//				UartWorking <= 1'b0;
+					UartWorking <= 1'b0;
 				end
 				UART_READ2: begin
 					Ram1EN <= 1'b1;
@@ -192,6 +192,7 @@ module ram_uart(
 	
 					rdn <= 1'b0;
 					wrn <= 1'b1;
+					UartWorking <= 1'b1;
 				end
 				UART_READ3: begin
 					Ram1EN <= 1'b1;
@@ -218,7 +219,7 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b1;
 	
-	//				UartWorking <= 1'b0;
+					UartWorking <= 1'b0;
 				end
 				UART_READ5: begin
 					Ram1EN <= 1'b1;
@@ -260,6 +261,8 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b1;
 	
+					UartWorking <= 1'b1;
+					UartWriting <= 1'b1;
 					temp_data <= mem_value[15:8];
 				end
 				UART_WRITE2: begin
@@ -273,8 +276,6 @@ module ram_uart(
 	
 					rdn <= 1'b1;
 					wrn <= 1'b0;
-	
-					UartWriting <= 1'b1;
 				end
 				UART_WRITE3: begin
 					Ram1EN <= 1'b1;
@@ -338,7 +339,6 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b0;
 	
-					UartWriting <= 1'b1;
 				end
 				UART_WRITE8: begin
 					Ram1EN <= 1'b1;
@@ -376,7 +376,8 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b1;
 	
-	//				UartWorking <= 1'b0;
+					UartWorking <= 1'b0;
+					UartWriting <= 1'b0;
 				end
 	
 				RAM1_READ1: begin
