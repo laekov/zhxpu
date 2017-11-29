@@ -1,18 +1,10 @@
-`timescale 1ns / 1ps
+ 1ns / 1ps
 
 `include "flash.v"
 
 module bootloader(
 	input clk,
 	input next,
-	output wire [22:0] flash_addr,
-	inout wire [15:0] flash_data,
-	output wire flash_byte,
-	output wire flash_vpen,
-	output wire flash_ce,
-	output wire flash_oe,
-	output wire flash_we,
-	output wire flash_rp,
 	output wire [15:0] data,
 	output wire read_ctrl,
 	output wire [22:0] caddr_out
