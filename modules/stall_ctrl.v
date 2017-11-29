@@ -23,9 +23,10 @@
 module stall_ctrl(
 	input mem_op,
 	input mem_done,
-	output wire hold
+	output reg hold
 );
 
-	assign hold = mem_op && !mem_done;
-
+	always@(*)begin 
+		hold = mem_op && !mem_done;
+	end
 endmodule
