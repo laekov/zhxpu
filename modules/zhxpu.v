@@ -329,21 +329,24 @@ module zhxpu(
 
 	wire [`RegValue] ram_data;
 	wire [`RegValue] ram_addr;
+	wire [`RegValue] ram_pc;
 
 	ram_sel __ram_sel(
 		.initializing(initializing),
 		.init_addr(init_addr),
 		.init_data(init_data),
+		.exe_pc(exe_pc),
 		.exe_addr(alu_res),
 		.exe_data(exe_read_value2),
 		.addr_out(ram_addr),
-		.data_out(ram_data)
+		.data_out(ram_data),
+		.pc_out(ram_pc)
 	);
 
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
-		.pc(exe_pc),
+		.pc(ram_pc),
 		.addr(ram_addr),
 		.data(ram_data),
 		.ram1_work_done(ram1_work_done),
@@ -423,7 +426,7 @@ module zhxpu(
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
-	assign led_data = { flash_ready, flash_read_ctrl, init_mem_wr, boot_done_out, init_data[3:0], init_addr[7:0] };
+	assign led_data = { flash_ready, flash_read_ctrl, init_mem_wr, boot_done_out, flash_data[3:0], init_data[3:0], init_addr[3:0] };
 	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
 	// assign led_data = { id_inst[15:11], reg_read_addr2[2:0], reg_read_value2[3:0], reg_write_value[3:0] };
 
