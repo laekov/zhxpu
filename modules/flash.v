@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
-`define CLK_CNT 24:0
+`define CLK_CNT 14:0
 
 module flash(
 	input clk,
-	input [22:0] addr,
+	input [22:1] addr,
 	input read_ctrl,
 	inout wire [15:0] flash_data,
 	output reg [22:0] flash_addr,
@@ -20,9 +20,9 @@ module flash(
 	localparam FLASH_IDLE = 8'b00000001;
 	localparam FLASH_READ1 = 8'b00001001;
 	localparam FLASH_READ2 = 8'b00001010;
-	localparam FLASH_READ3 = 8'h00001011;
-	localparam FLASH_READ4 = 8'h00001100;
-	localparam FLASH_READ5 = 8'h00001101;
+	localparam FLASH_READ3 = 8'b00001011;
+	localparam FLASH_READ4 = 8'b00001100;
+	localparam FLASH_READ5 = 8'b00001101;
 
 	assign flash_byte = 1'b1;
 	assign flash_vpen = 1'b1;
@@ -50,7 +50,7 @@ module flash(
 	end
 
 	reg [15:0] temp_data;
-	assign flash_data = (status == FLASH_READ3) ? 16'bZ : temp_data;
+	assign flash_data = (status == FLASH_READ3 || status == FLASH_READ4) ? 16'bZ : temp_data;
 
 	always @(posedge clk) begin
 		clkc <= clkc + 1;
@@ -69,24 +69,25 @@ module flash(
 				FLASH_READ1: begin
 					flash_we <= 1'b0;
 					temp_data <= 16'h00ff;
-					flash_addr <= addr;
+					flash_addr <= { addr, 1'b0 };
 					status <= next_status;
 				end
 				FLASH_READ2: begin
 					flash_we <= 1'b1;
-					flash_addr <= addr;
 					status <= next_status;
 				end
 				FLASH_READ3: begin
 					flash_oe <= 1'b0;
-					flash_addr <= addr;
 					status <= next_status;
 				end
 				FLASH_READ4: begin
+					flash_oe <= 1'b0;
+					flash_addr <= { addr, 1'b0 };
 					data <= flash_data;
 					status <= next_status;
 				end
 				FLASH_READ5: begin
+					flash_oe <= 1'b0;
 					status <= next_status;
 				end
 				default: begin
