@@ -2,6 +2,7 @@
 `include "alu.v"
 `include "alu_out_ctrl.v"
 `include "bootloader.v"
+`include "flash.v"
 `include "clock_ctrl.v"
 `include "decoder.v"
 `include "define.v"
@@ -18,6 +19,7 @@
 `include "ram_controller.v"
 `include "ram_uart.v"
 `include "ram2.v"
+`include "ram_sel.v"
 
 module zhxpu(
     input raw_clk,
@@ -85,6 +87,8 @@ module zhxpu(
 		.data(led_data),
 		.light(led)
 	);
+
+	wire initializing = 1'b0;
 
 // Stall ctrl module
 	wire hold;
@@ -283,12 +287,26 @@ module zhxpu(
 		.exe_result(ram2_work_res)
 	);
 
+	wire initializing;
+	wire [`RegValue] ram_data;
+	wire [`RegValue] ram_addr;
+
+	ram_sel __ram_sel(
+		.initializing(initializing),
+		.init_addr(init_addr),
+		.init_data(init_data),
+		.exe_addr(alu_res),
+		.exe_data(exe_read_value2),
+		.addr_out(ram_addr),
+		.data_out(ram_data),
+	);
+
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
 		.pc(exe_pc),
-		.addr(alu_res),
-		.data(exe_read_value2),
+		.addr(ram_addr),
+		.data(ram_data),
 		.ram1_work_done(ram1_work_done),
 		.ram1_feedback(ram1_work_res),
 		.ram1_need_to_work(ram1_need_to_work),
