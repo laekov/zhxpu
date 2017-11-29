@@ -8,7 +8,7 @@ module inst_mem_ctrl(
 	output reg ram_need_to_work,
 
 	input ram_work_done,
-	input ram_feed_back
+	input [`RegValue] ram_feed_back
 	);
 
 	reg [`RegValue] done_pc;
