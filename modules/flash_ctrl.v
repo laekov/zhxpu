@@ -68,7 +68,7 @@ module flash_ctrl(
 					end
 				end
 				FLASH_READ1: begin
-					flash_ready <= 1'b1;
+					flash_ready <= 1'b0;
 					flash_we <= 1'b0;
 					temp_data <= 16'h00ff;
 					flash_addr <= { addr, 1'b0 };

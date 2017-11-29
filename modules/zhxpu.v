@@ -97,6 +97,7 @@ module zhxpu(
 	wire [15:0] init_data;
 	wire [15:0] init_addr;
 	wire flash_read_ctrl;
+	wire init_mem_wr;
 	bootloader __bootloader(
 		.rst(rst),
 		.flash_ready(flash_ready),
@@ -279,12 +280,15 @@ module zhxpu(
 
 	wire [7:0] ram_status;
 
+	wire mem_wr;
+	assign mem_wr= init_mem_wr || exe_memwr_ctrl;
+
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(exe_memwr_ctrl),
+		.mem_wr(mem_wr),
 		.mem_addr({ 2'b0, alu_res }),
 		.mem_value(exe_read_value2),
 		.Ram1Addr(ram1_addr),
@@ -412,14 +416,14 @@ module zhxpu(
 	);
 
 	// assign dig1_data = reg_debug_out[7:4];
-	assign dig1_data = if_pc[7:4]; 
-	assign dig2_data = if_pc[3:0]; 
+	assign dig1_data = mflash_addr[4:1]; 
+	assign dig2_data = mflash_data[3:0]; 
 	// assign led_data = { reg_debug_out[11:0], wb_res[3:0] };
 	// assign led_data = { reg_read_value1[3:0], reg_read_value2[3:0], reg_read_addr1, reg_readable2, wb_res[3:0] };
 	// assign led_data = { reg_writable, reg_write_addr, reg_write_value[3:0], reg_debug_out[7:0] };
 	// assign led_data = { 1'b0, id_reg_addr, 1'b0, exe_reg_addr, 1'b0, reg_write_addr, reg_write_value[3:0] };
 	// assign led_data = if_inst;
-	assign led_data = mflash_data;
+	assign led_data = { flash_ready, flash_read_ctrl, init_mem_wr, boot_done_out, init_data[3:0], init_addr[7:0] };
 	// assign led_data = { if_pc[2:0], if_inst[15:11], reg_read_value1[3:0], reg_read_value2[3:0]  };
 	// assign led_data = { id_inst[15:11], reg_read_addr2[2:0], reg_read_value2[3:0], reg_write_value[3:0] };
 

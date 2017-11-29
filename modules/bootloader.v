@@ -16,7 +16,7 @@ module bootloader(
 
 	reg [22:1] caddr = 22'b0;
 	assign caddr_out = caddr;
-	reg read_c;
+	reg read_c = 1'b0;
 	assign read_ctrl = read_c;
 	reg [`MemAddr] maddr=18'b0;
 	assign maddr_out=maddr;
