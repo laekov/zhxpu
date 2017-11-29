@@ -55,53 +55,55 @@ module flash_ctrl(
 	assign flash_data = (status == FLASH_READ3 || status == FLASH_READ4) ? 16'bZ : temp_data;
 
 	always @(posedge clk or negedge rst) begin
-		clkc <= clkc + 1;
 		if (!rst) begin
 			status <= FLASH_IDLE;
-		end else if (clkc == 0) begin
-			case (status)
-				FLASH_IDLE: begin
-					if (last_ctrl != read_ctrl) begin
-						last_ctrl <= !last_ctrl;
-						status <= FLASH_READ1;
-						flash_we <= 1'b0;
-					end else begin
-						flash_we <= 1'b1;
-						status <= FLASH_IDLE;
+		end else begin
+			clkc <= clkc + 1;
+			if (clkc == 0) begin
+				case (status)
+					FLASH_IDLE: begin
+						if (last_ctrl != read_ctrl) begin
+							last_ctrl <= !last_ctrl;
+							status <= FLASH_READ1;
+							flash_we <= 1'b0;
+						end else begin
+							flash_we <= 1'b1;
+							status <= FLASH_IDLE;
+						end
 					end
-				end
-				FLASH_READ1: begin
-					flash_ready <= 1'b0;
-					flash_we <= 1'b0;
-					temp_data <= 16'h00ff;
-					flash_addr <= { addr, 1'b0 };
-					status <= next_status;
-				end
-				FLASH_READ2: begin
-					flash_we <= 1'b1;
-					status <= next_status;
-				end
-				FLASH_READ3: begin
-					flash_oe <= 1'b0;
-					status <= next_status;
-				end
-				FLASH_READ4: begin
-					flash_oe <= 1'b0;
-					flash_addr <= { addr, 1'b0 };
-					data <= flash_data;
-					status <= next_status;
-				end
-				FLASH_READ5: begin
-					flash_oe <= 1'b0;
-					flash_ready <= 1'b1;
-					status <= next_status;
-				end
-				default: begin
-					flash_oe <= 1'b1;
-					flash_we <= 1'b1;
-					status <= 8'hff;
-				end
-			endcase
+					FLASH_READ1: begin
+						flash_ready <= 1'b0;
+						flash_we <= 1'b0;
+						temp_data <= 16'h00ff;
+						flash_addr <= { addr, 1'b0 };
+						status <= next_status;
+					end
+					FLASH_READ2: begin
+						flash_we <= 1'b1;
+						status <= next_status;
+					end
+					FLASH_READ3: begin
+						flash_oe <= 1'b0;
+						status <= next_status;
+					end
+					FLASH_READ4: begin
+						flash_oe <= 1'b0;
+						flash_addr <= { addr, 1'b0 };
+						data <= flash_data;
+						status <= next_status;
+					end
+					FLASH_READ5: begin
+						flash_oe <= 1'b0;
+						flash_ready <= 1'b1;
+						status <= next_status;
+					end
+					default: begin
+						flash_oe <= 1'b1;
+						flash_we <= 1'b1;
+						status <= 8'hff;
+					end
+				endcase
+			end
 		end
 	end
 endmodule
