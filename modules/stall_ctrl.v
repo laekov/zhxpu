@@ -23,10 +23,11 @@
 module stall_ctrl(
 	input mem_op,
 	input mem_done,
+	input initializing,
 	output reg hold
 );
 
 	always@(*)begin 
-		hold = mem_op && !mem_done;
+		hold = !initializing && mem_op && !mem_done;
 	end
 endmodule

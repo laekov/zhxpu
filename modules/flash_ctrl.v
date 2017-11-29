@@ -1,9 +1,10 @@
 `timescale 1ns / 1ps
 
-`define CLK_CNT 20:0
+`define CLK_CNT 2:0
 
 module flash_ctrl(
 	input clk,
+	input rst,
 	input [22:1] addr,
 	input read_ctrl,
 	inout wire [15:0] flash_data,
@@ -53,9 +54,11 @@ module flash_ctrl(
 	reg [15:0] temp_data;
 	assign flash_data = (status == FLASH_READ3 || status == FLASH_READ4) ? 16'bZ : temp_data;
 
-	always @(posedge clk) begin
+	always @(posedge clk or negedge rst) begin
 		clkc <= clkc + 1;
-		if (clkc == 0) begin
+		if (!rst) begin
+			status <= FLASH_IDLE;
+		end else if (clkc == 0) begin
 			case (status)
 				FLASH_IDLE: begin
 					if (last_ctrl != read_ctrl) begin
