@@ -74,7 +74,7 @@ module bootloader(
 					flash_we <= 1'b1;
 				end
 				FLASH_READ3: begin
-					flash_oe = 1'b0;
+					flash_oe <= 1'b0;
 					flash_addr <= caddr;
 					temp_data <= 16'bZ;
 				end
