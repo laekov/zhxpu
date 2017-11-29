@@ -92,7 +92,7 @@ module ram2(
 			end
 			case (status)
 				IDLE: begin
-					Ram2EN <= 1'b1;
+					Ram2EN <= 1'b0;
 					Ram2OE <= 1'b1;
 					Ram2WE <= 1'b1;
 				end
@@ -136,7 +136,7 @@ module ram2(
 					Ram2OE <= 1'b0;
 					Ram2WE <= 1'b1;
 	
-					exe_result <= Ram2Data;
+					if_result <= Ram2Data;
 				end
 	
 				RAM2_WRITE1: begin

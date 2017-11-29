@@ -293,11 +293,11 @@ module zhxpu(
 		.mem_wr(mem_wr),
 		.mem_addr({ 2'b0, alu_res }),
 		.mem_value(exe_read_value2),
-		.Ram1Addr(ram2_addr),
-		.Ram1Data(ram2_data),
-		.Ram1OE(ram2_oe),
-		.Ram1WE(ram2_rw),
-		.Ram1EN(ram2_en),
+		.Ram1Addr(ram1_addr),
+		.Ram1Data(ram1_data),
+		.Ram1OE(ram1_oe),
+		.Ram1WE(ram1_rw),
+		.Ram1EN(ram1_en),
 		.data_ready(data_ready),
 		.rdn(rdn),
 		.tbre(tbre),
@@ -318,11 +318,11 @@ module zhxpu(
 		.mem_addr_if(if_pc),
 		.mem_addr_exe({2'b0,alu_res}),
 		.mem_value_exe(exe_read_value2),
-		.Ram2Addr(ram1_addr),
-		.Ram2Data(ram1_data),
-		.Ram2OE(ram1_oe),
-		.Ram2WE(ram1_rw),
-		.Ram2EN(ram1_en),
+		.Ram2Addr(ram2_addr),
+		.Ram2Data(ram2_data),
+		.Ram2OE(ram2_oe),
+		.Ram2WE(ram2_rw),
+		.Ram2EN(ram2_en),
 		.if_work_done(ram2_work_done_if),
 		.exe_work_done(ram2_work_done),
 		.if_result(ram2_work_res_if),
@@ -421,9 +421,9 @@ module zhxpu(
 	);
 
 	// assign dig1_data = reg_debug_out[7:4];
-	assign dig1_data = if_pc[7:4];
-	assign dig2_data = if_pc[3:0];
-	assign led_data = { ram2_data[7:0], ;
+	assign dig1_data = initializing ? init_addr[7:4] : if_pc[7:4];
+	assign dig2_data = initializing ? init_addr[3:0] : if_pc[3:0];
+	assign led_data = if_inst;
 
 endmodule
 
