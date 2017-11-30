@@ -342,7 +342,7 @@ module zhxpu(
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(mem_wr),
-		.mem_addr_if(ram_pc),
+		.mem_addr_if({ 2'b0, if_pc }),
 		.mem_addr_exe({2'b0, ram_addr}),
 		.mem_value_exe(ram_data),
 		.Ram2Addr(ram2_addr),
