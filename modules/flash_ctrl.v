@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`define CLK_CNT 8:0
+`define CLK_CNT 22:0
 
 module flash_ctrl(
 	input clk,
@@ -60,20 +60,18 @@ module flash_ctrl(
 			flash_ready <= 1'b0;
 		end else begin
 			clkc <= clkc + 1;
-			if (clkc == 0) begin
+			if (status == FLASH_IDLE) begin
+				if (read_ctrl) begin
+					status <= FLASH_READ1;
+					flash_we <= 1'b0;
+					flash_ready <= 1'b0;
+				end else begin
+					flash_we <= 1'b1;
+					status <= FLASH_IDLE;
+				end
+			end else if (clkc == 0) begin
 				case (status)
-					FLASH_IDLE: begin
-						if (last_ctrl != read_ctrl) begin
-							last_ctrl <= !last_ctrl;
-							status <= FLASH_READ1;
-							flash_we <= 1'b0;
-						end else begin
-							flash_we <= 1'b1;
-							status <= FLASH_IDLE;
-						end
-					end
 					FLASH_READ1: begin
-						flash_ready <= 1'b0;
 						flash_we <= 1'b0;
 						temp_data <= 16'h00ff;
 						flash_addr <= { addr, 1'b0 };

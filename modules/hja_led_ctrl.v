@@ -110,7 +110,11 @@ module hja_led_ctrl(
 		input flush,
 		input inst_read_done,
 		input [`RegValue] inst_done_pc,
-		input [`RegValue] ram_ctrl_done_pc
+		input [`RegValue] ram_ctrl_done_pc,
+
+		input [`RegValue] flash_done_pc,
+		input flash_controller_work_done,
+		input flash_controller_need_to_work
     );
 
 	always @(*) begin
@@ -157,6 +161,8 @@ module hja_led_ctrl(
 			16'h0028: led_data <= {ram2_status,8'b0};
 			16'h0029: led_data <= { inst_done_pc };
 			16'h002A: led_data <= { ram_ctrl_done_pc };
+			16'h002B: led_data <= { flash_done_pc };
+			16'h002C: led_data <= { flash_controller_work_done, 7'b0, flash_controller_need_to_work, 7'b0 };
 			16'h1000: led_data <= {reg_debug_out[15:0]};
 			16'h1100: led_data <= {reg_debug_out[31:16]};
 			16'h1200: led_data <= {reg_debug_out[47:32]};

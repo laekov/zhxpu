@@ -3,6 +3,7 @@
 `include "alu_out_ctrl.v"
 `include "bootloader.v"
 `include "flash_ctrl.v"
+`include "flash_controller.v"
 `include "clock_ctrl.v"
 `include "decoder.v"
 `include "define.v"
@@ -115,6 +116,8 @@ module zhxpu(
 	);
 	assign initializing = !boot_done_out;
 
+	wire flash_i_ready;
+
 	flash_ctrl __flash_ctrl(
 		.clk(raw_clk2),
 		.rst(rst),
@@ -129,7 +132,18 @@ module zhxpu(
 		.flash_oe(flash_oe),
 		.flash_we(flash_we),
 		.data(mflash_data),
-		.flash_ready(flash_ready)
+		.flash_ready(flash_i_ready)
+	);
+
+	wire flash_done_pc;
+
+	flash_controller __flash_controller(
+		.addr(mflash_addr),
+		.flash_work_done(flash_i_ready),
+		.need_to_work(flash_controller_need_to_work),
+		.flash_need_to_work(flash_read_ctrl),
+		.work_done(flash_controller_work_done),
+		.done_pc_out(flash_done_pc)
 	);
 
 // Stall ctrl module
@@ -514,7 +528,10 @@ module zhxpu(
 		.inst_read_done(inst_read_done),
 		.flush(flush),
 		.inst_done_pc(inst_done_pc),
-		.ram_ctrl_done_pc(ram_ctrl_done_pc)
+		.ram_ctrl_done_pc(ram_ctrl_done_pc),
+		.flash_done_pc(flash_done_pc),
+		.flash_controller_need_to_work(flash_controller_need_to_work),
+		.flash_controller_work_done(flash_controller_work_done)
 	);
 
 endmodule

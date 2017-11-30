@@ -22,6 +22,7 @@ module flash_controller(
 	input [`MemAddr] addr,
 
 	input flash_work_done,
+	input need_to_work,
 
 	output reg flash_need_to_work,
 	output reg work_done,
@@ -33,8 +34,8 @@ module flash_controller(
 
 	always @(*) begin
 		if (need_to_work == 1'b1) begin
-			if (flash_ready == 1'b1) begin
-				if (addr == done_pc) begin
+			if (flash_work_done == 1'b1) begin
+				if (addr[15:0] == done_pc) begin
 					work_done <= 1'b1;
 					flash_need_to_work <= 1'b0;
 				end
@@ -54,8 +55,8 @@ module flash_controller(
 		end
 	end
 
-	always @(posedge flash_ready) begin
-		done_pc <= pc;
+	always @(posedge flash_work_done) begin
+		done_pc <= addr[15:0];
 	end
 
 endmodule

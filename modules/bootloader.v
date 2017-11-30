@@ -33,7 +33,7 @@ module bootloader(
 		new_caddr <= caddr + 22'b1;
 	end
 
-	always @(posedge clk or negedge clk) begin
+	always @(posedge clk) begin
 		if (!rst) begin
 			caddr <= 22'b0;
 			maddr <= 18'b111111111111111111;
