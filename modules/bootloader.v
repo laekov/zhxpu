@@ -36,13 +36,14 @@ module bootloader(
 			read_c <= !read_c;
 		end else begin
 			if(boot_done==1'b0)begin
-				maddr <= caddr[18:1];
-				caddr <= next_caddr;
+				maddr <= maddr + 18'b1;
+				caddr <= new_caddr;
 				read_c <= !read_c;
 				data <= flash_data;
 				write_ctrl <= 1'b1;
 			end
 			if(caddr > 22'h219)begin
+				write_ctrl <= 1'b0;
 				boot_done <= 1'b1;
 			end
 		end
