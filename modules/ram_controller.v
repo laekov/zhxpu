@@ -37,8 +37,9 @@ module ram_controller(
 	output wire [`RegValue] done_pc_out
     );
 
-	reg [`RegValue] done_pc;
-	assign done_pc_out = done_pc;
+	reg [`RegValue] done_pc1;
+	reg [`RegValue] done_pc2;
+	assign done_pc_out = { done_pc1[7:0], done_pc2[7:0] };
 	
 	assign ram_work_done = ram1_work_done || ram2_work_done;
 
@@ -46,7 +47,7 @@ module ram_controller(
 		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
 			if (addr[15:15] == 1'b1) begin
 				if (ram1_work_done == 1'b1) begin
-					if (pc == done_pc) begin
+					if (pc == done_pc1) begin
 						feedback <= ram1_feedback;
 						work_done <= 1'b1;
 						ram1_need_to_work <= 1'b0;
@@ -65,7 +66,7 @@ module ram_controller(
 			end
 			else begin
 				if (ram2_work_done == 1'b1) begin
-					if (pc == done_pc) begin
+					if (pc == done_pc2) begin
 						feedback <= ram2_feedback;
 						work_done <= 1'b1;
 						ram1_need_to_work <= 1'b0;
@@ -90,8 +91,11 @@ module ram_controller(
 		end
 	end
 
-	always @(posedge ram1_work_done or posedge ram2_work_done) begin
-		done_pc <= pc;
+	always @(posedge ram1_work_done) begin
+		done_pc1 <= pc;
+	end
+	always @(posedge ram2_work_done) begin
+		done_pc2 <= pc;
 	end
 
 endmodule
