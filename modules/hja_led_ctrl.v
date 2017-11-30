@@ -109,7 +109,8 @@ module hja_led_ctrl(
 
 		input flush,
 		input inst_read_done,
-		input [`RegValue] inst_done_pc
+		input [`RegValue] inst_done_pc,
+		input [`RegValue] ram_ctrl_done_pc
     );
 
 	always @(*) begin
@@ -144,7 +145,7 @@ module hja_led_ctrl(
 			16'h001B: led_data <= {alu_res};
 			16'h001C: led_data <= {exe_read_value1};
 			16'h001D: led_data <= {exe_read_value2};
-			16'h001E: led_data <= {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,mem_wr,1'b0,flush,1'b0};
+			16'h001E: led_data <= {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,mem_wr,1'b0,flush,3'b0};
 			16'h001F: led_data <= {exe_mem_data};
 			16'h0020: led_data <= {wb_res};
 			16'h0021: led_data <= {mem_work_res};
@@ -156,6 +157,7 @@ module hja_led_ctrl(
 			16'h0027: led_data <= {ram_pc};
 			16'h0028: led_data <= {ram2_status,8'b0};
 			16'h0029: led_data <= { inst_done_pc };
+			16'h002A: led_data <= { ram_ctrl_done_pc };
 			default: led_data <= sw;
 		endcase
 	end

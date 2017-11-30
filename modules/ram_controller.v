@@ -33,10 +33,12 @@ module ram_controller(
 	output reg ram1_need_to_work,
 	output reg ram2_need_to_work,
 	output reg work_done,
-	output reg [`MemValue] feedback
+	output reg [`MemValue] feedback,
+	output wire [`RegValue] done_pc_out
     );
 
 	reg [`RegValue] done_pc;
+	assign done_pc_out = done_pc;
 	
 	assign ram_work_done = ram1_work_done || ram2_work_done;
 
@@ -88,7 +90,7 @@ module ram_controller(
 		end
 	end
 
-	always @(posedge ram_work_done) begin
+	always @(posedge ram1_work_done or posedge ram2_work_edge) begin
 		done_pc <= pc;
 	end
 

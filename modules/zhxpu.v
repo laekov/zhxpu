@@ -357,6 +357,7 @@ module zhxpu(
 		.status_out(ram2_status)
 	);
 
+	wire [`RegValue] ram_ctrl_done_pc;
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(mem_wr),
@@ -369,7 +370,8 @@ module zhxpu(
 		.ram2_feedback(ram2_work_res),
 		.ram2_need_to_work(ram2_need_to_work),
 		.work_done(mem_work_done),
-		.feedback(mem_work_res)
+		.feedback(mem_work_res),
+		.done_pc_out(ram_ctrl_done_pc)
 	);
 
 // WB stage modules
@@ -508,7 +510,8 @@ module zhxpu(
 		.ram2_status(ram2_status),
 		.inst_read_done(inst_read_done),
 		.flush(flush),
-		.inst_done_pc(inst_done_pc)
+		.inst_done_pc(inst_done_pc),
+		.ram_ctrl_done_pc(ram_ctrl_done_pc)
 	);
 
 endmodule
