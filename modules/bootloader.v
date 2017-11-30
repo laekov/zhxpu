@@ -34,7 +34,6 @@ module bootloader(
 			caddr <= 22'b0;
 			maddr <= 18'b111111111111111111;
 			boot_done <= 1'b0;
-			read_c <= !read_c;
 		end else if (boot_done) begin
 		end else if (flash_ready) begin
 			maddr <= new_caddr[18:1] - 18'b1;

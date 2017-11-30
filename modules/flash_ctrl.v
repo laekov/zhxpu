@@ -54,9 +54,10 @@ module flash_ctrl(
 	reg [15:0] temp_data;
 	assign flash_data = (status == FLASH_READ3 || status == FLASH_READ4) ? 16'bZ : temp_data;
 
-	always @(posedge clk or negedge rst) begin
+	always @(posedge clk) begin
 		if (!rst) begin
 			status <= FLASH_IDLE;
+			flash_ready <= 1'b0;
 		end else begin
 			clkc <= clkc + 1;
 			if (clkc == 0) begin
