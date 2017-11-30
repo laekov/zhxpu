@@ -11,7 +11,7 @@ module bootloader(
 	output wire [22:1] caddr_out,
 	output reg write_ctrl,
 	output wire boot_done_out,
-	output [`RegValue] maddr_out
+	output [`MemAddr] maddr_out
 );
 
 	reg [22:1] caddr = 22'b0;
@@ -36,7 +36,7 @@ module bootloader(
 			read_c <= !read_c;
 		end else begin
 			if(boot_done==1'b0)begin
-				maddr <= maddr + 18'b1;
+				maddr <= new_caddr[18:1] - 18'b1;
 				caddr <= new_caddr;
 				read_c <= !read_c;
 				data <= flash_data;
