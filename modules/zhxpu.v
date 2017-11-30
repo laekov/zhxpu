@@ -311,7 +311,7 @@ module zhxpu(
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(mem_wr),
+		.mem_wr(exe_memwr_ctrl),
 		.mem_addr({ 2'b0, ram_addr }),
 		.mem_value(ram_data),
 		.Ram1Addr(ram1_addr),
@@ -336,7 +336,7 @@ module zhxpu(
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(exe_memwr_ctrl),
+		.mem_wr(mem_wr),
 		.mem_addr_if(ram_pc),
 		.mem_addr_exe({2'b0, ram_addr}),
 		.mem_value_exe(ram_data),
@@ -354,7 +354,7 @@ module zhxpu(
 
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(exe_memwr_ctrl),
+		.mem_wr(mem_wr),
 		.pc(ram_pc),
 		.addr({ 2'b0, ram_addr }),
 		.ram1_work_done(ram1_work_done),

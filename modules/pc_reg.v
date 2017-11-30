@@ -29,13 +29,22 @@ module pc_reg(
 		output reg [`RegValue] pc
     );
 
-	always @(posedge clk or posedge set_pc or negedge rst) begin
+	reg [`RegValue] new_pc;
+
+	always @(*) begin
+		new_pc <= pc + 16'b1;
+	end
+
+	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			pc <= 16'b0;
-		end else if (set_pc) begin
-			pc <= set_pc_addr;
+		end else if (clk) begin
+			if (set_pc) begin
+				pc <= set_pc_addr + 16'b1;
+			end else begin
+				pc <= new_pc;
+			end
 		end else if (!hold) begin
-			pc <= pc + `SizePerIns;
 		end
 	end
 
