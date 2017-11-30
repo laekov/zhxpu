@@ -104,6 +104,8 @@ module hja_led_ctrl(
 		input [`RegValue] ram_addr,
 		input [`RegValue] ram_pc,
 
+		input [7:0] ram2_status,
+
 		input flush
     );
 
@@ -149,7 +151,8 @@ module hja_led_ctrl(
 			16'h0025: led_data <= {ram_data};
 			16'h0026: led_data <= {ram_addr};
 			16'h0027: led_data <= {ram_pc};
-			default: led_data <= 16'b0;
+			16'h0028: led_data <= {ram2_status,8'b0};
+			default: led_data <= sw;
 		endcase
 	end
 

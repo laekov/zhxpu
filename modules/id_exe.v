@@ -86,6 +86,8 @@ module id_exe(
 					end
 					else if (opn[10:8] == 3'b000) begin // BTEQZ
 					end
+					else if (opn[10:8] == 3'b001) begin // BTNEZ
+					end
 					else if ((opn[10:8] == 3'b100) && (opn[4:0] == 5'b00000)) begin // MTSP
 						op1 <= read_value1;
 					end

@@ -21,6 +21,7 @@
 `include "define.v"
 module pc_reg(
 		input clk,
+		input rst,
 		input hold,
 		input set_pc,
 		input [15:0] set_pc_addr,
@@ -28,8 +29,10 @@ module pc_reg(
 		output reg [`RegValue] pc
     );
 
-	always @(posedge clk or posedge set_pc) begin
-		if (set_pc) begin
+	always @(posedge clk or posedge set_pc or negedge rst) begin
+		if (!rst) begin
+			pc <= 16'b0;
+		end else if (set_pc) begin
 			pc <= set_pc_addr;
 		end else if (!hold) begin
 			pc <= pc + `SizePerIns;
