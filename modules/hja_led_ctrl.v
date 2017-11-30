@@ -107,7 +107,8 @@ module hja_led_ctrl(
 		input [7:0] ram2_status,
 		input decoder_error,
 
-		input flush
+		input flush,
+		input inst_read_done
     );
 
 	always @(*) begin
@@ -125,7 +126,7 @@ module hja_led_ctrl(
 			16'h000A: led_data <= {alu_write_value};
 			16'h000B: led_data <= {reg_debug_out};
 			16'h000C: led_data <= {reg_writable,3'b0,reg_readable1,3'b0,reg_readable2,3'b0,alu_writable,3'b0};
-			16'h000D: led_data <= {set_pc,15'b0};
+			16'h000D: led_data <= {set_pc,7'b0,inst_read_done,7'b0};
 			16'h000E: led_data <= {set_pc_addr};
 			16'h000F: led_data <= {if_pc};
 			16'h0010: led_data <= {if_inst};

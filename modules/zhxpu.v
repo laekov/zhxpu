@@ -504,6 +504,7 @@ module zhxpu(
 		.ram_addr(ram_addr),
 		.ram_pc(ram_pc),
 		.ram2_status(ram2_status),
+		.inst_read_done(inst_read_done),
 		.flush(flush)
 	);
 
