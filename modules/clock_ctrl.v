@@ -45,9 +45,7 @@ module clock_ctrl(
 				cur_cnt = tmp;
 				pclk = ((tmp > (CLK_INTERVAL >> 2)) && (tmp < (CLK_INTERVAL >> 1)));
 			end
-		end else begin
-			clk = manual_clk;
-		end
+		end 
 	end
 
 endmodule

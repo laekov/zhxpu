@@ -69,6 +69,7 @@ module register(
 	always @(clk) begin	
 		if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin
 			case (write_addr)
+				4'b0000: begin reg0 <= write_value; end
 				4'b0001: begin reg1 <= write_value; end
 				4'b0010: begin reg2 <= write_value; end
 				4'b0011: begin reg3 <= write_value; end
@@ -101,6 +102,7 @@ module register(
 			read_value1 <= write_value;
 		end else begin
 			case (read_addr1)
+				4'b0000: begin read_value1 <= reg0; end
 				4'b0001: begin read_value1 <= reg1; end
 				4'b0010: begin read_value1 <= reg2; end
 				4'b0011: begin read_value1 <= reg3; end
@@ -127,6 +129,7 @@ module register(
 			read_value2 <= write_value;
 		end else begin
 			case (read_addr2)
+				4'b0000: begin read_value2 <= reg0; end
 				4'b0001: begin read_value2 <= reg1; end
 				4'b0010: begin read_value2 <= reg2; end
 				4'b0011: begin read_value2 <= reg3; end

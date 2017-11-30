@@ -39,7 +39,7 @@ module pc_reg(
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			pc <= 16'b0;
-		end else if (clk && !hold) begin
+		end else if (!hold) begin
 			if (set_pc) begin
 				pc <= set_pc_addr + 16'b1;
 			end else if (read_done) begin

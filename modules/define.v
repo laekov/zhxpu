@@ -17,7 +17,7 @@
 //Define of registers
 `define	RegAddr	3:0
 `define RegValue 15:0
-`define ZeroReg 4'b0000
+`define ZeroReg 4'b1111
 `define SPReg 4'b1111
 `define TReg 4'b1110
 `define RAReg 4'b1101

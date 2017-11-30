@@ -10,10 +10,12 @@ module inst_mem_ctrl(
 	input ram_work_done,
 	input [`MemValue] ram_feed_back,
 	
-	output reg work_done
+	output reg work_done,
+	output wire [`RegValue] done_pc_out
 	);
 
-	reg [`RegValue] done_pc;
+	reg [`RegValue] done_pc = 16'hffff;
+	assign done_pc_out = done_pc;
 
 	always @(*) begin
 		if (ram_work_done == 1'b1) begin

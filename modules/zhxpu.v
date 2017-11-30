@@ -199,6 +199,7 @@ module zhxpu(
 	wire ram2_need_to_work_if;
 	wire ram2_work_done_if;
 	wire [`MemValue] ram2_work_res_if;
+	wire [`RegValue] inst_done_pc;
 
 	inst_mem_ctrl __inst_mem_ctrl(
 		.addr(if_pc),
@@ -206,7 +207,8 @@ module zhxpu(
 		.ram_need_to_work(ram2_need_to_work_if),
 		.ram_work_done(ram2_work_done_if),
 		.ram_feed_back(ram2_work_res_if),
-		.work_done(inst_read_done)
+		.work_done(inst_read_done),
+		.done_pc_out(inst_done_pc)
 	);
 
 // ID stage modules
@@ -505,7 +507,8 @@ module zhxpu(
 		.ram_pc(ram_pc),
 		.ram2_status(ram2_status),
 		.inst_read_done(inst_read_done),
-		.flush(flush)
+		.flush(flush),
+		.inst_done_pc(inst_done_pc)
 	);
 
 endmodule
