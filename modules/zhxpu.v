@@ -185,6 +185,7 @@ module zhxpu(
 
 	pc_reg __pc_reg(	
 		.clk(clk),
+		.rst(rst),
 		.hold(hold),
 		.set_pc(set_pc),
 		.set_pc_addr(set_pc_addr),
@@ -326,6 +327,7 @@ module zhxpu(
 		.result(ram1_work_res)
 	);
 
+	wire [7:0] ram2_status;
 	ram2 __ram2(
 		.clk(raw_clk),
 		.rst(rst),
@@ -344,7 +346,8 @@ module zhxpu(
 		.if_work_done(ram2_work_done_if),
 		.exe_work_done(ram2_work_done),
 		.if_result(ram2_work_res_if),
-		.exe_result(ram2_work_res)
+		.exe_result(ram2_work_res),
+		.status_out(ram2_status)
 	);
 
 	ram_controller __ram_controller(
@@ -494,6 +497,7 @@ module zhxpu(
 		.ram_data(ram_data),
 		.ram_addr(ram_addr),
 		.ram_pc(ram_pc),
+		.ram2_status(ram2_status),
 		.flush(flush)
 	);
 
