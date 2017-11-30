@@ -105,6 +105,7 @@ module hja_led_ctrl(
 		input [`RegValue] ram_pc,
 
 		input [7:0] ram2_status,
+		input decoder_error,
 
 		input flush
     );
@@ -132,7 +133,7 @@ module hja_led_ctrl(
 			16'h0012: led_data <= {ram2_work_res_if};
 			16'h0013: led_data <= {id_inst};
 			16'h0014: led_data <= {id_pc};
-			16'h0015: led_data <= {id_mem_read,3'b0,id_mem_write,3'b0,id_reg_addr,4'b0};
+			16'h0015: led_data <= {id_mem_read,3'b0,id_mem_write,3'b0,id_reg_addr,3'b0,decoder_error};
 			16'h0016: led_data <= {exe_pc};
 			16'h0017: led_data <= {exe_inst};
 			16'h0018: led_data <= {exe_reg_write,3'b0,alu_flag,3'b0,exe_reg_addr,4'b0};

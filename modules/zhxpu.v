@@ -213,9 +213,11 @@ module zhxpu(
 	wire id_mem_write;
 	wire id_reg_write;
 	wire [`RegAddr] id_reg_addr;
+	wire decoder_error;
 
 	decoder __decoder(
 		.opn(id_inst),
+		.decoder_error(decoder_error),
 	//	.readable1(stall_readable1),
 		.read_addr1(reg_read_addr1),
 	//	.readable2(stall_readable2),
@@ -469,6 +471,7 @@ module zhxpu(
 		.ram2_need_to_work_if(ram2_need_to_work_if),
 		.ram2_work_done_if(ram2_work_done_if),
 		.ram2_work_res_if(ram2_work_res_if),
+		.decoder_error(decoder_error),
 		.id_inst(id_inst),
 		.id_pc(id_pc),
 		.id_mem_read(id_mem_read),
