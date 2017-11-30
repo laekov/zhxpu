@@ -182,6 +182,7 @@ module zhxpu(
 	//wire pc_enabled;
 	reg pc_enabled = 1'b1;
 	wire [`RegValue] if_pc;
+	wire inst_read_done;
 
 	pc_reg __pc_reg(	
 		.clk(clk),
@@ -190,7 +191,8 @@ module zhxpu(
 		.set_pc(set_pc),
 		.set_pc_addr(set_pc_addr),
 		.pc_enabled(pc_enabled),
-		.pc(if_pc)
+		.pc(if_pc),
+		.read_done(inst_read_done)
 	);
 
 	wire [`RegValue] if_inst;
@@ -203,7 +205,8 @@ module zhxpu(
 		.data(if_inst),
 		.ram_need_to_work(ram2_need_to_work_if),
 		.ram_work_done(ram2_work_done_if),
-		.ram_feed_back(ram2_work_res_if)
+		.ram_feed_back(ram2_work_res_if),
+		.work_done(inst_read_done)
 	);
 
 // ID stage modules
