@@ -20,6 +20,7 @@
 `include "ram_uart.v"
 `include "ram2.v"
 `include "ram_sel.v"
+`include "hja_led_ctrl.v"
 
 module zhxpu(
     input raw_clk,
@@ -423,7 +424,78 @@ module zhxpu(
 	// assign dig1_data = reg_debug_out[7:4];
 	assign dig1_data = initializing ? init_addr[7:4] : if_pc[7:4];
 	assign dig2_data = initializing ? init_addr[3:0] : if_pc[3:0];
-	assign led_data = if_inst;
+	//assign led_data = if_inst;
+	//
+	
+	hja_led_ctrl __hja_led_ctrl(
+		.sw(sw),
+		.led_data(led_data),
+		.clk(clk),
+		.pclk(pclk),
+		.initializing(initializing),
+		.boot_done_out(boot_done_out),
+		.flash_ready(flash_ready),
+		.mflash_data(mflash_data),
+		.mflash_addr(mflash_addr),
+		.init_data(init_data),
+		.init_addr(init_add),
+		.flash_read_ctrl(flash_read_ctrl),
+		.init_mem_wr(init_mem_wr),
+		.hold(hold),
+		.ram1_work_done(ram1_work_done),
+		.ram2_work_done(ram2_work_done),
+		.mem_work_done(mem_work_done),
+		.mem_op(mem_op),
+		.reg_writable(reg_writable),
+		.reg_write_addr(reg_write_addr),
+		.reg_write_value(reg_write_value),
+		.reg_readable1(reg_readable1),
+		.reg_read_addr1(reg_read_addr1),
+		.reg_read_value1(reg_read_value1),
+		.reg_readable2(reg_readable2),
+		.reg_read_addr2(reg_read_addr2),
+		.reg_read_value2(reg_read_value2),
+		.alu_writable(alu_writable),
+		.alu_write_addr(alu_write_addr),
+		.alu_write_value(alu_write_value),
+		.reg_debug_out(reg_debug_out),
+		.set_pc(set_pc),
+		.set_pc_addr(set_pc_addr),
+		.if_pc(if_pc),
+		.if_inst(if_inst),
+		.ram2_need_to_work_if(ram2_need_to_work_if),
+		.ram2_work_done_if(ram2_work_done_if),
+		.ram2_work_res_if(ram2_work_res_if),
+		.id_inst(id_inst),
+		.id_pc(id_pc),
+		.id_mem_read(id_mem_read),
+		.id_mem_write(id_mem_write),
+		.id_reg_addr(id_reg_addr),
+		.exe_pc(exe_pc),
+		.exe_inst(exe_inst),
+		.exe_reg_write(exe_reg_write),
+		.exe_reg_addr(exe_reg_addr),
+		.alu_op1(alu_op1),
+		.alu_op2(alu_op2),
+		.alu_res(alu_res),
+		.exe_read_value1(exe_read_value1),
+		.exe_read_value2(exe_read_value2),
+		.alu_flag(alu_flag),
+		.exe_memwr_ctrl(exe_memwr_ctrl),
+		.exe_memrd_ctrl(exe_memrd_ctrl),
+		.exe_mem_data(exe_mem_data),
+		.wb_res(wb_res),
+		.wb_flag(wb_flag),
+		.mem_work_res(mem_work_res),
+		.ram1_need_to_work(ram1_need_to_work),
+		.ram2_need_to_work(ram2_need_to_work),
+		.ram_status(ram_status),
+		.mem_wr(mem_wr),
+		.ram_data(ram_data),
+		.ram_addr(ram_addr),
+		.ram_pc(ram_pc),
+		.flush(flush)
+	);
 
 endmodule
 
