@@ -9,6 +9,8 @@ module inst_mem_ctrl(
 
 	input ram_work_done,
 	input [`MemValue] ram_feed_back
+	
+	output reg work_done,
 	);
 
 	reg [`RegValue] done_pc;
@@ -18,15 +20,18 @@ module inst_mem_ctrl(
 			if (addr == done_pc) begin
 				data <= ram_feed_back;
 				ram_need_to_work <= 1'b0;
+				work_done <= 1'b1;
 			end
 			else begin
 				ram_need_to_work <= 1'b1;
 				data <= 16'h0800;
+				work_done <= 1'b0;
 			end
 		end
 		else begin
 			ram_need_to_work <= 1'b1;
 			data <= 16'h0800;
+			work_done <= 1'b0;
 		end
 	end
 
