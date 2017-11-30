@@ -22,7 +22,6 @@ module flash_controller(
 	input [`MemAddr] addr,
 
 	input flash_work_done,
-	input [`MemValue] ram2_feedback,
 
 	output reg flash_need_to_work,
 	output reg work_done,

@@ -5,12 +5,16 @@
 module bootloader(
 	input clk,
 	input rst,
-	input wire flash_ready,
+	input wire work_done,
 	input wire [15:0] flash_data,
+
+	output wire need_to_work,
 	output reg [`MemValue] data,
 	output wire read_ctrl,
+
 	output wire [22:1] caddr_out,
 	output reg write_ctrl,
+
 	output wire boot_done_out,
 	output [`MemAddr] maddr_out
 );
@@ -29,16 +33,15 @@ module bootloader(
 		new_caddr <= caddr + 22'b1;
 	end
 
-	always @(posedge clk) begin
+	always @(posedge clk or negedge clk) begin
 		if (!rst) begin
 			caddr <= 22'b0;
 			maddr <= 18'b111111111111111111;
 			boot_done <= 1'b0;
 		end else if (boot_done) begin
-		end else if (flash_ready) begin
+		end else if (work_done == 1'b1) begin
 			maddr <= new_caddr[18:1] - 18'b1;
 			caddr <= new_caddr;
-			read_c <= !read_c;
 			data <= flash_data;
 			write_ctrl <= 1'b1;
 			if(caddr > 22'h219)begin

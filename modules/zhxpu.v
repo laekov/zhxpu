@@ -99,13 +99,15 @@ module zhxpu(
 	wire [15:0] init_addr;
 	wire flash_read_ctrl;
 	wire init_mem_wr;
+	wire flash_controller_work_done;
+	wire flash_controller_need_to_work;
 	bootloader __bootloader(
 		.clk(raw_clk),
 		.rst(rst),
-		.flash_ready(flash_ready),
+		.work_done(flash_controller_work_done),
 		.flash_data(mflash_data),
 		.data(init_data),
-		.read_ctrl(flash_read_ctrl),
+		.need_to_work(flash_controller_need_to_work),
 		.caddr_out(mflash_addr),
 		.write_ctrl(init_mem_wr),
 		.boot_done_out(boot_done_out),
