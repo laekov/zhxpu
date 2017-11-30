@@ -26,6 +26,7 @@ module pc_reg(
 		input set_pc,
 		input [15:0] set_pc_addr,
 		input pc_enabled,
+		input read_done,
 		output reg [`RegValue] pc
     );
 
@@ -42,7 +43,9 @@ module pc_reg(
 			if (set_pc) begin
 				pc <= set_pc_addr + 16'b1;
 			end else begin
-				pc <= new_pc;
+				if (read_done) begin
+					pc <= new_pc;
+				end
 			end
 		end else if (!hold) begin
 		end
