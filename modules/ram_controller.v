@@ -90,7 +90,7 @@ module ram_controller(
 		end
 	end
 
-	always @(posedge ram1_work_done or posedge ram2_work_edge) begin
+	always @(posedge ram1_work_done or posedge ram2_work_done) begin
 		done_pc <= pc;
 	end
 
