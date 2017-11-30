@@ -74,6 +74,8 @@ module ram2(
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
+			exe_work_done <= 1'b0;
+			if_work_done <= 1'b0;
 		end
 		else begin
 			cnt <= next_cnt;

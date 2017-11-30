@@ -108,6 +108,7 @@ module ram_uart(
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
+			work_done <= 1'b0;
 		end
 		else begin
 			cnt <= next_cnt;

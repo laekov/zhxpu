@@ -55,7 +55,7 @@ module hja_led_ctrl(
 		input [`RegAddr] alu_write_addr,
 		input [`RegValue] alu_write_value,
 
-		input [`RegValue] reg_debug_out,
+		input [255:0] reg_debug_out,
 
 		input set_pc,
 		input [15:0] set_pc_addr,
