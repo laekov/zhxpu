@@ -100,6 +100,7 @@ module zhxpu(
 	wire flash_read_ctrl;
 	wire init_mem_wr;
 	bootloader __bootloader(
+		.clk(raw_clk),
 		.rst(rst),
 		.flash_ready(flash_ready),
 		.flash_data(mflash_data),
