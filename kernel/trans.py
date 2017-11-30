@@ -46,7 +46,7 @@ for line in f:
         s = s + trans(line[a])
 
     cnt += 1
-    print cnt,line.replace("\n","")
+    #print cnt,line.replace("\n","")
 
     if s[0:5] == "01001":
         print "ADDIU",reg(s[5:8]),s[8:16]
@@ -60,7 +60,76 @@ for line in f:
         elif s[5:8] == "100" and s[11:16] =="00000":
             print "MTSP",reg(s[8:11])
         else:
-            print s
             gg
     elif s[0:5] == "11100":
-        print ""
+        if s[14:16] == "01":
+            print "ADDU",reg(s[5:8]),reg(s[8:11]),reg(s[11:14])
+        elif s[14:16] == "11":
+            print "SUBU",reg(s[5:8]),reg(s[8:11]),reg(s[11:14])
+        else:
+            gg
+    elif s[0:5] == "11101":
+        if s[11:16] == "01100":
+            print "AND",reg(s[5:8]),reg(s[8:11])
+        elif s[8:16] == "00000000":
+            print "JR",reg(s[5:8])
+        elif s[11:16] == "01010":
+            print "CMP",reg(s[5:8]),reg(s[8:11])
+        elif s[8:16] == "01000000":
+            print "MFPC",reg(s[5:8])
+        elif s[11:16] == "01101":
+            print "OR",reg(s[5:8]),reg(s[8:11])
+        elif s[8:16] == "11000000":
+            print "JALR",reg(s[5:8])
+        elif s[5:16] == "00000100000":
+            print "JRRA"
+        elif s[11:16] == "00111":
+            print "SRAV",reg(s[5:8]),reg(s[8:11])
+        else:
+            gg
+    elif s[0:5] == "00010":
+        print "B",s[5:16]
+    elif s[0:5] == "00100":
+        print "BEQZ",reg(s[5:8]),s[8:16]
+    elif s[0:5] == "00101":
+        print "BNEZ",reg(s[5:8]),s[8:16]
+    elif s[0:5] == "01101":
+        print "LI",reg(s[5:8]),s[8:16]
+    elif s[0:5] == "10011":
+        print "LW",reg(s[5:8]),reg(s[8:11]),s[11:16]
+    elif s[0:5] == "10010":
+        print "LW_SP",reg(s[5:8]),s[8:16]
+    elif s[0:5] == "11110":
+        if s[8:16] == "00000000":
+            print "MFIH",reg(s[5:8])
+        elif s[8:16] == "00000001":
+            print "MTIH",reg(s[5:8])
+        else:
+            gg
+    elif s[0:5] == "00001":
+        if s[5:16] == "00000000000":
+            print "NOP"
+        else:
+            gg
+    elif s[0:5] == "00110":
+        if s[14:16] == "00":
+            print "SLL",reg(s[5:8]),reg(s[8:11]),s[11:14]
+        elif s[14:16] == "11":
+            print "SRA",reg(s[5:8]),reg(s[8:11]),s[11:14]
+        elif s[14:16] == "10":
+            print "SRL",reg(s[5:8]),reg(s[8:11]),s[11:14]
+        else:
+            gg
+    elif s[0:5] == "11011":
+        print "SW",reg(s[5:8]),reg(s[8:11]),s[11:16]
+    elif s[0:5] == "11010":
+        print "SW_SP",reg(s[5:8]),s[8:16]
+    elif s[0:5] == "01111":
+        if s[11:16] == "00000":
+            print "MOVE",reg(s[5:8]),reg(s[8:11])
+        else:
+            gg
+    elif s[0:5] == "00000":
+        print "ADDSP3",reg(s[5:8]),s[8:16]
+    else:
+        gg
