@@ -3,9 +3,10 @@
 `include "define.v"
 
 module bootloader(
+	input clk,
+	input rst,
 	input wire flash_ready,
 	input wire [15:0] flash_data,
-	input rst,
 	output reg [`MemValue] data,
 	output wire read_ctrl,
 	output wire [22:1] caddr_out,
