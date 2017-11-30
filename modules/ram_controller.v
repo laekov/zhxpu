@@ -45,6 +45,12 @@ module ram_controller(
 
 	always @(*) begin
 		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
+			if (addr == `ZhiZhangAddr) begin
+				feedback <= 16'hffff;
+				work_done <= 1'b1;
+				ram1_need_to_work <= 1'b0;
+				ram2_need_to_work <= 1'b0;
+			end else
 			if (addr[15:15] == 1'b1) begin
 				if (ram1_work_done == 1'b1) begin
 					if (pc == done_pc1) begin

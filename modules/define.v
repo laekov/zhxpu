@@ -10,6 +10,7 @@
 `define MemAddr 17:0
 `define MemAddrB 18:0
 `define UartAddr 18'hbf00
+`define ZhiZhangAddr 18'bf01
 `define UartValue 7:0
 
 `define RamFrequency 0:0
