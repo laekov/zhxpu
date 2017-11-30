@@ -126,7 +126,6 @@ module hja_led_ctrl(
 			16'h0008: led_data <= {reg_read_value1};
 			16'h0009: led_data <= {reg_read_value2};
 			16'h000A: led_data <= {alu_write_value};
-			16'h000B: led_data <= {reg_debug_out};
 			16'h000C: led_data <= {reg_writable,3'b0,reg_readable1,3'b0,reg_readable2,3'b0,alu_writable,3'b0};
 			16'h000D: led_data <= {set_pc,7'b0,inst_read_done,7'b0};
 			16'h000E: led_data <= {set_pc_addr};
@@ -158,6 +157,22 @@ module hja_led_ctrl(
 			16'h0028: led_data <= {ram2_status,8'b0};
 			16'h0029: led_data <= { inst_done_pc };
 			16'h002A: led_data <= { ram_ctrl_done_pc };
+			16'h1000: led_data <= {reg_debug_out[15:0]};
+			16'h1100: led_data <= {reg_debug_out[31:16]};
+			16'h1200: led_data <= {reg_debug_out[47:32]};
+			16'h1300: led_data <= {reg_debug_out[63:48]};
+			16'h1400: led_data <= {reg_debug_out[79:64]};
+			16'h1500: led_data <= {reg_debug_out[95:80]};
+			16'h1600: led_data <= {reg_debug_out[111:96]};
+			16'h1700: led_data <= {reg_debug_out[127:112]};
+			16'h1800: led_data <= {reg_debug_out[143:128]};
+			16'h1900: led_data <= {reg_debug_out[159:144]};
+			16'h1A00: led_data <= {reg_debug_out[175:160]};
+			16'h1B00: led_data <= {reg_debug_out[191:176]};
+			16'h1C00: led_data <= {reg_debug_out[207:192]};
+			16'h1D00: led_data <= {reg_debug_out[223:208]};
+			16'h1E00: led_data <= {reg_debug_out[239:224]};
+			16'h1F00: led_data <= {reg_debug_out[255:240]};
 			default: led_data <= sw;
 		endcase
 	end

@@ -43,7 +43,7 @@ module register(
 	input RA_writable,
 	input [`RegValue] RA_value,
 
-	output wire [`RegValue] debug_out
+	output wire [255:0] debug_out
     );
 
 	reg [`RegValue] reg0;
@@ -64,7 +64,7 @@ module register(
 	reg [`RegValue] reg15;
 
 	//assign debug_out = { regs[1][3:0], regs[2][3:0], regs[3][3:0], regs[4][3:0] };
-	assign debug_out = { reg1[3:0], reg2[3:0], reg4[3:0], reg5[3:0] };
+	assign debug_out = { reg0, reg1, reg2, reg3, reg4, reg5, reg6, reg7, reg8, reg9, reg10, reg11, reg12, reg13, reg14, reg15 };
 
 	always @(clk) begin	
 		if ((writable == `Writeable) && (write_addr != `ZeroReg)) begin

@@ -157,7 +157,7 @@ module zhxpu(
 	wire [`RegAddr] alu_write_addr;
 	wire [`RegValue] alu_write_value;
 
-	wire [`RegValue] reg_debug_out;
+	wire [255:0] reg_debug_out;
 
 	register __register(
 		.clk(raw_clk),
