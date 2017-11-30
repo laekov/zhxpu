@@ -22,7 +22,6 @@ module ram_controller(
 	inout mem_rd,
 	inout mem_wr,
 	input [`MemAddr] addr,
-	input [`MemValue] data,
 
 	input ram1_work_done,
 	input [`MemValue] ram1_feedback,

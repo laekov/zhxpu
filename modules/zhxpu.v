@@ -351,7 +351,6 @@ module zhxpu(
 		.mem_wr(exe_memwr_ctrl),
 		.pc(ram_pc),
 		.addr({ 2'b0, ram_addr }),
-		.data(ram_data),
 		.ram1_work_done(ram1_work_done),
 		.ram1_feedback(ram1_work_res),
 		.ram1_need_to_work(ram1_need_to_work),
