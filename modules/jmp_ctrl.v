@@ -15,13 +15,13 @@ module jmp_ctrl(
 		case (opn[15:11])
 			5'b00010: begin //B
 				set_pc <= 1'b1;
-				set_pc_value <= pc_in + { ((opn[10:10] == 1'b1) ? 5'b11111 : 5'b00000), opn[10:0] }; 
+				set_pc_value <= pc_in + { ((opn[10:10] == 1'b1) ? 5'b11111 : 5'b00000), opn[10:0] } + 16'b1; 
 				write_RA <= 1'b0;
 			end
 			5'b00101: begin //BNEZ
 				if (op1 != 0) begin
 					set_pc <= 1'b1;
-					set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] }; 
+					set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] } + 16'b1; 
 				end else begin
 					set_pc <= 1'b0;
 					set_pc_value <= 16'b0;
@@ -32,7 +32,7 @@ module jmp_ctrl(
 				if (opn[10:8] == 3'b000) begin // BTEQZ
 					if (op1 == 0) begin
 						set_pc <= 1'b1;
-						set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] }; 
+						set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] } + 16'b1; 
 					end else begin
 						set_pc <= 1'b0;
 						set_pc_value <= 16'b0;
@@ -42,7 +42,7 @@ module jmp_ctrl(
 				if (opn[10:8] == 3'b001) begin // BTNEZ
 					if (op1 != 0) begin
 						set_pc <= 1'b1;
-						set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] }; 
+						set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] } + 16'b1; 
 					end else begin
 						set_pc <= 1'b0;
 						set_pc_value <= 16'b0;
@@ -79,7 +79,7 @@ module jmp_ctrl(
 			5'b00100: begin //BEQZ
 				if (op1 == 0) begin
 					set_pc <= 1'b1;
-					set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] };
+					set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] } + 16'b1;
 					write_RA <= 1'b0;
 				end
 				else begin

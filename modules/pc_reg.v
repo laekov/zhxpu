@@ -41,7 +41,7 @@ module pc_reg(
 			pc <= 16'b0;
 		end else if (!hold) begin
 			if (set_pc) begin
-				pc <= set_pc_addr + 16'b1;
+				pc <= set_pc_addr;
 			end else if (read_done) begin
 				pc <= new_pc;
 			end
