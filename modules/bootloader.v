@@ -22,24 +22,28 @@ module bootloader(
 	assign maddr_out=maddr[15:0];
 	reg boot_done=1'b0;
 	assign boot_done_out=boot_done;
+	reg [22:1] new_caddr;
+
+	always @(*) begin
+		new_caddr <= caddr + 22'b1;
+	end
 
 	always @(posedge flash_ready or negedge rst) begin
 		if (!rst) begin
-			caddr = 22'b0;
-			maddr=18'b0;
-			boot_done=1'b0;
-			read_c=!read_c;
+			caddr <= 22'b0;
+			maddr <= 18'b111111111111111111;
+			boot_done <= 1'b0;
+			read_c <= !read_c;
 		end else begin
 			if(boot_done==1'b0)begin
-				write_ctrl=1'b0;
-				caddr = caddr + 22'b1;
-				read_c = !read_c;
-				maddr = maddr + 18'b1;
-				data = flash_data;
-				write_ctrl = 1'b1;
+				maddr <= caddr[18:1];
+				caddr <= next_caddr;
+				read_c <= !read_c;
+				data <= flash_data;
+				write_ctrl <= 1'b1;
 			end
-			if(maddr>18'h218)begin
-				boot_done =1'b1;
+			if(caddr > 22'h219)begin
+				boot_done <= 1'b1;
 			end
 		end
 	end
