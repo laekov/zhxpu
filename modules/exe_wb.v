@@ -22,11 +22,8 @@ module exe_wb(
 	input [`RegValue] mem_read_value
 );
 
-	always @(posedge clk or posedge pclk) begin
-		if (pclk) begin
-			write_reg_ctrl <= 1'b0;
-			write_reg_addr <= `ZeroReg;
-		end else if (hold) begin
+	always @(posedge clk) begin
+		if (hold) begin
 		end else begin
 			write_reg_ctrl <= reg_wr;
 			write_reg_addr <= reg_addr;

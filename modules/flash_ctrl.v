@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`define CLK_CNT 22:0
+`define CLK_CNT 5:0
 
 module flash_ctrl(
 	input clk,
