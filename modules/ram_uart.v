@@ -271,6 +271,10 @@ module ram_uart(
 						else if (mem_rd == 1'b1) next_status <= UART_READ1;
 						else next_status <= IDLE;
 					end
+					else begin
+						if (mem_wr == 1'b1) next_status <= RAM1_WRITE1;
+						else next_status <= RAM1_READ1;
+					end
 				end
 				else next_status <= IDLE;
 			end
