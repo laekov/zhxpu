@@ -29,6 +29,7 @@ module ram_controller(
 	input [`MemValue] ram2_feedback,
 
 	input [`RegValue] pc,
+	input uart_received_data,
 
 	output reg ram1_need_to_work,
 	output reg ram2_need_to_work,
@@ -46,7 +47,7 @@ module ram_controller(
 	always @(*) begin
 		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
 			if (addr == `ZhiZhangAddr) begin
-				feedback <= 16'hffff;
+				feedback = {12'hfff,2'b1,uart_received_data,1'b1};
 				work_done <= 1'b1;
 				ram1_need_to_work <= 1'b0;
 				ram2_need_to_work <= 1'b0;

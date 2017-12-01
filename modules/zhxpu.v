@@ -315,6 +315,8 @@ module zhxpu(
 	wire [`RegValue] ram_addr;
 	wire [`RegValue] ram_pc;
 
+	wire uart_received_data;
+
 	ram_sel __ram_sel(
 		.initializing(initializing),
 		.init_addr(init_addr),
@@ -348,6 +350,7 @@ module zhxpu(
 		.wrn(wrn),
 		.uart_work_done(ram1_work_done),
 		.status_out(ram_status),
+		.uart_received_data(uart_received_data),
 		.result(ram1_work_res)
 	);
 
@@ -388,6 +391,7 @@ module zhxpu(
 		.ram2_need_to_work(ram2_need_to_work),
 		.work_done(mem_work_done),
 		.feedback(mem_work_res),
+		.uart_received_data(uart_received_data),
 		.done_pc_out(ram_ctrl_done_pc)
 	);
 

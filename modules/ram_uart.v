@@ -49,9 +49,15 @@ module ram_uart(
 	output wire uart_work_done,
 	output reg [`MemValue] result,
 
+	output wire uart_received_data,
+
 	output wire [7:0] status_out
 
     );
+
+	reg received;
+	reg received_data
+	assign uart_received_data = received;
 
 //	reg Ram1Working;
 	reg UartWorking;
@@ -96,7 +102,8 @@ module ram_uart(
 	localparam RAM1_WRITE1 = 8'b01100001;
 	localparam RAM1_WRITE2 = 8'b01100010;
 	localparam RAM1_WRITE3 = 8'b01100011;
-	localparam RAM1_WRITE4 = 8'b01100100;
+
+	localparam WAIT_FOR_WORK = 8'b111111111;
 
 	reg [7:0] status;
 	assign status_out = status;
@@ -114,22 +121,24 @@ module ram_uart(
 			cnt <= next_cnt;
 			if (cnt == 0) begin
 				status <= next_status;
-				case (next_status)
-					UART_READ6: work_done <= 1'b1;
-					UART_WRITE10: work_done <= 1'b1;
-					RAM1_WRITE3: work_done <= 1'b1;
-					RAM1_READ3: work_done <= 1'b1;
-
-					UART_WRITE1: work_done <= 1'b0;
-					UART_READ2:  work_done <= 1'b0;
-					RAM1_WRITE1: work_done <= 1'b0;
-					RAM1_READ1: work_done <= 1'b0;
-
-					UART_READ3: temp_data1 <= UartData;
-				endcase
+				if (next_status == IDLE) begin
+					work_done <= 1'b1;
+					if (status == WAIT_FOR_WORK) begin
+						result <= received_data;
+						received <= 1'b0;
+					end
+				if (next_status == UART_READ3) temp_data1 <= UartData;
 			end
 			case (status)
 				IDLE: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
+				end
+				WAIT_FOR_WORK: begin
 					Ram1EN <= 1'b1;
 					Ram1OE <= 1'b1;
 					Ram1WE <= 1'b1;
@@ -190,9 +199,9 @@ module ram_uart(
 	
 					rdn <= 1'b1;
 					wrn <= 1'b1;
-	
-					result <= {temp_data1,UartData};
-	//				UartWorking <= 1'b0;
+
+					received <= 1'b1;
+					received_data <= {temp_data1,UartData};
 				end
 	
 				UART_WRITE1: begin
@@ -314,7 +323,6 @@ module ram_uart(
 					wrn <= 1'b1;
 					
 					result <= Ram1Data;
-	//				Ram1Working <= 1'b0;
 				end
 	
 				RAM1_WRITE1: begin
@@ -346,14 +354,6 @@ module ram_uart(
 					
 	//				Ram1Working <= 1'b0;
 				end
-				RAM1_WRITE4: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
 	
 			endcase
 	
@@ -367,13 +367,18 @@ module ram_uart(
 				next_status <= UART_READ1;
 			end
 
-			UART_READ1: begin
+			WAIT_FOR_WORK: begin
 				if (need_to_work == 1'b1) begin
 					if (mem_addr == `UartAddr) begin
 						if (mem_wr == 1'b1) next_status <= UART_WRITE1;
 						else begin
-							if (data_ready == 1'b1) next_status <= UART_READ2;
-							else next_status <= UART_READ1;
+							if (received == 1'b0) begin
+								if (data_ready == 1'b1) next_status <= UART_READ2;
+								else next_status <= UART_READ1;
+							end
+							else begin
+								next_status <= IDLE;
+							end
 						end
 					end
 					else begin
@@ -382,8 +387,23 @@ module ram_uart(
 					end
 				end
 				else begin
-					if (data_ready == 1'b1) next_status <= UART_READ2;
-					else next_status <= UART_READ1;
+					if (received == 1'b0) next_status <= UART_READ1;
+					else next_status <= WAIT_FOR_WORK;
+				end
+			end
+
+			UART_READ1: begin
+				if (need_to_work == 1'b1) begin
+					next_status = WAIT_FOR_WORK;
+				end
+				else begin
+					if (received == 1'b0) begin
+						if (data_ready == 1'b1) next_status <= UART_READ2;
+						else next_status <= UART_READ1;
+					end
+					else begin
+						next_status <= WAIT_FOR_WORK;
+					end
 				end
 			end
 			UART_READ2: next_status <= UART_READ3;
@@ -393,7 +413,7 @@ module ram_uart(
 				else next_status <= UART_READ4;
 			end
 			UART_READ5: next_status <= UART_READ6;
-			UART_READ6: next_status <= IDLE;
+			UART_READ6: next_status <= UART_READ1;
 
 			UART_WRITE1: next_status <= UART_WRITE2;
 			UART_WRITE2: next_status <= UART_WRITE3;
@@ -425,7 +445,6 @@ module ram_uart(
 			RAM1_WRITE1 : next_status <= RAM1_WRITE2;
 			RAM1_WRITE2 : next_status <= RAM1_WRITE3;
 			RAM1_WRITE3 : next_status <= IDLE;
-			RAM1_WRITE4 : next_status <= IDLE;
 
 			default: next_status <= IDLE;
 		endcase
