@@ -101,7 +101,7 @@ module alu(
 				end
 			end
 			5'b00001: begin
-				if (opn[10:0] == 11'b10000000000) begin //NOP
+				if (opn[10:0] == 11'b00000000000) begin //NOP
 					{flag,res} <= {1'b0,16'b0};
 				end
 			end

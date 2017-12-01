@@ -262,7 +262,7 @@ module decoder(
 			end
 			5'b00001: begin
 				decoder_error <= 1'b0;
-				if (opn[10:0] == 11'b10000000000) begin //NOP
+				if (opn[10:0] == 11'b00000000000) begin //NOP
 					//readable1 <= 1'b0;
 
 					//readable2 <= 1'b0;
