@@ -62,6 +62,7 @@ module zhxpu(
 	wire pclk;
 
 	clock_ctrl __clock_ctrl(
+		.sw(sw),
 		.raw_clk(raw_clk),
 		//.manual_clk(manual_clk),
 		.auto_en(manual_clk),
