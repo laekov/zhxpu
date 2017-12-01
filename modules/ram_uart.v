@@ -36,7 +36,6 @@ module ram_uart(
 	output reg Ram1WE,
 	output reg Ram1EN,
 
-	inout wire [`UartValue] UartData,
 	output reg UartOE,
 	output reg UartWE,
 	output reg UartEN,
@@ -64,8 +63,7 @@ module ram_uart(
 	reg [`UartValue] temp_data;
 	
 	assign Ram1Addr = mem_addr;
-	assign UartData = UartWriting?temp_data:8'bz;
-	assign Ram1Data = UartWorking?{8'b0, UartData}:(Ram1Writing?mem_value:16'bz);
+	assign Ram1Data = UartWorking?{8'b0, UartWriting?temp_data:8'bz}:(Ram1Writing?mem_value:16'bz);
 
 	localparam IDLE = 8'b00000000;
 	
@@ -108,6 +106,9 @@ module ram_uart(
 				end
 				else if (next_status == UART_READ1 || next_status == UART_WRITE1 || next_status == RAM1_READ1 || next_status == RAM1_WRITE1) begin
 					work_done <= 1'b0;
+				end
+				if (next_status == UART_READ3) begin
+					result <= Ram1Data;
 				end
 			end
 
