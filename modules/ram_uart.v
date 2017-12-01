@@ -107,7 +107,7 @@ module ram_uart(
 				else if (next_status == UART_READ1 || next_status == UART_WRITE1 || next_status == RAM1_READ1 || next_status == RAM1_WRITE1) begin
 					work_done <= 1'b0;
 				end
-				if (next_status == UART_READ3) begin
+				if (status == UART_READ3) begin
 					result <= Ram1Data;
 				end
 			end
@@ -120,6 +120,8 @@ module ram_uart(
 	
 					rdn <= 1'b1;
 					wrn <= 1'b1;
+
+					UartWorking <= 1'b0;
 				end
 
 				UART_READ1: begin
@@ -148,9 +150,6 @@ module ram_uart(
 	
 					rdn <= 1'b1;
 					wrn <= 1'b1;
-
-					result <= Ram1Data;
-					UartWorking <= 1'b0;
 				end
 	
 				UART_WRITE1: begin

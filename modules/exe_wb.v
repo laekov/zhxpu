@@ -16,17 +16,23 @@ module exe_wb(
 	output reg unlock_reg,
 	output reg [`RegAddr] unlock_reg_addr,
 	output reg [`RegValue] sp_reg_data,
-	output reg write_reg_ctrl,
-	output reg [`RegAddr] write_reg_addr,
+	output wire write_reg_ctrl,
+	output wire [`RegAddr] write_reg_addr,
 	output reg [`RegValue] write_reg_data,
 	input [`RegValue] mem_read_value
 );
 
-	always @(clk) begin
+	reg write_reg_ctrl_c;
+	reg [`RegAddr] write_reg_addr_c;
+
+	assign write_reg_ctrl = write_reg_ctrl_c && !clk;
+	assign write_reg_addr = write_reg_addr_c;
+
+	always @(posedge clk) begin
 		if (hold) begin
 		end else begin
-			write_reg_ctrl <= reg_wr && clk;
-			write_reg_addr <= clk ? reg_addr : `ZeroReg;
+			write_reg_ctrl_c <= reg_wr;
+			write_reg_addr_c <= reg_addr;
 			write_reg_data <= alu_res;
 		end
 	end

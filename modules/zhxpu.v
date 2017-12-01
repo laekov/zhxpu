@@ -533,7 +533,9 @@ module zhxpu(
 		.ram_ctrl_done_pc(ram_ctrl_done_pc),
 		.flash_done_pc(flash_done_pc),
 		.flash_controller_need_to_work(flash_controller_need_to_work),
-		.flash_controller_work_done(flash_controller_work_done)
+		.flash_controller_work_done(flash_controller_work_done),
+		.id_reg_write(id_reg_write),
+		.data_ready(data_ready)
 	);
 
 endmodule

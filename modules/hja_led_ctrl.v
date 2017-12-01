@@ -54,6 +54,7 @@ module hja_led_ctrl(
 		input alu_writable,
 		input [`RegAddr] alu_write_addr,
 		input [`RegValue] alu_write_value,
+		input id_reg_write,
 
 		input [255:0] reg_debug_out,
 
@@ -114,7 +115,8 @@ module hja_led_ctrl(
 
 		input [`RegValue] flash_done_pc,
 		input flash_controller_work_done,
-		input flash_controller_need_to_work
+		input flash_controller_need_to_work,
+		input data_ready
     );
 
 	always @(*) begin
@@ -139,7 +141,7 @@ module hja_led_ctrl(
 			8'h12: led_data <= {ram2_work_res_if};
 			8'h13: led_data <= {id_inst};
 			8'h14: led_data <= {id_pc};
-			8'h15: led_data <= {id_mem_read,3'b0,id_mem_write,3'b0,id_reg_addr,3'b0,decoder_error};
+			8'h15: led_data <= {id_mem_read,3'b0,id_mem_write,3'b0,id_reg_addr,3'b0,decoder_error, 1'b0, id_reg_write, 1'b0 };
 			8'h16: led_data <= {exe_pc};
 			8'h17: led_data <= {exe_inst};
 			8'h18: led_data <= {exe_reg_write,3'b0,alu_flag,3'b0,exe_reg_addr,4'b0};
@@ -148,7 +150,7 @@ module hja_led_ctrl(
 			8'h1B: led_data <= {alu_res};
 			8'h1C: led_data <= {exe_read_value1};
 			8'h1D: led_data <= {exe_read_value2};
-			8'h1E: led_data <= {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,mem_wr,1'b0,flush,3'b0};
+			8'h1E: led_data <= {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,mem_wr,1'b0,flush,1'b0, data_ready, 1'b0};
 			8'h1F: led_data <= {exe_mem_data};
 			8'h20: led_data <= {wb_res};
 			8'h21: led_data <= {mem_work_res};
