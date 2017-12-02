@@ -48,9 +48,9 @@ module ram_uart(
 	output wire uart_work_done,
 	output reg [`MemValue] result,
 
-	output reg [`QueueSize] front,
-	output reg [`QueueSize] tail,
-	output reg [`RegValue] queue_front_v,
+	output wire [`QueueSize] front,
+	output wire [`QueueSize] tail,
+	output wire [`RegValue] queue_front_v,
 
 	output wire [7:0] status_out
 
@@ -92,7 +92,7 @@ module ram_uart(
 	localparam RAM1_WRITE2 = 8'b01100010;
 	localparam RAM1_WRITE3 = 8'b01100011;
 	
-	localparam UART_READ_FROM_QUEUE = 8'b01100011;
+	localparam UART_READ_FROM_QUEUE = 8'b10000011;
 
 	reg [7:0] status;
 	assign status_out = status;

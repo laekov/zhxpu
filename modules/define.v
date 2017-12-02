@@ -16,7 +16,7 @@
 `define RamFrequency 0:0
 
 `define QueueSize 7:0
-`define QueueSizeH 256
+`define QueueSizeH 0:255
 
 //Define of registers
 `define	RegAddr	3:0

@@ -558,7 +558,8 @@ module zhxpu(
 		.mem_act2(mem_act2),
 		.qfront(qfront),
 		.qtail(qtail),
-		.qfrontv(qfrontv)
+		.qfrontv(qfrontv),
+		.uart_ready(uart_ready)
 	);
 
 endmodule
