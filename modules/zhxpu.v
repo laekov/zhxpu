@@ -386,6 +386,8 @@ module zhxpu(
 	wire [31:0] mem_act;
 	wire [`RegValue] mem_act1;
 	wire [`RegValue] mem_act2;
+	wire uart_ready;
+	assign uart_ready = qfront != qtail;
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(mem_wr),
@@ -399,7 +401,7 @@ module zhxpu(
 		.ram2_need_to_work(ram2_need_to_work),
 		.work_done(mem_work_done),
 		.feedback(mem_work_res),
-		.uart_received_data(data_ready),
+		.uart_received_data(uart_ready),
 		.done_pc_out(ram_ctrl_done_pc),
 		.mem_act(mem_act),
 		.done_act1_out(mem_act1),
