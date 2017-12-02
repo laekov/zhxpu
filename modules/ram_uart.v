@@ -126,159 +126,6 @@ module ram_uart(
 					work_done <= 1'b0;
 				end
 			end
-
-			case (status)
-				IDLE: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
-
-				UART_READ1: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-
-					Ram1Writing <= 1'b0;
-				end
-				UART_READ2: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b0;
-					wrn <= 1'b1;
-				end
-				UART_READ3: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b0;
-					wrn <= 1'b1;
-					
-					queue[queue_tail] <= Ram1Data;
-				end
-	
-				UART_WRITE1: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-	
-					Ram1Writing <= 1'b1;
-				end
-				UART_WRITE2: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b0;
-				end
-				UART_WRITE3: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
-				UART_WRITE4: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
-				UART_WRITE5: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
-	
-				RAM1_READ1: begin
-					Ram1EN <= 1'b0;
-					Ram1OE <= 1'b0;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-					
-					Ram1Writing <= 1'b0;
-				end
-				RAM1_READ2: begin
-					Ram1EN <= 1'b0;
-					Ram1OE <= 1'b0;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
-				RAM1_READ3: begin
-					Ram1EN <= 1'b0;
-					Ram1OE <= 1'b0;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-					
-					result <= Ram1Data;
-				end
-	
-				RAM1_WRITE1: begin
-					Ram1EN <= 1'b0;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-					
-					Ram1Writing <= 1'b1;
-				end
-				RAM1_WRITE2: begin
-					Ram1EN <= 1'b0;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b0;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-				end
-				RAM1_WRITE3: begin
-					Ram1EN <= 1'b0;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-					
-				end
-
-				UART_READ_FROM_QUEUE: begin
-					Ram1EN <= 1'b1;
-					Ram1OE <= 1'b1;
-					Ram1WE <= 1'b1;
-	
-					rdn <= 1'b1;
-					wrn <= 1'b1;
-					
-					result <= queue[queue_front];
-				end
-	
-			endcase
-	
 		end
 	end
 
@@ -333,6 +180,160 @@ module ram_uart(
 			RAM1_WRITE3 : next_status <= IDLE;
 
 			default: next_status <= IDLE;
+		endcase
+	end
+
+	always @(status) begin
+		case (status)
+			IDLE: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+
+			UART_READ1: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+
+				Ram1Writing <= 1'b0;
+			end
+			UART_READ2: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b0;
+				wrn <= 1'b1;
+			end
+			UART_READ3: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b0;
+				wrn <= 1'b1;
+				
+				queue[queue_tail] <= Ram1Data;
+			end
+
+			UART_WRITE1: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+
+				Ram1Writing <= 1'b1;
+			end
+			UART_WRITE2: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b0;
+			end
+			UART_WRITE3: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+			UART_WRITE4: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+			UART_WRITE5: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+
+			RAM1_READ1: begin
+				Ram1EN <= 1'b0;
+				Ram1OE <= 1'b0;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+				
+				Ram1Writing <= 1'b0;
+			end
+			RAM1_READ2: begin
+				Ram1EN <= 1'b0;
+				Ram1OE <= 1'b0;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+			RAM1_READ3: begin
+				Ram1EN <= 1'b0;
+				Ram1OE <= 1'b0;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+				
+				result <= Ram1Data;
+			end
+
+			RAM1_WRITE1: begin
+				Ram1EN <= 1'b0;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+				
+				Ram1Writing <= 1'b1;
+			end
+			RAM1_WRITE2: begin
+				Ram1EN <= 1'b0;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b0;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+			end
+			RAM1_WRITE3: begin
+				Ram1EN <= 1'b0;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+				
+			end
+
+			UART_READ_FROM_QUEUE: begin
+				Ram1EN <= 1'b1;
+				Ram1OE <= 1'b1;
+				Ram1WE <= 1'b1;
+
+				rdn <= 1'b1;
+				wrn <= 1'b1;
+				
+				result <= queue[queue_front];
+			end
+
 		endcase
 	end
 
