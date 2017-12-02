@@ -110,8 +110,8 @@ module ram_uart(
 		end
 		else begin
 			cnt <= next_cnt;
-			if (cnt == 0) begin
-			// if (1'b1) begin
+			// if (cnt == 0) begin
+			if (1'b1) begin
 				status <= next_status;
 				if (status == UART_READ_FROM_QUEUE) begin
 					queue_front <= queue_front + 1;
@@ -287,7 +287,7 @@ module ram_uart(
 		case (status)
 			IDLE: begin
 				if (data_ready == 1'b1) begin
-					next_status <= UART_READ1;
+					next_status <= UART_READ2;
 				end
 				else if (need_to_work == 1'b1) begin
 					if (mem_addr == `UartAddr) begin

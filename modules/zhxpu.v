@@ -107,7 +107,7 @@ module zhxpu(
 	wire flash_controller_work_done;
 	wire flash_controller_need_to_work;
 	bootloader __bootloader(
-		.clk(raw_clk),
+		.clk(raw_clk2),
 		.rst(rst),
 		.work_done(flash_controller_work_done),
 		.flash_data(mflash_data),
