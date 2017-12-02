@@ -55,7 +55,7 @@ module jmp_ctrl(
 			5'b11101: begin
 				if (opn[7:0] == 8'b00000000) begin // JR
 					set_pc <= 1'b1;
-					set_pc_value <= op1 + 16'b1;
+					set_pc_value <= op1;
 					write_RA <= 1'b0;
 				end else if (opn[7:0] == 8'b11000000) begin //JALR
 					set_pc <= 1'b1;

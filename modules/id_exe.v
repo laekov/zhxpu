@@ -116,7 +116,7 @@ module id_exe(
 						op2 <= read_value2;
 					end
 					else if (opn[7:0] == 8'b01000000) begin //MFPC
-						op1 <= pc;
+						op1 <= pc + 16'b1;
 					end
 					else if (opn[4:0] == 5'b01101) begin //OR
 						op1 <= read_value1;

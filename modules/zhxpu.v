@@ -155,12 +155,14 @@ module zhxpu(
 	wire ram1_work_done;
 	wire ram2_work_done;
 	wire mem_work_done;
+	wire inst_read_done;
 	wire mem_op;
 
 	stall_ctrl __stall_ctrl(
 		.mem_op(mem_op),
 		.initializing(initializing),
 		.mem_done(mem_work_done),
+		.inst_read_done(inst_read_done),
 		.hold(hold)
 	);
 
@@ -204,7 +206,6 @@ module zhxpu(
 	//wire pc_enabled;
 	reg pc_enabled = 1'b1;
 	wire [`RegValue] if_pc;
-	wire inst_read_done;
 
 	pc_reg __pc_reg(	
 		.clk(clk),
