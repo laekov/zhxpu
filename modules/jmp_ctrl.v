@@ -37,7 +37,6 @@ module jmp_ctrl(
 						set_pc <= 1'b0;
 						set_pc_value <= 16'b0;
 					end
-					write_RA <= 1'b0;
 				end else if (opn[10:8] == 3'b001) begin // BTNEZ
 					if (op1 != 0) begin
 						set_pc <= 1'b1;
@@ -51,6 +50,7 @@ module jmp_ctrl(
 					set_pc <= 1'b0;
 					set_pc_value <= 16'b0;
 				end
+				write_RA <= 1'b0;
 			end
 			5'b11101: begin
 				if (opn[7:0] == 8'b00000000) begin // JR
@@ -73,6 +73,7 @@ module jmp_ctrl(
 				else begin
 					set_pc <= 1'b0;
 					set_pc_value <= 1'b0;
+					write_RA <= 1'b0;
 				end
 			end
 			5'b00100: begin //BEQZ
