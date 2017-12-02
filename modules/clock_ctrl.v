@@ -28,7 +28,7 @@ module clock_ctrl(
     );
 
 	wire [31:0] clk_interval;
-	assign clk_interval = { 8'h00, sw[7:4], 4'h0, sw[3:0], 12'h002 };
+	assign clk_interval = { 8'h00, sw[7:4], 4'h0, sw[3:2], 12'h000, sw[1:0] };
 	//localparam clk_interval = 32'h00000008;
 	reg [31:0] cur_cnt = 32'h0;
 	wire cur_status;
