@@ -178,7 +178,8 @@ module zhxpu(
 	wire [255:0] reg_debug_out;
 
 	register __register(
-		.clk(raw_clk),
+		.raw_clk(raw_clk),
+		.clk(clk),
 		.writable(reg_writable),
 		.write_addr(reg_write_addr),
 		.write_value(reg_write_value),
@@ -376,6 +377,9 @@ module zhxpu(
 	);
 
 	wire [`RegValue] ram_ctrl_done_pc;
+	wire [31:0] mem_act;
+	wire [`RegValue] mem_act1;
+	wire [`RegValue] mem_act2;
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(mem_wr),
@@ -390,7 +394,10 @@ module zhxpu(
 		.work_done(mem_work_done),
 		.feedback(mem_work_res),
 		.uart_received_data(data_ready),
-		.done_pc_out(ram_ctrl_done_pc)
+		.done_pc_out(ram_ctrl_done_pc),
+		.mem_act(mem_act),
+		.done_act1_out(mem_act1),
+		.done_act2_out(mem_act2)
 	);
 
 // WB stage modules
@@ -411,6 +418,7 @@ module zhxpu(
 // ID/EXE
 	id_exe __id_exe(
 		.clk(clk),
+		.rst(rst),
 		.pclk(pclk),
 		//.flush(flush),
 		.mem_write(id_mem_write),
@@ -431,7 +439,8 @@ module zhxpu(
 		.pc_out(exe_pc),
 		.opn_out(exe_inst),
 		.op1(alu_op1),
-		.op2(alu_op2)
+		.op2(alu_op2),
+		.mem_act(mem_act)
 	); 
 	assign mem_op = exe_memwr_ctrl || exe_memrd_ctrl;
 
@@ -535,7 +544,10 @@ module zhxpu(
 		.flash_controller_need_to_work(flash_controller_need_to_work),
 		.flash_controller_work_done(flash_controller_work_done),
 		.id_reg_write(id_reg_write),
-		.data_ready(data_ready)
+		.data_ready(data_ready),
+		.mem_act(mem_act),
+		.mem_act1(mem_act1),
+		.mem_act2(mem_act2)
 	);
 
 endmodule

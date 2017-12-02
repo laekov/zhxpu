@@ -25,7 +25,7 @@ module exe_wb(
 	reg write_reg_ctrl_c;
 	reg [`RegAddr] write_reg_addr_c;
 
-	assign write_reg_ctrl = write_reg_ctrl_c && !clk;
+	assign write_reg_ctrl = write_reg_ctrl_c;
 	assign write_reg_addr = write_reg_addr_c;
 
 	always @(posedge clk) begin

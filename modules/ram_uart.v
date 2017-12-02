@@ -65,6 +65,7 @@ module ram_uart(
 	localparam UART_READ1 = 8'b11010001;
 	localparam UART_READ2 = 8'b11010010;
 	localparam UART_READ3 = 8'b11010011;
+	localparam UART_READ4 = 8'b11010100;
 
 	localparam UART_WRITE1 = 8'b11100001;
 	localparam UART_WRITE2 = 8'b11100010;
@@ -96,7 +97,7 @@ module ram_uart(
 			cnt <= next_cnt;
 			if (cnt == 0) begin
 				status <= next_status;
-				if (status == UART_READ3 || status == UART_WRITE5 || status == RAM1_READ3 || status == RAM1_WRITE3) begin
+				if (status == UART_READ4 || status == UART_WRITE5 || status == RAM1_READ3 || status == RAM1_WRITE3) begin
 					work_done <= 1'b1;
 				end
 				else if (next_status == UART_READ1 || next_status == UART_WRITE1 || next_status == RAM1_READ1 || next_status == RAM1_WRITE1) begin
@@ -137,10 +138,18 @@ module ram_uart(
 					Ram1OE <= 1'b1;
 					Ram1WE <= 1'b1;
 	
-					rdn <= 1'b1;
+					rdn <= 1'b0;
 					wrn <= 1'b1;
 					
 					result <= Ram1Data;
+				end
+				UART_READ4: begin
+					Ram1EN <= 1'b1;
+					Ram1OE <= 1'b1;
+					Ram1WE <= 1'b1;
+	
+					rdn <= 1'b1;
+					wrn <= 1'b1;
 				end
 	
 				UART_WRITE1: begin
@@ -271,7 +280,8 @@ module ram_uart(
 				else next_status <= UART_READ1;
 			end
 			UART_READ2: next_status <= UART_READ3;
-			UART_READ3: next_status <= IDLE;
+			UART_READ3: next_status <= UART_READ4;
+			UART_READ4: next_status <= IDLE;
 
 			UART_WRITE1: next_status <= UART_WRITE2;
 			UART_WRITE2: next_status <= UART_WRITE3;
