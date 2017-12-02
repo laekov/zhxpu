@@ -43,9 +43,8 @@ START:          ;ºÏ≤‚√¸¡Ó
 	LI R6 0x00BF 
 	SLL R6 R6 0x0000 
 	LW R6 R1 0x0000
-	LI R6 0x00ff 
-	AND R1 R6 
 	NOP
+	SW R6 R1 0x0000
 	B START
 
 NOP
