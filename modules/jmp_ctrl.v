@@ -38,8 +38,7 @@ module jmp_ctrl(
 						set_pc_value <= 16'b0;
 					end
 					write_RA <= 1'b0;
-				end
-				if (opn[10:8] == 3'b001) begin // BTNEZ
+				end else if (opn[10:8] == 3'b001) begin // BTNEZ
 					if (op1 != 0) begin
 						set_pc <= 1'b1;
 						set_pc_value <= pc_in + { ((opn[7:7] == 1'b1) ? 8'hff : 8'h00), opn[7:0] } + 16'b1; 
