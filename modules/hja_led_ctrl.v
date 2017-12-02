@@ -119,7 +119,11 @@ module hja_led_ctrl(
 		input flash_controller_need_to_work,
 		input data_ready,
 		input [`RegValue] mem_act1,
-		input [`RegValue] mem_act2 
+		input [`RegValue] mem_act2,
+
+		input [`QueueSize] qfront,
+		input [`QueueSize] qtail,
+		input [`RegValue] qfrontv
     );
 
 	always @(*) begin
@@ -187,6 +191,8 @@ module hja_led_ctrl(
 			8'h32: led_data <= {reg_debug_out[223:208]};
 			8'h31: led_data <= {reg_debug_out[239:224]};
 			8'h30: led_data <= {reg_debug_out[255:240]};
+			8'h40: led_data <= { qfront, qtail };
+			8'h41: led_data <= qfrontv;
 			default: led_data <= sw;
 		endcase
 	end

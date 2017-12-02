@@ -329,6 +329,9 @@ module zhxpu(
 		.pc_out(ram_pc)
 	);
 
+	wire [`QueueSize] qfront;
+	wire [`QueueSize] qtail;
+	wire [`RegValue] qfrontv;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
@@ -350,7 +353,10 @@ module zhxpu(
 		.wrn(wrn),
 		.uart_work_done(ram1_work_done),
 		.status_out(ram_status),
-		.result(ram1_work_res)
+		.result(ram1_work_res),
+		.front(qfront),
+		.tail(qtail),
+		.queue_front_v(qfrontv)
 	);
 
 	wire [7:0] ram2_status;
@@ -547,7 +553,10 @@ module zhxpu(
 		.data_ready(data_ready),
 		.mem_act(mem_act),
 		.mem_act1(mem_act1),
-		.mem_act2(mem_act2)
+		.mem_act2(mem_act2),
+		.qfront(qfront),
+		.qtail(qtail),
+		.qfrontv(qfrontv)
 	);
 
 endmodule
