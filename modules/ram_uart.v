@@ -105,6 +105,8 @@ module ram_uart(
 		if (!rst) begin
 			status <= IDLE;
 			work_done <= 1'b0;
+			queue_front <= 0;
+			queue_tail <= 0;
 		end
 		else begin
 			cnt <= next_cnt;
