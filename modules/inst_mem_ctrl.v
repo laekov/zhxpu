@@ -530,10 +530,7 @@ module inst_mem_ctrl(
 	end
 
 	always @(*) begin
-		if (addr[15:12] == 4'b0) begin
-			data <= suppose;
-			work_done <= 1'b1;
-		end else if (ram_work_done == 1'b1) begin
+		if (ram_work_done == 1'b1) begin
 			if (addr == done_pc) begin
 				data <= ram_feed_back;
 				ram_need_to_work <= 1'b0;

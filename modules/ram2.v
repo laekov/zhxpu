@@ -80,6 +80,7 @@ module ram2(
 		else begin
 			cnt <= next_cnt;
 			if (cnt == 0) begin
+			// if (1'b1) begin
 				status <= next_status;
 				case (next_status)
 					RAM2_WRITE1: exe_work_done <= 1'b0;

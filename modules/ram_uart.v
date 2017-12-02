@@ -111,6 +111,7 @@ module ram_uart(
 		else begin
 			cnt <= next_cnt;
 			if (cnt == 0) begin
+			// if (1'b1) begin
 				status <= next_status;
 				if (status == UART_READ_FROM_QUEUE) begin
 					queue_front <= queue_front + 1;

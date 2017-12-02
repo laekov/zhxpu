@@ -28,24 +28,22 @@ module clock_ctrl(
     );
 
 	wire [31:0] clk_interval;
-	assign clk_interval = { 8'h00, sw[7:4], 4'h0, sw[3:0], 12'h004 };
+	assign clk_interval = { 8'h00, sw[7:4], 4'h0, sw[3:0], 12'h002 };
 	//localparam clk_interval = 32'h00000008;
 	reg [31:0] cur_cnt = 32'h0;
-	reg cur_status = 1'b0;
+	wire cur_status;
+	assign cur_status = !clk;
 
-	reg [31:0] tmp;
+	wire [31:0] tmp;
+	assign tmp = cur_cnt + 32'h00000001;
 
 	always @(posedge raw_clk) begin
 		if (!auto_en) begin
-			tmp = cur_cnt + 32'h00000001;
 			if (tmp >= clk_interval) begin
 				cur_cnt = 32'h0;
-				pclk = 32'h0;
 				clk = cur_status;
-				cur_status = !cur_status;
 			end else begin
 				cur_cnt = tmp;
-				pclk = 1'b0;
 			end
 		end 
 	end
