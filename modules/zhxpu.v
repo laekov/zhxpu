@@ -57,6 +57,9 @@ module zhxpu(
 	input tsre,
 	output wrn
 );
+// Flags
+	wire right;
+
 // Clock module
 	wire clk;
 	wire pclk;
@@ -227,7 +230,8 @@ module zhxpu(
 		.ram_work_done(ram2_work_done_if),
 		.ram_feed_back(ram2_work_res_if),
 		.work_done(inst_read_done),
-		.done_pc_out(inst_done_pc)
+		.done_pc_out(inst_done_pc),
+		.right(right)
 	);
 
 // ID stage modules
@@ -559,7 +563,8 @@ module zhxpu(
 		.qfront(qfront),
 		.qtail(qtail),
 		.qfrontv(qfrontv),
-		.uart_ready(uart_ready)
+		.uart_ready(uart_ready),
+		.right(right)
 	);
 
 endmodule
