@@ -355,7 +355,7 @@ module zhxpu(
 	wire [31:0] mem_act2;
 
 	ram_uart __ram_uart(
-		.clk(raw_clk),
+		.clk(raw_clk2),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
@@ -386,7 +386,7 @@ module zhxpu(
 	wire [15:0] ram2_status;
 	wire [15:0] ram2_cnt;
 	ram2 __ram2(
-		.clk(raw_clk),
+		.clk(raw_clk2),
 		.rst(rst),
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
