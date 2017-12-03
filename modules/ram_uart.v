@@ -237,7 +237,7 @@ module ram_uart(
 			RAM1_WRITE2 : next_status <= RAM1_WRITE3;
 			RAM1_WRITE3 : next_status <= IDLE;
 
-			default: next_status <= ERROR;
+			default: next_status <= IDLE;
 		endcase
 	end
 
