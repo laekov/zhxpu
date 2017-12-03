@@ -56,6 +56,10 @@ module id_exe(
 	output reg [31:0] mem_act
     );
 
+	initial begin
+		mem_write_out = 1'b0;
+		mem_read_out = 1'b0;
+	end
 
 	always @(posedge clk) begin
 		if (hold) begin

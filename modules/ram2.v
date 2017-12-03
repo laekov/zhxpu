@@ -25,6 +25,7 @@ module ram2(
 	input need_to_work_if,
 	input need_to_work_exe,
 	input mem_rd,
+	input exe_mem_wr,
 	input mem_wr,
 	
 	input [`MemAddr] mem_addr_if,
@@ -172,13 +173,13 @@ module ram2(
 		next_cnt <= cnt + 1;
 	end
 
-	always @(negedge clk) begin
+	always @(*) begin
 		case (status)
 			IDLE: begin
 				if (need_to_work_exe == 1'b1) begin
 					if (mem_rd == 1'b1) begin
 						next_status <= RAM2_READ1;
-					end else if (mem_wr == 1'b1) begin
+					end else if (exe_mem_wr == 1'b1) begin
 						next_status <= RAM2_WRITE1;
 					end else begin
 						next_status <= ERROR;
