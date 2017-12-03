@@ -513,7 +513,7 @@ module zhxpu(
 		.mflash_data(mflash_data),
 		.mflash_addr(mflash_addr),
 		.init_data(init_data),
-		.init_addr(init_add),
+		.init_addr(init_addr),
 		.flash_read_ctrl(flash_read_ctrl),
 		.init_mem_wr(init_mem_wr),
 		.hold(hold),

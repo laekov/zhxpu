@@ -26,6 +26,7 @@ module bootloader(
 	reg boot_done;
 	assign boot_done_out=boot_done;
 	reg flash_addr_next;
+
 	always @(*)begin
 		flash_addr_next=flash_addr+22'b1;
 	end
