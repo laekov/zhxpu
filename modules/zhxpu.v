@@ -197,7 +197,9 @@ module zhxpu(
 		.readable2(reg_readable2),
 		.read_addr2(reg_read_addr2),
 		.read_value2(reg_read_value2),
-		.debug_out(reg_debug_out)
+		.debug_out(reg_debug_out),
+		.write_RA_value(write_RA_value),
+		.write_RA(write_RA)
 	);
 
 // IF stage modules
@@ -257,13 +259,17 @@ module zhxpu(
 		.reg_addr(id_reg_addr)
 	);
 
+	wire write_RA;
+	wire [`RegValue] write_RA_value;
 	jmp_ctrl __jmp_ctrl(
 		.op1(reg_read_value1),
 		.op2(reg_read_value2),
 		.pc_in(id_pc),
 		.opn(id_inst),
 		.set_pc(set_pc),
-		.set_pc_value(set_pc_addr)
+		.set_pc_value(set_pc_addr),
+		.write_RA(write_RA),
+		.write_RA_value(write_RA_value)
 	);
 
 // EXE stage modules
