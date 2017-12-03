@@ -73,7 +73,7 @@ module ram_uart(
 
 
 	reg work_done;
-	assign uart_work_done = work_done && mem_act === local_act;
+	assign uart_work_done = work_done && mem_act == local_act;
 	reg Ram1Writing;
 	reg UartReading;
 	assign uart_reading = UartReading;
@@ -142,19 +142,20 @@ module ram_uart(
 						end
 						else begin
 							if (need_to_work == 1'b1) begin
-								if (mem_act === local_act) status <= IDLE;
-								else if (mem_addr == `UartAddr) begin
-									if (mem_wr == 1'b1) status <= UART_WRITE1;
-									else if (mem_rd == 1'b1) status <= UART_READ_FROM_QUEUE1;
-									else status <= ERROR;
+								if (mem_act !== local_act) begin 
+									if (mem_addr == `UartAddr) begin
+										if (mem_wr == 1'b1) status <= UART_WRITE1;
+										else if (mem_rd == 1'b1) status <= UART_READ_FROM_QUEUE1;
+										else status <= IDLE;
+									end
+									else begin
+										if (mem_wr == 1'b1) status <= RAM1_WRITE1;
+										else if (mem_rd == 1'b1) status <= RAM1_READ1;
+										else status <= IDLE;
+									end	
 								end
-								else begin
-									if (mem_wr == 1'b1) status <= RAM1_WRITE1;
-									else if (mem_rd == 1'b1) status <= RAM1_READ1;
-									else status <= ERROR;
-								end	
+								else status <= IDLE;
 							end
-							else status <= IDLE;
 						end
 					end
 
@@ -190,6 +191,7 @@ module ram_uart(
 
 					UART_WRITE1: begin
 						wrn <= 1'b1;
+
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b1;
 						status <= UART_WRITE2;
@@ -214,11 +216,14 @@ module ram_uart(
 					end
 
 					RAM1_READ1: begin
+						Ram1EN <= 1'b0;
+
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b0;
 						status <= RAM1_READ2;
 					end
 					RAM1_READ2: begin
+						Ram1OE <= 1'b0;
 						status <= RAM1_READ3;
 					end
 					RAM1_READ3: begin
@@ -229,14 +234,20 @@ module ram_uart(
 					end
 
 					RAM1_WRITE1: begin
+						Ram1EN <= 1'b0;
+
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b1;
 						status <= RAM1_WRITE2;
 					end
 					RAM1_WRITE2: begin
+						Ram1WE <= 1'b0;
+
 						status <= RAM1_WRITE3;
 					end
 					RAM1_WRITE3: begin
+						Ram1WE <= 1'b1;
+
 						work_done <= 1'b1;
 						local_act <= mem_act;
 						status <= IDLE;
@@ -245,6 +256,5 @@ module ram_uart(
 			end
 		end
 	end
-
 
 endmodule
