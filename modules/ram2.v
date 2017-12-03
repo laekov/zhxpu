@@ -113,7 +113,7 @@ module ram2(
 							if (mem_act !== local_act) begin
 								if (mem_rd == 1'b1) begin
 									status <= RAM2_READ1;
-								end else if (exe_mem_wr == 1'b1) begin
+								end else if (mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
 									status <= RAM2_WRITE1;
 								end else begin
 									status <= IDLE;
