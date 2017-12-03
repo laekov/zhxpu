@@ -25,15 +25,6 @@ module bootloader(
 	assign data_out=data;
 	reg boot_done;
 	assign boot_done_out=boot_done;
-	reg flash_addr_next;
-
-	always @(*)begin
-		flash_addr_next=flash_addr+22'b1;
-	end
-	reg ram_addr_next;
-	always @(*)begin
-		ram_addr_next=ram_addr+18'b1;
-	end	
 
 	always @(posedge clk)begin
 		if (!rst)begin
@@ -48,12 +39,12 @@ module bootloader(
 				if(flash_work_done)begin
 					flash_need_to_work<=1'b0;
 					data<=flash_data;
-					ram_addr<=ram_addr_next;
+					ram_addr<=ram_addr+18'b1;
 					ram_need_to_work<=1'b1;	
 				end
 				else if(ram_work_done)begin
 					ram_need_to_work<=1'b0;
-					flash_addr<=flash_addr_next;
+					flash_addr<=flash_addr+22'b1;
 					flash_need_to_work<=1'b1;
 					if(ram_addr>22'h219)begin
 						boot_done<=1'b1;
