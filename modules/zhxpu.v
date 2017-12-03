@@ -106,11 +106,13 @@ module zhxpu(
 	wire init_mem_wr;
 	wire flash_controller_work_done;
 	wire flash_controller_need_to_work;
+	wire mem_work_done;
+	
 	bootloader __bootloader(
 		.clk(raw_clk2),
 		.rst(rst),
 		.flash_work_done(flash_controller_work_done),
-		.ram_work_done(exe_work_done),
+		.ram_work_done(mem_work_done),
 		.flash_data(mflash_data),
 		.data_out(init_data),
 		.flash_need_to_work(flash_controller_need_to_work),
@@ -155,7 +157,6 @@ module zhxpu(
 	wire hold;
 	wire ram1_work_done;
 	wire ram2_work_done;
-	wire mem_work_done;
 	wire inst_read_done;
 	wire mem_op;
 
