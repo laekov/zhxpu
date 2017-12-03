@@ -131,7 +131,8 @@ module hja_led_ctrl(
 		input [15:0] ram2_cnt,
 
 		input uart_reading,
-		input flash_i_ready
+		input flash_i_ready,
+		input flash_status
     );
 
 	always @(*) begin
@@ -204,6 +205,7 @@ module hja_led_ctrl(
 			8'h42: led_data <= { uart_ready, 3'b0, uart_reading, 3'b0, right, 3'b0, flash_i_ready, 3'b0 };
 			8'h43: led_data <= { uart_flags };
 			8'h44: led_data <= { ram2_cnt };
+			8'h45: led_data <= { flash_status };
 			default: led_data <= sw;
 		endcase
 	end

@@ -17,7 +17,7 @@ module flash_ctrl(
 	output reg flash_we,
 	output reg [15:0] data,
 	output reg flash_ready,
-	output wire [7:0] status_out
+	output wire [15:0] status_out
 );
 	localparam FLASH_IDLE = 8'b00000001;
 	localparam FLASH_READ1 = 8'b00001001;
@@ -37,7 +37,7 @@ module flash_ctrl(
 
 	reg [7:0] status = FLASH_IDLE;
 	reg [7:0] next_status;
-	assign status_out = { next_status[3:0], status[3:0] };
+	assign status_out = { next_status, status };
 
 	always @(*) begin
 		case (status)

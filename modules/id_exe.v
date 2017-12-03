@@ -53,12 +53,15 @@ module id_exe(
 
 	output reg [`RegValue] read_value1_output,
 	output reg [`RegValue] read_value2_output,
-	output reg [31:0] mem_act
+	output reg [31:0] mem_act,
+
+	output reg mem_trig
     );
 
 	initial begin
 		mem_write_out = 1'b0;
 		mem_read_out = 1'b0;
+		mem_trig = 1'b0;
 	end
 
 	always @(posedge clk) begin
@@ -68,6 +71,9 @@ module id_exe(
 			pc_out <= pc;
 			mem_write_out <= mem_write;
 			mem_read_out <= mem_read;
+			if (mem_write || mem_read) begin
+				mem_trig <= !mem_trig;
+			end
 			reg_write_out <= reg_write;
 			reg_addr_out <= reg_addr;
 			mem_act <= mem_act + 32'b1;

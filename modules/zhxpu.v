@@ -124,6 +124,7 @@ module zhxpu(
 	assign initializing = !boot_done_out;
 
 	wire flash_i_ready;
+	wire [15:0] flash_status;
 
 	flash_ctrl __flash_ctrl(
 		.clk(raw_clk2),
@@ -139,7 +140,8 @@ module zhxpu(
 		.flash_oe(flash_oe),
 		.flash_we(flash_we),
 		.data(mflash_data),
-		.flash_ready(flash_i_ready)
+		.flash_ready(flash_i_ready),
+		.status_out(flash_status)
 	);
 
 	wire flash_done_pc;
@@ -592,7 +594,8 @@ module zhxpu(
 		.uart_flags(uart_flags),
 		.ram2_cnt(ram2_cnt),
 		.uart_reading(uart_reading),
-		.flash_i_ready(flash_i_ready)
+		.flash_i_ready(flash_i_ready),
+		.flash_status(flash_status)
 	);
 
 endmodule
