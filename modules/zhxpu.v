@@ -313,7 +313,7 @@ module zhxpu(
 	wire [`MemValue] ram1_work_res;
 	wire [`MemValue] ram2_work_res;
 
-	wire [7:0] ram_status;
+	wire [15:0] ram_status;
 
 	wire mem_wr;
 	assign mem_wr= init_mem_wr || exe_memwr_ctrl;
@@ -484,7 +484,8 @@ module zhxpu(
 	//assign led_data = if_inst;
 	//
 	//
-	wire [15:0] uart_flags = { rdn, 3'b0, wrn, 3'b0, tbre, 3'b0, tsre, 3'b0 };
+	wire [15:0] uart_flags;
+	assign uart_flags = { rdn, 3'b0, wrn, 3'b0, tbre, 3'b0, tsre, 3'b0 };
 	
 	hja_led_ctrl __hja_led_ctrl(
 		.sw(sw),

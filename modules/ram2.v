@@ -63,6 +63,7 @@ module ram2(
 	localparam RAM2_WRITE1 = 8'b10100001;
 	localparam RAM2_WRITE2 = 8'b10100010;
 	localparam RAM2_WRITE3 = 8'b10100011;
+	localparam ERROR = 8'b11111101;
 	
 	reg [7:0] status;
 	assign status_out = status;
@@ -82,89 +83,86 @@ module ram2(
 			if (cnt == 0) begin
 			// if (1'b1) begin
 				status <= next_status;
-				case (next_status)
-					RAM2_WRITE1: exe_work_done <= 1'b0;
-					RAM2_WRITE3: exe_work_done <= 1'b1;
-					RAM2_READ1: exe_work_done <= 1'b0;
-					RAM2_READ3: exe_work_done <= 1'b1;
-
-					RAM2_READ4: if_work_done <= 1'b0;
-					RAM2_READ6: if_work_done <= 1'b1;
-
-				endcase
+				if (next_status == RAM2_WRITE1 || next_status == RAM2_READ1) exe_work_done <= 1'b0;
+				if (status == RAM2_READ3 || status == RAM2_WRITE3) exe_work_done <= 1'b1;
+				if (next_status == RAM2_READ4) if_work_done <= 1'b0;
+				if (status == RAM2_READ6) if_work_done <= 1'b1;
 			end
-			case (status)
-				IDLE: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b1;
-					Ram2WE <= 1'b1;
-				end
-	
-				RAM2_READ1: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b1;
-					Ram2WE <= 1'b1;
-
-					Ram2Addr <= mem_addr_exe;
-					Ram2Writing <= 1'b0;
-				end
-				RAM2_READ2: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b0;
-					Ram2WE <= 1'b1;
-				end
-				RAM2_READ3: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b0;
-					Ram2WE <= 1'b1;
-	
-					exe_result <= Ram2Data;
-				end
-	
-				RAM2_READ4: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b1;
-					Ram2WE <= 1'b1;
-
-					Ram2Addr <= mem_addr_if;
-					Ram2Writing <= 1'b0;
-				end
-				RAM2_READ5: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b0;
-					Ram2WE <= 1'b1;
-				end
-				RAM2_READ6: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b0;
-					Ram2WE <= 1'b1;
-	
-					if_result <= Ram2Data;
-				end
-	
-				RAM2_WRITE1: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b1;
-					Ram2WE <= 1'b1;
-	
-					Ram2Writing <= 1'b1;
-					Ram2Addr <= mem_addr_exe;
-				end
-				RAM2_WRITE2: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b1;
-					Ram2WE <= 1'b0;
-	
-				end
-				RAM2_WRITE3: begin
-					Ram2EN <= 1'b0;
-					Ram2OE <= 1'b1;
-					Ram2WE <= 1'b1;
-				end
-	
-			endcase
-	
 		end
+	end
+	
+	always @(posedge clk) begin
+		case (status)
+			IDLE: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b1;
+				Ram2WE <= 1'b1;
+			end
+
+			RAM2_READ1: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b0;
+				Ram2WE <= 1'b1;
+
+				Ram2Addr <= mem_addr_exe;
+				Ram2Writing <= 1'b0;
+			end
+			RAM2_READ2: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b0;
+				Ram2WE <= 1'b1;
+			end
+			RAM2_READ3: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b0;
+				Ram2WE <= 1'b1;
+
+				exe_result <= Ram2Data;
+			end
+
+			RAM2_READ4: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b0;
+				Ram2WE <= 1'b1;
+
+				Ram2Addr <= mem_addr_if;
+				Ram2Writing <= 1'b0;
+			end
+			RAM2_READ5: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b0;
+				Ram2WE <= 1'b1;
+			end
+			RAM2_READ6: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b0;
+				Ram2WE <= 1'b1;
+
+				if_result <= Ram2Data;
+			end
+
+			RAM2_WRITE1: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b1;
+				Ram2WE <= 1'b1;
+
+				Ram2Writing <= 1'b1;
+				Ram2Addr <= mem_addr_exe;
+			end
+			RAM2_WRITE2: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b1;
+				Ram2WE <= 1'b0;
+
+			end
+			RAM2_WRITE3: begin
+				Ram2EN <= 1'b0;
+				Ram2OE <= 1'b1;
+				Ram2WE <= 1'b1;
+			end
+
+		endcase
+
 	end
 
 	always @(*) begin
@@ -178,12 +176,16 @@ module ram2(
 					else if (mem_rd == 1'b1) begin
 						next_status <= RAM2_READ1;
 					end
-					else next_status <= IDLE;
+					else begin
+						next_status <= ERROR;
+					end
 				end
 				else if (need_to_work_if == 1'b1) begin
 					next_status <= RAM2_READ4;
 				end
-				else next_status <= IDLE;
+				else begin
+					next_status <= IDLE;
+				end
 			end
 
 			RAM2_READ1: next_status <= RAM2_READ3;
@@ -198,10 +200,10 @@ module ram2(
 			RAM2_WRITE2 : next_status <= RAM2_WRITE3;
 			RAM2_WRITE3 : next_status <= IDLE;
 
-			default: next_status <= IDLE;
+			default: next_status <= ERROR;
 		endcase
 	end
 
 
-endmodule
+	endmodule
 

@@ -98,7 +98,7 @@ module hja_led_ctrl(
 		input [`MemValue] ram1_work_res,
 		input [`MemValue] ram2_work_res,
 
-		input [7:0] ram_status,
+		input [15:0] ram_status,
 		
 		input mem_wr,
 
@@ -166,7 +166,7 @@ module hja_led_ctrl(
 			8'h21: led_data <= {mem_work_res};
 			8'h22: led_data <= {ram1_work_res};
 			8'h23: led_data <= {ram2_work_res};
-			8'h24: led_data <= {ram_status,8'b0};
+			8'h24: led_data <= {ram_status};
 			8'h25: led_data <= {ram_data};
 			8'h26: led_data <= {ram_addr};
 			8'h27: led_data <= {ram_pc};
