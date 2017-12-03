@@ -589,7 +589,9 @@ module zhxpu(
 		.right(right),
 		.uart_flags(uart_flags),
 		.ram2_cnt(ram2_cnt),
-		.uart_reading(uart_reading)
+		.uart_reading(uart_reading),
+		.ram1_work_res(ram1_work_res),
+		.ram2_work_res(ram2_work_res)
 	);
 
 endmodule
