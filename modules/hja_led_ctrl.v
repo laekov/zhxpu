@@ -125,7 +125,8 @@ module hja_led_ctrl(
 		input [`QueueSize] qtail,
 		input [`RegValue] qfrontv,
 		input uart_ready,
-		input right
+		input right,
+		input uart_flags
     );
 
 	always @(*) begin
@@ -196,6 +197,7 @@ module hja_led_ctrl(
 			8'h40: led_data <= { qfront, qtail };
 			8'h41: led_data <= qfrontv;
 			8'h42: led_data <= { uart_ready, 7'b0, right, 7'b0 };
+			8'h43: led_data <= { uart_flags };
 			default: led_data <= sw;
 		endcase
 	end

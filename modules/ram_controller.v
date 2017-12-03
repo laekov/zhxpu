@@ -38,7 +38,8 @@ module ram_controller(
 	output wire [`RegValue] done_pc_out,
 	input [31:0] mem_act,
 	output wire [`RegValue] done_act1_out,
-	output wire [`RegValue] done_act2_out
+	output wire [`RegValue] done_act2_out,
+	input uart_reading
     );
 
 	reg [`RegValue] done_pc1;
@@ -55,7 +56,7 @@ module ram_controller(
 	always @(*) begin
 		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
 			if (addr == `ZhiZhangAddr) begin
-				feedback <= {12'hfff,2'b11,uart_received_data,1'b1};
+				feedback <= {12'hfff,2'b11,uart_received_data,!uart_reading};
 				work_done <= 1'b1;
 				ram1_need_to_work <= 1'b0;
 				ram2_need_to_work <= 1'b0;

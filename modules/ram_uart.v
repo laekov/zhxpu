@@ -52,7 +52,8 @@ module ram_uart(
 	output wire [`QueueSize] tail,
 	output wire [`RegValue] queue_front_v,
 
-	output wire [7:0] status_out
+	output wire [7:0] status_out,
+	output wire uart_reading
 
     );
 
@@ -68,6 +69,8 @@ module ram_uart(
 	reg work_done;
 	assign uart_work_done = work_done;
 	reg Ram1Writing;
+	reg UartReading;
+	assign uart_reading = UartReading;
 	
 	assign Ram1Addr = mem_addr;
 	assign Ram1Data = Ram1Writing?mem_value:16'bz;
@@ -162,10 +165,13 @@ module ram_uart(
 			UART_WRITE1: next_status <= UART_WRITE2;
 			UART_WRITE2: next_status <= UART_WRITE3;
 			UART_WRITE3: begin
-				if (tbre == 1'b1 && tsre == 1'b1) next_status <= UART_WRITE4;
-				else next_status <= UART_WRITE2;
+				if (tbre == 1'b1) next_status <= UART_WRITE4;
+				else next_status <= UART_WRITE3;
 			end
-			UART_WRITE4: next_status <= IDLE;
+			UART_WRITE4: begin
+				if (tsre == 1'b1) next_status <= UART_WRITE5;
+				else next_status <= UART_WRITE4;
+			end
 			UART_WRITE5: next_status <= IDLE;
 
 			RAM1_READ1: next_status <= RAM1_READ3;
@@ -200,6 +206,7 @@ module ram_uart(
 				wrn <= 1'b1;
 
 				Ram1Writing <= 1'b0;
+				UartReading <= 1'b1;
 			end
 			UART_READ2: begin
 				Ram1EN <= 1'b1;
@@ -218,6 +225,7 @@ module ram_uart(
 				wrn <= 1'b1;
 				
 				queue[queue_tail] <= Ram1Data;
+				UartReading <= 1'b0;
 			end
 
 			UART_WRITE1: begin
@@ -226,7 +234,9 @@ module ram_uart(
 				Ram1WE <= 1'b1;
 
 				rdn <= 1'b1;
-				wrn <= 1'b1;
+				wrn <= 1'b0;
+				Ram1Writing <= 1'b1;
+				UartReading <= 1'b1;
 			end
 			UART_WRITE2: begin
 				Ram1EN <= 1'b1;
@@ -235,8 +245,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b0;
-				
-				Ram1Writing <= 1'b1;
 			end
 			UART_WRITE3: begin
 				Ram1EN <= 1'b1;
@@ -261,6 +269,7 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
+				UartReading <= 1'b0;
 			end
 
 			RAM1_READ1: begin

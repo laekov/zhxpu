@@ -322,6 +322,8 @@ module zhxpu(
 	wire [`RegValue] ram_addr;
 	wire [`RegValue] ram_pc;
 
+	wire uart_reading;
+
 	ram_sel __ram_sel(
 		.initializing(initializing),
 		.init_addr(init_addr),
@@ -361,7 +363,8 @@ module zhxpu(
 		.result(ram1_work_res),
 		.front(qfront),
 		.tail(qtail),
-		.queue_front_v(qfrontv)
+		.queue_front_v(qfrontv),
+		.uart_reading(uart_reading)
 	);
 
 	wire [7:0] ram2_status;
@@ -410,7 +413,8 @@ module zhxpu(
 		.done_pc_out(ram_ctrl_done_pc),
 		.mem_act(mem_act),
 		.done_act1_out(mem_act1),
-		.done_act2_out(mem_act2)
+		.done_act2_out(mem_act2),
+		.uart_reading(uart_reading)
 	);
 
 // WB stage modules
@@ -479,6 +483,8 @@ module zhxpu(
 	assign dig2_data = initializing ? init_addr[3:0] : if_pc[3:0];
 	//assign led_data = if_inst;
 	//
+	//
+	wire [15:0] uart_flags = { rdn, 3'b0, wrn, 3'b0, tbre, 3'b0, tsre, 3'b0 };
 	
 	hja_led_ctrl __hja_led_ctrl(
 		.sw(sw),
@@ -565,7 +571,8 @@ module zhxpu(
 		.qtail(qtail),
 		.qfrontv(qfrontv),
 		.uart_ready(uart_ready),
-		.right(right)
+		.right(right),
+		.uart_flags(uart_flags)
 	);
 
 endmodule
