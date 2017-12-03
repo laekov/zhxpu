@@ -5,54 +5,61 @@
 module bootloader(
 	input clk,
 	input rst,
-	input wire work_done,
+	input wire flash_work_done,
+	input wire ram_work_done,
 	input wire [15:0] flash_data,
 
-	output reg need_to_work,
-	output reg [`MemValue] data,
-	output wire read_ctrl,
-
-	output wire [22:1] caddr_out,
-	output reg write_ctrl,
-
-	output wire boot_done_out,
-	output [`MemAddr] maddr_out
+	output reg flash_need_to_work,
+	output wire [22:1] flash_addr_out,
+	output reg ram_need_to_work,
+	output wire [`MemValue] data_out,
+	output wire [`MemAddr] ram_addr_out,
+	output wire boot_done_out
 );
 
-	reg [22:1] caddr = 22'b0;
-	assign caddr_out = caddr;
-	reg read_c = 1'b0;
-	assign read_ctrl = read_c;
-	reg [`MemAddr] maddr=18'b0;
-	assign maddr_out=maddr[15:0];
-	reg boot_done=1'b0;
+	reg [22:1] flash_addr;
+	assign flash_addr_out=flash_addr;
+	reg [`MemAddr] ram_addr;
+	assign ram_addr_out=ram_addr;
+	reg [`MemValue] data;
+	assign data_out=data;
+	reg boot_done;
 	assign boot_done_out=boot_done;
-	reg [22:1] new_caddr;
-	
-	always @(*) begin
-		caddr = {4'b0, maddr + 18'b1};
+	reg flash_addr_next;
+	always @(*)begin
+		flash_addr_next=flash_addr+22'b1;
 	end
-/*	
-	always @(posedge clk) begin
-		if (!rst) begin
-			maddr <= 18'b0;
-			boot_done <= 1'b0;
-		end else if (boot_done) begin
-			need_to_work <= 1'b0;
-		end else if (work_done == 1'b1) begin
-			maddr <= caddr[18:1];
-			data <= flash_data;
-			if(caddr > 22'h219)begin
-				write_ctrl <= 1'b0;
-				boot_done <= 1'b1;
-			end else begin
-				write_ctrl <= 1'b1;
+	reg ram_addr_next;
+	always @(*)begin
+		ram_addr_next=ram_addr+18'b1;
+	end	
+
+	always @(posedge clk)begin
+		if (!rst)begin
+			flash_addr=22'b0;
+			ram_addr=18'b0;
+			boot_done=1'b0;
+			flash_need_to_work=1'b1;
+			ram_need_to_work=1'b0;
+		end
+		else begin
+			if(boot_done==1'b0)begin
+				if(flash_work_done)begin
+					flash_need_to_work=1'b0;
+					data=flash_data;
+					flash_addr=flash_addr_next;
+					ram_need_to_work=1'b1;	
+				end
+				else if(ram_work_done)begin
+					ram_need_to_work=1'b0;
+					ram_addr=ram_addr_next;
+					flash_need_to_work=1'b1;
+					if(ram_addr>22'h219)begin
+						boot_done=1'b1;
+					end
+				end
 			end
-		end else begin
-			need_to_work <= 1'b1;
 		end
 	end
-	*/
-   initial boot_done = 1'b1;
 endmodule
 

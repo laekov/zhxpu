@@ -109,14 +109,14 @@ module zhxpu(
 	bootloader __bootloader(
 		.clk(raw_clk2),
 		.rst(rst),
-		.work_done(flash_controller_work_done),
+		.flash_work_done(flash_controller_work_done),
 		.flash_data(mflash_data),
-		.data(init_data),
-		.need_to_work(flash_controller_need_to_work),
-		.caddr_out(mflash_addr),
-		.write_ctrl(init_mem_wr),
+		.data_out(init_data),
+		.flash_need_to_work(flash_controller_need_to_work),
+		.flash_addr_out(mflash_addr),
+		.ram_need_to_work(init_mem_wr),
 		.boot_done_out(boot_done_out),
-		.maddr_out(init_addr)
+		.ram_addr_out(init_addr)
 	);
 	assign initializing = !boot_done_out;
 
