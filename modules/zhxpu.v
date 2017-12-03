@@ -385,6 +385,8 @@ module zhxpu(
 
 	wire [15:0] ram2_status;
 	wire [15:0] ram2_cnt;
+	wire [31:0] combined_act;
+	assign combined_act = initializing ? { 16'b0, init_addr } : mem_act;
 	ram2 __ram2(
 		.clk(raw_clk2),
 		.rst(rst),
@@ -407,7 +409,7 @@ module zhxpu(
 		.exe_result(ram2_work_res),
 		.status_out(ram2_status),
 		.cnt_out(ram2_cnt),
-		.mem_act(mem_act),
+		.mem_act(combined_act),
 		.mem_act_out(mem_act2)	
 	);
 
