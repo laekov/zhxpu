@@ -3,7 +3,6 @@
 `include "alu_out_ctrl.v"
 `include "bootloader.v"
 `include "flash_ctrl.v"
-`include "flash_controller.v"
 `include "clock_ctrl.v"
 `include "decoder.v"
 `include "define.v"
@@ -57,15 +56,11 @@ module zhxpu(
 	input tsre,
 	output wrn
 );
-// Flags
-	wire right;
-
 // Clock module
 	wire clk;
 	wire pclk;
 
 	clock_ctrl __clock_ctrl(
-		.sw(sw),
 		.raw_clk(raw_clk),
 		//.manual_clk(manual_clk),
 		.auto_en(manual_clk),
@@ -104,24 +99,19 @@ module zhxpu(
 	wire [15:0] init_addr;
 	wire flash_read_ctrl;
 	wire init_mem_wr;
-	wire flash_controller_work_done;
-	wire flash_controller_need_to_work;
 	bootloader __bootloader(
-		.clk(raw_clk2),
+		.clk(raw_clk),
 		.rst(rst),
-		.flash_work_done(flash_controller_work_done),
-		.ram_work_done(exe_work_done),
+		.flash_ready(flash_ready),
 		.flash_data(mflash_data),
-		.data_out(init_data),
-		.flash_need_to_work(flash_controller_need_to_work),
-		.flash_addr_out(mflash_addr),
-		.ram_need_to_work(init_mem_wr),
+		.data(init_data),
+		.read_ctrl(flash_read_ctrl),
+		.caddr_out(mflash_addr),
+		.write_ctrl(init_mem_wr),
 		.boot_done_out(boot_done_out),
-		.ram_addr_out(init_addr)
+		.maddr_out(init_addr)
 	);
 	assign initializing = !boot_done_out;
-
-	wire flash_i_ready;
 
 	flash_ctrl __flash_ctrl(
 		.clk(raw_clk2),
@@ -137,18 +127,7 @@ module zhxpu(
 		.flash_oe(flash_oe),
 		.flash_we(flash_we),
 		.data(mflash_data),
-		.flash_ready(flash_i_ready)
-	);
-
-	wire flash_done_pc;
-
-	flash_controller __flash_controller(
-		.addr(mflash_addr),
-		.flash_work_done(flash_i_ready),
-		.need_to_work(flash_controller_need_to_work),
-		.flash_need_to_work(flash_read_ctrl),
-		.work_done(flash_controller_work_done),
-		.done_pc_out(flash_done_pc)
+		.flash_ready(flash_ready)
 	);
 
 // Stall ctrl module
@@ -156,14 +135,12 @@ module zhxpu(
 	wire ram1_work_done;
 	wire ram2_work_done;
 	wire mem_work_done;
-	wire inst_read_done;
 	wire mem_op;
 
 	stall_ctrl __stall_ctrl(
 		.mem_op(mem_op),
 		.initializing(initializing),
 		.mem_done(mem_work_done),
-		.inst_read_done(inst_read_done),
 		.hold(hold)
 	);
 
@@ -183,12 +160,8 @@ module zhxpu(
 
 	wire [255:0] reg_debug_out;
 
-	wire write_RA;
-	wire [`RegValue] write_RA_value;
-
 	register __register(
-		.raw_clk(raw_clk),
-		.clk(clk),
+		.clk(raw_clk),
 		.writable(reg_writable),
 		.write_addr(reg_write_addr),
 		.write_value(reg_write_value),
@@ -201,9 +174,7 @@ module zhxpu(
 		.readable2(reg_readable2),
 		.read_addr2(reg_read_addr2),
 		.read_value2(reg_read_value2),
-		.debug_out(reg_debug_out),
-		.RA_value(write_RA_value),
-		.RA_writable(write_RA)
+		.debug_out(reg_debug_out)
 	);
 
 // IF stage modules
@@ -212,6 +183,7 @@ module zhxpu(
 	//wire pc_enabled;
 	reg pc_enabled = 1'b1;
 	wire [`RegValue] if_pc;
+	wire inst_read_done;
 
 	pc_reg __pc_reg(	
 		.clk(clk),
@@ -237,8 +209,7 @@ module zhxpu(
 		.ram_work_done(ram2_work_done_if),
 		.ram_feed_back(ram2_work_res_if),
 		.work_done(inst_read_done),
-		.done_pc_out(inst_done_pc),
-		.right(right)
+		.done_pc_out(inst_done_pc)
 	);
 
 // ID stage modules
@@ -269,9 +240,7 @@ module zhxpu(
 		.pc_in(id_pc),
 		.opn(id_inst),
 		.set_pc(set_pc),
-		.set_pc_value(set_pc_addr),
-		.write_RA(write_RA),
-		.write_RA_value(write_RA_value)
+		.set_pc_value(set_pc_addr)
 	);
 
 // EXE stage modules
@@ -321,7 +290,7 @@ module zhxpu(
 	wire [`MemValue] ram1_work_res;
 	wire [`MemValue] ram2_work_res;
 
-	wire [15:0] ram_status;
+	wire [7:0] ram_status;
 
 	wire mem_wr;
 	assign mem_wr= init_mem_wr || exe_memwr_ctrl;
@@ -329,8 +298,6 @@ module zhxpu(
 	wire [`RegValue] ram_data;
 	wire [`RegValue] ram_addr;
 	wire [`RegValue] ram_pc;
-
-	wire uart_reading;
 
 	ram_sel __ram_sel(
 		.initializing(initializing),
@@ -344,19 +311,13 @@ module zhxpu(
 		.pc_out(ram_pc)
 	);
 
-	wire [`QueueSize] qfront;
-	wire [`QueueSize] qtail;
-	wire [`RegValue] qfrontv;
-	wire [31:0] mem_act;
-	wire [31:0] mem_act1;
-	wire [31:0] mem_act2;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(mem_wr),
+		.mem_wr(exe_memwr_ctrl),
 		.mem_addr({ 2'b0, ram_addr }),
 		.mem_value(ram_data),
 		.Ram1Addr(ram1_addr),
@@ -371,24 +332,16 @@ module zhxpu(
 		.wrn(wrn),
 		.uart_work_done(ram1_work_done),
 		.status_out(ram_status),
-		.result(ram1_work_res),
-		.front(qfront),
-		.tail(qtail),
-		.queue_front_v(qfrontv),
-		.uart_reading(uart_reading),
-		.mem_act(mem_act),
-		.mem_act_out(mem_act1)
+		.result(ram1_work_res)
 	);
 
-	wire [15:0] ram2_status;
-	wire [15:0] ram2_cnt;
+	wire [7:0] ram2_status;
 	ram2 __ram2(
 		.clk(raw_clk),
 		.rst(rst),
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.exe_mem_wr(exe_memwr_ctrl),
 		.mem_wr(mem_wr),
 		.mem_addr_if({ 2'b0, if_pc }),
 		.mem_addr_exe({2'b0, ram_addr}),
@@ -398,19 +351,14 @@ module zhxpu(
 		.Ram2OE(ram2_oe),
 		.Ram2WE(ram2_rw),
 		.Ram2EN(ram2_en),
-		.if_work_done_out(ram2_work_done_if),
-		.exe_work_done_out(ram2_work_done),
+		.if_work_done(ram2_work_done_if),
+		.exe_work_done(ram2_work_done),
 		.if_result(ram2_work_res_if),
 		.exe_result(ram2_work_res),
-		.status_out(ram2_status),
-		.cnt_out(ram2_cnt),
-		.mem_act(mem_act),
-		.mem_act_out(mem_act2)	
+		.status_out(ram2_status)
 	);
 
 	wire [`RegValue] ram_ctrl_done_pc;
-	wire uart_ready;
-	assign uart_ready = qfront != qtail;
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(mem_wr),
@@ -424,12 +372,7 @@ module zhxpu(
 		.ram2_need_to_work(ram2_need_to_work),
 		.work_done(mem_work_done),
 		.feedback(mem_work_res),
-		.uart_received_data(uart_ready),
-		.done_pc_out(ram_ctrl_done_pc),
-		.mem_act(mem_act),
-		//.done_act1_out(mem_act1),
-		//.done_act2_out(mem_act2),
-		.uart_reading(uart_reading)
+		.done_pc_out(ram_ctrl_done_pc)
 	);
 
 // WB stage modules
@@ -450,7 +393,6 @@ module zhxpu(
 // ID/EXE
 	id_exe __id_exe(
 		.clk(clk),
-		.rst(rst),
 		.pclk(pclk),
 		//.flush(flush),
 		.mem_write(id_mem_write),
@@ -471,8 +413,7 @@ module zhxpu(
 		.pc_out(exe_pc),
 		.opn_out(exe_inst),
 		.op1(alu_op1),
-		.op2(alu_op2),
-		.mem_act(mem_act)
+		.op2(alu_op2)
 	); 
 	assign mem_op = exe_memwr_ctrl || exe_memrd_ctrl;
 
@@ -498,9 +439,6 @@ module zhxpu(
 	assign dig2_data = initializing ? init_addr[3:0] : if_pc[3:0];
 	//assign led_data = if_inst;
 	//
-	//
-	wire [15:0] uart_flags;
-	assign uart_flags = { rdn, 3'b0, wrn, 3'b0, tbre, 3'b0, tsre, 3'b0 };
 	
 	hja_led_ctrl __hja_led_ctrl(
 		.sw(sw),
@@ -574,24 +512,7 @@ module zhxpu(
 		.inst_read_done(inst_read_done),
 		.flush(flush),
 		.inst_done_pc(inst_done_pc),
-		.ram_ctrl_done_pc(ram_ctrl_done_pc),
-		.flash_done_pc(flash_done_pc),
-		.flash_controller_need_to_work(flash_controller_need_to_work),
-		.flash_controller_work_done(flash_controller_work_done),
-		.id_reg_write(id_reg_write),
-		.data_ready(data_ready),
-		.mem_act(mem_act),
-		.mem_act1(mem_act1),
-		.mem_act2(mem_act2),
-		.qfront(qfront),
-		.qtail(qtail),
-		.qfrontv(qfrontv),
-		.uart_ready(uart_ready),
-		.right(right),
-		.uart_flags(uart_flags),
-		.ram2_cnt(ram2_cnt),
-		.uart_reading(uart_reading),
-		.flash_i_ready(flash_i_ready)
+		.ram_ctrl_done_pc(ram_ctrl_done_pc)
 	);
 
 endmodule

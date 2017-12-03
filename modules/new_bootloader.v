@@ -30,7 +30,7 @@ module bootloader(
 		flash_addr_next=flash_addr+22'b1;
 	end
 	reg ram_addr_next;
-	always @(*)begin
+	alway @(*)begin
 		ram_addr_next=ram_addr+18'b1;
 	end	
 
@@ -47,12 +47,12 @@ module bootloader(
 				if(flash_work_done)begin
 					flash_need_to_work=1'b0;
 					data=flash_data;
-					ram_addr=ram_addr_next;
+					flash_addr=flash_addr_next;
 					ram_need_to_work=1'b1;	
 				end
 				else if(ram_work_done)begin
 					ram_need_to_work=1'b0;
-					flash_addr=flash_addr_next;
+					ram_addr=ram_addr_next;
 					flash_need_to_work=1'b1;
 					if(ram_addr>22'h219)begin
 						boot_done=1'b1;

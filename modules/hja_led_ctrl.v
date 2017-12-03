@@ -129,7 +129,8 @@ module hja_led_ctrl(
 		input uart_flags,
 		input [15:0] ram2_cnt,
 
-		input uart_reading
+		input uart_reading,
+		input flash_i_ready
     );
 
 	always @(*) begin
@@ -145,7 +146,7 @@ module hja_led_ctrl(
 			8'h08: led_data <= {reg_read_value1};
 			8'h09: led_data <= {reg_read_value2};
 			8'h0A: led_data <= {alu_write_value};
-			8'h0C: led_data <= {reg_writable,3'b0,reg_readable1,3'b0,reg_readable2,3'b0,alu_writable,3'b0};
+			8'h0C: led_data <= {reg_writable,3'b0,reg_readable1,3'b0,reg_readable2,3'b0,alu_writable,1'b0,flash_i_ready,1'b0};
 			8'h0D: led_data <= {set_pc,7'b0,inst_read_done,7'b0};
 			8'h0E: led_data <= {set_pc_addr};
 			8'h0F: led_data <= {if_pc};
