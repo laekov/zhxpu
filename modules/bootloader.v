@@ -37,26 +37,26 @@ module bootloader(
 
 	always @(posedge clk)begin
 		if (!rst)begin
-			flash_addr=22'b0;
-			ram_addr=18'b0;
-			boot_done=1'b0;
-			flash_need_to_work=1'b1;
-			ram_need_to_work=1'b0;
+			flash_addr<=22'b0;
+			ram_addr<=18'b0;
+			boot_done<=1'b0;
+			flash_need_to_work<=1'b1;
+			ram_need_to_work<=1'b0;
 		end
 		else begin
 			if(boot_done==1'b0)begin
 				if(flash_work_done)begin
-					flash_need_to_work=1'b0;
-					data=flash_data;
-					ram_addr=ram_addr_next;
-					ram_need_to_work=1'b1;	
+					flash_need_to_work<=1'b0;
+					data<=flash_data;
+					ram_addr<=ram_addr_next;
+					ram_need_to_work<=1'b1;	
 				end
 				else if(ram_work_done)begin
-					ram_need_to_work=1'b0;
-					flash_addr=flash_addr_next;
-					flash_need_to_work=1'b1;
+					ram_need_to_work<=1'b0;
+					flash_addr<=flash_addr_next;
+					flash_need_to_work<=1'b1;
 					if(ram_addr>22'h219)begin
-						boot_done=1'b1;
+						boot_done<=1'b1;
 					end
 				end
 			end
