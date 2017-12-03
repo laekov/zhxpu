@@ -50,6 +50,7 @@ module ram2(
 	reg Ram2Writing;
 
 	assign Ram2Data = Ram2Writing?mem_value_exe:16'bz;
+	assign Ram2Addr = need_to_work_exe?mem_addr_exe:mem_addr_if;
 
 	localparam IDLE = 8'b00000000;
 
@@ -86,20 +87,23 @@ module ram2(
 			if (cnt == 0) begin
 			// if (1'b1) begin
 				status <= next_status;
-				if (next_status == RAM2_WRITE1 || next_status == RAM2_READ1) exe_work_done <= 1'b0;
-				if (status == RAM2_READ3 || status == RAM2_WRITE3) exe_work_done <= 1'b1;
-				if (next_status == RAM2_READ4) if_work_done <= 1'b0;
-				if (status == RAM2_READ6) if_work_done <= 1'b1;
+				if (next_status == RAM2_WRITE1) Ram2Writing <= 1'b1;
+				if (next_status == RAM2_READ1 || next_status == RAM2_READ4) Ram2Writing <= 1'b0;
 			end
 		end
 	end
 	
-	always @(posedge clk) begin
+	always @(*) begin
 		case (status)
 			IDLE: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
+
+				exe_result <= exe_result;
+				if_result <= if_result;
+				exe_work_done <= exe_work_done;
+				if_work_done <= if_work_done;
 			end
 
 			RAM2_READ1: begin
@@ -107,20 +111,31 @@ module ram2(
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
 
-				Ram2Addr <= mem_addr_exe;
-				Ram2Writing <= 1'b0;
+				exe_result <= exe_result;
+				if_result <= if_result;
+				exe_work_done <= 1'b0;
+				if_work_done <= if_work_done;
 			end
 			RAM2_READ2: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
+
+				exe_result <= exe_result;
+				if_result <= if_result;
+				exe_work_done <= 1'b0;
+				if_work_done <= if_work_done;
 			end
 			RAM2_READ3: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
 
+
 				exe_result <= Ram2Data;
+				if_result <= if_result;
+				exe_work_done <= 1'b1;
+				if_work_done <= if_work_done;
 			end
 
 			RAM2_READ4: begin
@@ -128,20 +143,30 @@ module ram2(
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
 
-				Ram2Addr <= mem_addr_if;
-				Ram2Writing <= 1'b0;
+				exe_result <= exe_result;
+				if_result <= if_result;
+				exe_work_done <= exe_work_done;
+				if_work_done <= 1'b0;
 			end
 			RAM2_READ5: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
+
+				exe_result <= exe_result;
+				if_result <= if_result;
+				exe_work_done <= exe_work_done;
+				if_work_done <= 1'b0;
 			end
 			RAM2_READ6: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
 
+				exe_result <= exe_result;
 				if_result <= Ram2Data;
+				exe_work_done <= exe_work_done;
+				if_work_done <= 1'b1;
 			end
 
 			RAM2_WRITE1: begin
@@ -149,19 +174,30 @@ module ram2(
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
 
-				Ram2Writing <= 1'b1;
-				Ram2Addr <= mem_addr_exe;
+				if_result <= if_result;
+				exe_result <= exe_result;
+				exe_work_done <= 1'b0;
+				if_work_done <= if_work_done;
 			end
 			RAM2_WRITE2: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b0;
 
+				if_result <= if_result;
+				exe_result <= exe_result;
+				exe_work_done <= 1'b0;
+				if_work_done <= if_work_done;
 			end
 			RAM2_WRITE3: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
+
+				if_result <= if_result;
+				exe_result <= exe_result;
+				exe_work_done <= 1'b1;
+				if_work_done <= if_work_done;
 			end
 
 		endcase
@@ -172,7 +208,7 @@ module ram2(
 		next_cnt <= cnt + 1;
 	end
 
-	always @(negedge clk) begin
+	always @(*) begin
 		case (status)
 			IDLE: begin
 				if (need_to_work_exe == 1'b1) begin
@@ -181,7 +217,7 @@ module ram2(
 					end else if (mem_wr == 1'b1) begin
 						next_status <= RAM2_WRITE1;
 					end else begin
-						next_status <= ERROR;
+						next_status <= IDLE;
 					end
 				end
 				else if (need_to_work_if == 1'b1) begin
@@ -204,7 +240,7 @@ module ram2(
 			RAM2_WRITE2 : next_status <= RAM2_WRITE3;
 			RAM2_WRITE3 : next_status <= IDLE;
 
-			default: next_status <= ERROR;
+			default: next_status <= IDLE;
 		endcase
 	end
 
