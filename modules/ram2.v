@@ -170,6 +170,9 @@ module ram2(
 
 	always @(*) begin
 		next_cnt <= cnt + 1;
+	end
+
+	always @(negedge clk) begin
 		case (status)
 			IDLE: begin
 				if (need_to_work_exe == 1'b1) begin
