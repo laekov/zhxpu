@@ -126,8 +126,8 @@ module ram_uart(
 				if (status == UART_READ4) begin
 					queue_tail <= queue_tail + 1;
 				end
-				if (next_status == UART_READ1 || next_status == RAM_READ1) Ram1Writing <= 1'b0;
-				if (next_status == UART_WRITE1 || next_status == RAM_WRITE1) Ram1Writing <= 1'b1;
+				if (next_status == UART_READ1 || next_status == RAM1_READ1) Ram1Writing <= 1'b0;
+				if (next_status == UART_WRITE1 || next_status == RAM1_WRITE1) Ram1Writing <= 1'b1;
 			end
 		end
 	end
