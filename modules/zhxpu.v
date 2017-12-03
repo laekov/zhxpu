@@ -182,6 +182,9 @@ module zhxpu(
 
 	wire [255:0] reg_debug_out;
 
+	wire write_RA;
+	wire [`RegValue] write_RA_value;
+
 	register __register(
 		.raw_clk(raw_clk),
 		.clk(clk),
@@ -198,8 +201,8 @@ module zhxpu(
 		.read_addr2(reg_read_addr2),
 		.read_value2(reg_read_value2),
 		.debug_out(reg_debug_out),
-		.write_RA_value(write_RA_value),
-		.write_RA(write_RA)
+		.write_RA_value(RA_value),
+		.write_RA(RA_writable)
 	);
 
 // IF stage modules
@@ -259,8 +262,6 @@ module zhxpu(
 		.reg_addr(id_reg_addr)
 	);
 
-	wire write_RA;
-	wire [`RegValue] write_RA_value;
 	jmp_ctrl __jmp_ctrl(
 		.op1(reg_read_value1),
 		.op2(reg_read_value2),
