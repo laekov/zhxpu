@@ -597,7 +597,7 @@ module zhxpu(
 		.ram2_cnt(ram2_cnt),
 		.uart_reading(uart_reading),
 		.flash_i_ready(flash_i_ready),
-		.flash_status(flash_status)
+		.flash_status(flash_status),
 		.ram1_work_res(ram1_work_res),
 		.ram2_work_res(ram2_work_res)
 	);
