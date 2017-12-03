@@ -38,8 +38,8 @@ module ram2(
 	output reg Ram2WE,
 	output reg Ram2EN,
 
-	output reg if_work_done,
-	output reg exe_work_done,
+	output wire if_work_done_out,
+	output wire exe_work_done_out,
 	output reg [`MemValue] if_result,
 	output reg [`MemValue] exe_result,
 
@@ -51,8 +51,15 @@ module ram2(
 
     );
 
+	reg if_work_done;
+	reg exe_work_done;
+
+
 	reg [31:0] local_act;
 	assign mem_act_out = local_act;
+	
+	assign if_work_done_out = if_work_done && local_act == mem_act;
+	assign exe_work_done_out = exe_work_done && local_act == mem_act;
 	 
 	reg Ram2Writing;
 
@@ -97,8 +104,37 @@ module ram2(
 			if (cnt == 0) begin
 			// if (1'b1) begin
 				status <= next_status;
-				if (next_status == RAM2_WRITE1) Ram2Writing <= 1'b1;
-				if (next_status == RAM2_READ1 || next_status == RAM2_READ4) Ram2Writing <= 1'b0;
+				case (status)
+					RAM2_READ1: begin
+						Ram2Writing <= 1'b0;
+						exe_work_done <= 1'b0;
+					end
+					RAM2_READ3: begin
+						exe_work_done <= 1'b1;
+						exe_result <= Ram2Data;
+						local_act <= mem_act;
+					end
+
+					RAM2_READ4: begin
+						Ram2Writing <= 1'b0;
+						if_work_done <= 1'b0;
+					end
+					RAM2_READ6: begin
+						if_work_done <= 1'b1;
+						if_result <= Ram2Data;
+						local_act <= mem_act;
+					end
+
+					RAM2_WRITE1: begin
+						Ram2Writing <= 1'b1;
+						exe_work_done <= 1'b0;
+					end
+					RAM2_WRITE3: begin
+						exe_work_done <= 1'b1;
+						exe_result <= Ram2Data;
+						local_act <= mem_act;
+					end
+				endcase
 			end
 		end
 	end
@@ -109,115 +145,54 @@ module ram2(
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
-
-				exe_result <= exe_result;
-				if_result <= if_result;
-				exe_work_done <= exe_work_done;
-				if_work_done <= if_work_done;
-				local_act <= local_act;
 			end
 
 			RAM2_READ1: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
-
-				exe_result <= exe_result;
-				if_result <= if_result;
-				exe_work_done <= 1'b0;
-				if_work_done <= if_work_done;
-				local_act <= local_act;
 			end
 			RAM2_READ2: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
-
-				exe_result <= exe_result;
-				if_result <= if_result;
-				exe_work_done <= 1'b0;
-				if_work_done <= if_work_done;
-				local_act <= local_act;
 			end
 			RAM2_READ3: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
-
-
-				exe_result <= Ram2Data;
-				if_result <= if_result;
-				exe_work_done <= 1'b1;
-				if_work_done <= if_work_done;
-				local_act <= mem_act;
 			end
 
 			RAM2_READ4: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
-
-				exe_result <= exe_result;
-				if_result <= if_result;
-				exe_work_done <= exe_work_done;
-				if_work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			RAM2_READ5: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
-
-				exe_result <= exe_result;
-				if_result <= if_result;
-				exe_work_done <= exe_work_done;
-				if_work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			RAM2_READ6: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b0;
 				Ram2WE <= 1'b1;
-
-				exe_result <= exe_result;
-				if_result <= Ram2Data;
-				exe_work_done <= exe_work_done;
-				if_work_done <= 1'b1;
-				local_act <= mem_act;
 			end
 
 			RAM2_WRITE1: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
-
-				if_result <= if_result;
-				exe_result <= exe_result;
-				exe_work_done <= 1'b0;
-				if_work_done <= if_work_done;
-				local_act <= local_act;
 			end
 			RAM2_WRITE2: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b0;
-
-				if_result <= if_result;
-				exe_result <= exe_result;
-				exe_work_done <= 1'b0;
-				if_work_done <= if_work_done;
-				local_act <= local_act;
 			end
 			RAM2_WRITE3: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
-
-				if_result <= if_result;
-				exe_result <= exe_result;
-				exe_work_done <= 1'b1;
-				if_work_done <= if_work_done;
-				local_act <= mem_act;
 			end
 
 		endcase

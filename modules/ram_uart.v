@@ -73,7 +73,7 @@ module ram_uart(
 
 
 	reg work_done;
-	assign uart_work_done = work_done;
+	assign uart_work_done = work_done && mem_act == local_act;
 	reg Ram1Writing;
 	reg UartReading;
 	assign uart_reading = UartReading;
@@ -129,14 +129,56 @@ module ram_uart(
 			if (cnt == 0) begin
 			//if (1'b1) begin
 				status <= next_status;
-				if (status == UART_READ_FROM_QUEUE2 && next_status == IDLE) begin
-					queue_front <= queue_front + 1;
-				end
-				if (status == UART_READ4) begin
-					queue_tail <= queue_tail + 1;
-				end
-				if (next_status == UART_READ1 || next_status == RAM1_READ1) Ram1Writing <= 1'b0;
-				if (next_status == UART_WRITE1 || next_status == RAM1_WRITE1) Ram1Writing <= 1'b1;
+				case (status)
+					IDLE: begin end
+					UART_READ_FROM_QUEUE1: begin
+						work_done <= 1'b0;
+						result <= queue[queue_front];
+					end
+					UART_READ_FROM_QUEUE2: begin
+						work_done <= 1'b1;
+						queue_front <= queue_front + 1;
+						local_act <= mem_act;
+					end
+
+					UART_READ1: begin
+						Ram1Writing <= 1'b0;
+					end
+					UART_READ3: begin
+						queue[queue_tail] <= Ram1Data;
+					end
+					UART_READ4 :begin
+						queue_tail <= queue_tail + 1;
+					end
+
+					UART_WRITE1: begin
+						work_done <= 1'b0;
+						Ram1Writing <= 1'b1;
+					end
+					UART_WRITE5: begin
+						work_done <= 1'b1;
+						local_act <= mem_act;
+					end
+
+					RAM1_READ1: begin
+						work_done <= 1'b0;
+						Ram1Writing <= 1'b0;
+					end
+					RAM1_READ3: begin
+						result <= Ram1Data;
+						work_done <= 1'b1;
+						local_act <= mem_act;
+					end
+
+					RAM1_WRITE1: begin
+						work_done <= 1'b0;
+						Ram1Writing <= 1'b1;
+					end
+					RAM1_WRITE3: begin
+						work_done <= 1'b1;
+						local_act <= mem_act;
+					end
+				endcase
 			end
 		end
 	end
@@ -209,9 +251,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				UartReading <= 1'b0;
-				result <= result;
-				work_done <= work_done;
-				local_act <= local_act;
 			end
 
 			UART_READ1: begin
@@ -223,9 +262,6 @@ module ram_uart(
 				wrn <= 1'b1;
 
 				UartReading <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_READ2: begin
 				Ram1EN <= 1'b1;
@@ -234,9 +270,6 @@ module ram_uart(
 
 				rdn <= 1'b0;
 				wrn <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_READ3: begin
 				Ram1EN <= 1'b1;
@@ -247,10 +280,6 @@ module ram_uart(
 				wrn <= 1'b1;
 				
 				result <= result;
-				queue[queue_tail] <= Ram1Data;
-				UartReading <= 1'b0;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_READ4: begin
 				Ram1EN <= 1'b1;
@@ -259,9 +288,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 
 
@@ -274,9 +300,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b0;
 				UartReading <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_WRITE2: begin
 				Ram1EN <= 1'b1;
@@ -285,9 +308,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b0;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_WRITE3: begin
 				Ram1EN <= 1'b1;
@@ -296,9 +316,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_WRITE4: begin
 				Ram1EN <= 1'b1;
@@ -307,9 +324,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			UART_WRITE5: begin
 				Ram1EN <= 1'b1;
@@ -319,9 +333,6 @@ module ram_uart(
 				rdn <= 1'b1;
 				wrn <= 1'b1;
 				UartReading <= 1'b0;
-				result <= result;
-				work_done <= 1'b1;
-				local_act <= mem_act;
 			end
 
 			RAM1_READ1: begin
@@ -331,10 +342,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			RAM1_READ2: begin
 				Ram1EN <= 1'b0;
@@ -343,9 +350,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			RAM1_READ3: begin
 				Ram1EN <= 1'b0;
@@ -354,10 +358,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				
-				result <= Ram1Data;
-				work_done <= 1'b1;
-				local_act <= mem_act;
 			end
 
 			RAM1_WRITE1: begin
@@ -367,11 +367,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				
-				
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			RAM1_WRITE2: begin
 				Ram1EN <= 1'b0;
@@ -380,10 +375,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				
-				result <= result;
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 			RAM1_WRITE3: begin
 				Ram1EN <= 1'b0;
@@ -392,10 +383,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				
-				result <= result;
-				work_done <= 1'b1;
-				local_act <= mem_act;
 			end
 
 			UART_READ_FROM_QUEUE1: begin
@@ -405,10 +392,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				
-				result <= queue[queue_front];
-				work_done <= 1'b0;
-				local_act <= local_act;
 			end
 
 			UART_READ_FROM_QUEUE2: begin
@@ -418,9 +401,6 @@ module ram_uart(
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;
-				result <= result;
-				work_done <= 1'b1;
-				local_act <= mem_act;
 			end
 		endcase
 	end
