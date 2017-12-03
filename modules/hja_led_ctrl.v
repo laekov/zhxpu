@@ -131,7 +131,6 @@ module hja_led_ctrl(
 		input [15:0] ram2_cnt,
 
 		input uart_reading,
-		input flash_i_ready,
 		input flash_status
     );
 
