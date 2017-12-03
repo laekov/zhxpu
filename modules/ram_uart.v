@@ -183,7 +183,7 @@ module ram_uart(
 		end
 	end
 
-	always @(*) begin
+	always @(negedge clk) begin
 		next_cnt <= cnt + 1;
 		case (status)
 			IDLE: begin

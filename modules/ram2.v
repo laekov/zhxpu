@@ -203,7 +203,7 @@ module ram2(
 		next_cnt <= cnt + 1;
 	end
 
-	always @(*) begin
+	always @(negedge clk) begin
 		case (status)
 			IDLE: begin
 				if (need_to_work_exe == 1'b1) begin
