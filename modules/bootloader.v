@@ -28,7 +28,7 @@ module bootloader(
 
 	always @(posedge clk)begin
 		if (!rst)begin
-			flash_addr<=22'b0;
+			flash_addr<=22'b1;
 			ram_addr<=18'b0;
 			boot_done<=1'b0;
 			flash_need_to_work<=1'b1;

@@ -535,9 +535,11 @@ module inst_mem_ctrl(
 			data <= ram_feed_back;
 			if (addr[15:12] == 4'b0) begin
 				if (data != suppose) begin
-					right <= right + 1;
+					right <= 16'hffff;
 				end
+				else right <= 16'b0;
 			end
+			else right <= 16'b0;
 			ram_need_to_work <= 1'b0;
 			work_done <= 1'b1;
 		end
@@ -545,6 +547,7 @@ module inst_mem_ctrl(
 			ram_need_to_work <= 1'b1;
 			data <= 16'h0800;
 			work_done <= 1'b0;
+			right <= 16'b0;
 		end
 	end
 
