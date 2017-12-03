@@ -92,7 +92,7 @@ module ram_controller(
 		else begin
 			ram1_need_to_work <= 1'b0;
 			ram2_need_to_work <= 1'b0;
-			work_done <= 1'b1;
+			work_done <= 1'b0;
 		end
 	end
 endmodule
