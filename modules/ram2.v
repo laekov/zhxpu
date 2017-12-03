@@ -32,7 +32,7 @@ module ram2(
 	input [`MemAddr] mem_addr_exe,
 	input [`MemValue] mem_value_exe,
 
-	output reg [`MemAddr] Ram2Addr,
+	output wire [`MemAddr] Ram2Addr,
 	inout wire [`MemValue] Ram2Data,
 	output reg Ram2OE,
 	output reg Ram2WE,
