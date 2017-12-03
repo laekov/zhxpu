@@ -11,15 +11,16 @@ module inst_mem_ctrl(
 	input [`MemValue] ram_feed_back,
 	
 	output reg work_done,
-	output wire right,
+	output reg [`RegValue] right,
 	output wire [`RegValue] done_pc_out
 	);
 
 	reg [`RegValue] done_pc = 16'hffff;
 	assign done_pc_out = done_pc;
 
+	initial right = 16'b0;
+
 	reg [`RegValue] suppose;
-	assign right = work_done == 1'b1 && addr == done_pc && suppose != ram_feed_back;
 
 	always @(*) begin
 		case (addr)
@@ -530,12 +531,13 @@ module inst_mem_ctrl(
 	end
 
 	always @(*) begin
-		if (addr[15:12] == 4'b0) begin
-			data <= suppose;
-			work_done <= 1'b1;
-			ram_need_to_work <= 1'b0;
-		end else if (ram_work_done == 1'b1) begin
+		if (ram_work_done == 1'b1) begin
 			data <= ram_feed_back;
+			if (addr[15:12] == 4'b0) begin
+				if (data != suppose) begin
+					right <= right + 1;
+				end
+			end
 			ram_need_to_work <= 1'b0;
 			work_done <= 1'b1;
 		end

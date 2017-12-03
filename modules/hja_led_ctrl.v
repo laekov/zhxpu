@@ -126,7 +126,7 @@ module hja_led_ctrl(
 		input [`QueueSize] qtail,
 		input [`RegValue] qfrontv,
 		input uart_ready,
-		input right,
+		input [`RegValue] right,
 		input uart_flags,
 		input [15:0] ram2_cnt,
 
@@ -201,10 +201,11 @@ module hja_led_ctrl(
 			8'h30: led_data <= {reg_debug_out[255:240]};
 			8'h40: led_data <= { qfront, qtail };
 			8'h41: led_data <= qfrontv;
-			8'h42: led_data <= { uart_ready, 3'b0, uart_reading, 3'b0, right, 3'b0, flash_i_ready, 3'b0 };
+			8'h42: led_data <= { uart_ready, 3'b0, uart_reading, 7'b0, flash_i_ready, 3'b0 };
 			8'h43: led_data <= { uart_flags };
 			8'h44: led_data <= { ram2_cnt };
 			8'h45: led_data <= { flash_status };
+			8'h46: led_data <= { right };
 			default: led_data <= sw;
 		endcase
 	end

@@ -58,7 +58,7 @@ module zhxpu(
 	output wrn
 );
 // Flags
-	wire right;
+	wire [`RegValue] right;
 
 // Clock module
 	wire clk;
