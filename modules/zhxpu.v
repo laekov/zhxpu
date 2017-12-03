@@ -367,7 +367,8 @@ module zhxpu(
 		.uart_reading(uart_reading)
 	);
 
-	wire [7:0] ram2_status;
+	wire [15:0] ram2_status;
+	wire [15:0] ram2_cnt;
 	ram2 __ram2(
 		.clk(raw_clk),
 		.rst(rst),
@@ -387,7 +388,8 @@ module zhxpu(
 		.exe_work_done(ram2_work_done),
 		.if_result(ram2_work_res_if),
 		.exe_result(ram2_work_res),
-		.status_out(ram2_status)
+		.status_out(ram2_status),
+		.cnt_out(ram2_cnt)
 	);
 
 	wire [`RegValue] ram_ctrl_done_pc;
@@ -573,7 +575,9 @@ module zhxpu(
 		.qfrontv(qfrontv),
 		.uart_ready(uart_ready),
 		.right(right),
-		.uart_flags(uart_flags)
+		.uart_flags(uart_flags),
+		.ram2_cnt(ram2_cnt),
+		.uart_reading(uart_reading)
 	);
 
 endmodule

@@ -106,7 +106,7 @@ module hja_led_ctrl(
 		input [`RegValue] ram_addr,
 		input [`RegValue] ram_pc,
 
-		input [7:0] ram2_status,
+		input [15:0] ram2_status,
 		input decoder_error,
 
 		input flush,
@@ -126,7 +126,10 @@ module hja_led_ctrl(
 		input [`RegValue] qfrontv,
 		input uart_ready,
 		input right,
-		input uart_flags
+		input uart_flags,
+		input [15:0] ram2_cnt,
+
+		input uart_reading
     );
 
 	always @(*) begin
@@ -170,7 +173,7 @@ module hja_led_ctrl(
 			8'h25: led_data <= {ram_data};
 			8'h26: led_data <= {ram_addr};
 			8'h27: led_data <= {ram_pc};
-			8'h28: led_data <= {ram2_status,8'b0};
+			8'h28: led_data <= {ram2_status};
 			8'h29: led_data <= { inst_done_pc };
 			8'h2A: led_data <= { ram_ctrl_done_pc };
 			8'h2B: led_data <= { flash_done_pc };
@@ -196,8 +199,9 @@ module hja_led_ctrl(
 			8'h30: led_data <= {reg_debug_out[255:240]};
 			8'h40: led_data <= { qfront, qtail };
 			8'h41: led_data <= qfrontv;
-			8'h42: led_data <= { uart_ready, 7'b0, right, 7'b0 };
+			8'h42: led_data <= { uart_ready, 3'b0, uart_reading, 3'b0, right, 7'b0 };
 			8'h43: led_data <= { uart_flags };
+			8'h44: led_data <= { ram2_cnt };
 			default: led_data <= sw;
 		endcase
 	end

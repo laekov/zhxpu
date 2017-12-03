@@ -42,7 +42,8 @@ module ram2(
 	output reg [`MemValue] if_result,
 	output reg [`MemValue] exe_result,
 
-	output wire [7:0] status_out
+	output wire [15:0] status_out,
+	output wire [15:0] cnt_out
 
     );
 	 
@@ -66,11 +67,13 @@ module ram2(
 	localparam ERROR = 8'b11111101;
 	
 	reg [7:0] status;
-	assign status_out = status;
 	reg [7:0] next_status;
+	assign status_out = { status, next_status };
 
 	reg [`RamFrequency] cnt;
 	reg [`RamFrequency] next_cnt;
+
+	assign cnt_out = { cnt, 7'b0, next_cnt, 7'b0 };
 
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
@@ -170,13 +173,11 @@ module ram2(
 		case (status)
 			IDLE: begin
 				if (need_to_work_exe == 1'b1) begin
-					if (mem_wr == 1'b1) begin
-						next_status <= RAM2_WRITE1;
-					end
-					else if (mem_rd == 1'b1) begin
+					if (mem_rd == 1'b1) begin
 						next_status <= RAM2_READ1;
-					end
-					else begin
+					end else if (mem_wr == 1'b1) begin
+						next_status <= RAM2_WRITE1;
+					end else begin
 						next_status <= ERROR;
 					end
 				end
@@ -188,7 +189,7 @@ module ram2(
 				end
 			end
 
-			RAM2_READ1: next_status <= RAM2_READ3;
+			RAM2_READ1: next_status <= RAM2_READ2;
 			RAM2_READ2: next_status <= RAM2_READ3;
 			RAM2_READ3: next_status <= IDLE;
 
