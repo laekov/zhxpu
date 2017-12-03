@@ -337,7 +337,7 @@ module ram_uart(
 
 			RAM1_READ1: begin
 				Ram1EN <= 1'b0;
-				Ram1OE <= 1'b0;
+				Ram1OE <= 1'b1;
 				Ram1WE <= 1'b1;
 
 				rdn <= 1'b1;
@@ -379,7 +379,7 @@ module ram_uart(
 			RAM1_WRITE3: begin
 				Ram1EN <= 1'b0;
 				Ram1OE <= 1'b1;
-				Ram1WE <= 1'b1;
+				Ram1WE <= 1'b0;
 
 				rdn <= 1'b1;
 				wrn <= 1'b1;

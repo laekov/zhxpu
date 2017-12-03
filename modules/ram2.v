@@ -149,7 +149,7 @@ module ram2(
 
 			RAM2_READ1: begin
 				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b0;
+				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
 			end
 			RAM2_READ2: begin
@@ -165,7 +165,7 @@ module ram2(
 
 			RAM2_READ4: begin
 				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b0;
+				Ram2OE <= 1'b1;
 				Ram2WE <= 1'b1;
 			end
 			RAM2_READ5: begin
@@ -192,7 +192,7 @@ module ram2(
 			RAM2_WRITE3: begin
 				Ram2EN <= 1'b0;
 				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
+				Ram2WE <= 1'b0;
 			end
 
 		endcase
