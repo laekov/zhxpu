@@ -43,10 +43,16 @@ module ram2(
 	output reg [`MemValue] if_result,
 	output reg [`MemValue] exe_result,
 
+	input wire [31:0] mem_act,
+	output [31:0] mem_act_out,
+
 	output wire [15:0] status_out,
 	output wire [15:0] cnt_out
 
     );
+
+	reg [31:0] local_act;
+	assign mem_act_out = local_act;
 	 
 	reg Ram2Writing;
 
@@ -108,6 +114,7 @@ module ram2(
 				if_result <= if_result;
 				exe_work_done <= exe_work_done;
 				if_work_done <= if_work_done;
+				local_act <= local_act;
 			end
 
 			RAM2_READ1: begin
@@ -119,6 +126,7 @@ module ram2(
 				if_result <= if_result;
 				exe_work_done <= 1'b0;
 				if_work_done <= if_work_done;
+				local_act <= local_act;
 			end
 			RAM2_READ2: begin
 				Ram2EN <= 1'b0;
@@ -129,6 +137,7 @@ module ram2(
 				if_result <= if_result;
 				exe_work_done <= 1'b0;
 				if_work_done <= if_work_done;
+				local_act <= local_act;
 			end
 			RAM2_READ3: begin
 				Ram2EN <= 1'b0;
@@ -140,6 +149,7 @@ module ram2(
 				if_result <= if_result;
 				exe_work_done <= 1'b1;
 				if_work_done <= if_work_done;
+				local_act <= mem_act;
 			end
 
 			RAM2_READ4: begin
@@ -151,6 +161,7 @@ module ram2(
 				if_result <= if_result;
 				exe_work_done <= exe_work_done;
 				if_work_done <= 1'b0;
+				local_act <= local_act;
 			end
 			RAM2_READ5: begin
 				Ram2EN <= 1'b0;
@@ -161,6 +172,7 @@ module ram2(
 				if_result <= if_result;
 				exe_work_done <= exe_work_done;
 				if_work_done <= 1'b0;
+				local_act <= local_act;
 			end
 			RAM2_READ6: begin
 				Ram2EN <= 1'b0;
@@ -171,6 +183,7 @@ module ram2(
 				if_result <= Ram2Data;
 				exe_work_done <= exe_work_done;
 				if_work_done <= 1'b1;
+				local_act <= mem_act;
 			end
 
 			RAM2_WRITE1: begin
@@ -182,6 +195,7 @@ module ram2(
 				exe_result <= exe_result;
 				exe_work_done <= 1'b0;
 				if_work_done <= if_work_done;
+				local_act <= local_act;
 			end
 			RAM2_WRITE2: begin
 				Ram2EN <= 1'b0;
@@ -192,6 +206,7 @@ module ram2(
 				exe_result <= exe_result;
 				exe_work_done <= 1'b0;
 				if_work_done <= if_work_done;
+				local_act <= local_act;
 			end
 			RAM2_WRITE3: begin
 				Ram2EN <= 1'b0;
@@ -202,6 +217,7 @@ module ram2(
 				exe_result <= exe_result;
 				exe_work_done <= 1'b1;
 				if_work_done <= if_work_done;
+				local_act <= mem_act;
 			end
 
 		endcase
@@ -216,7 +232,8 @@ module ram2(
 		case (status)
 			IDLE: begin
 				if (need_to_work_exe == 1'b1) begin
-					if (mem_rd == 1'b1) begin
+					if (mem_act == local_act) next_status <= IDLE;
+					else if (mem_rd == 1'b1) begin
 						next_status <= RAM2_READ1;
 					end else if (exe_mem_wr == 1'b1) begin
 						next_status <= RAM2_WRITE1;
@@ -225,7 +242,8 @@ module ram2(
 					end
 				end
 				else if (need_to_work_if == 1'b1) begin
-					next_status <= RAM2_READ4;
+					if (mem_act == local_act) next_status <= IDLE;
+					else next_status <= RAM2_READ4;
 				end
 				else begin
 					next_status <= IDLE;

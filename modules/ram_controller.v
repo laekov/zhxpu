@@ -31,12 +31,13 @@ module ram_controller(
 	input [`RegValue] pc,
 	input uart_received_data,
 
+	input [31:0] mem_act,
+
 	output reg ram1_need_to_work,
 	output reg ram2_need_to_work,
 	output reg work_done,
 	output reg [`MemValue] feedback,
 	output wire [`RegValue] done_pc_out,
-	input [31:0] mem_act,
 	output wire [`RegValue] done_act1_out,
 	output wire [`RegValue] done_act2_out,
 	input uart_reading
@@ -63,16 +64,10 @@ module ram_controller(
 			end else
 			if (addr[15:15] == 1'b1) begin
 				if (ram1_work_done == 1'b1) begin
-					if (pc == done_pc1 && mem_act == done_act1) begin
-						feedback <= ram1_feedback;
-						work_done <= 1'b1;
-						ram1_need_to_work <= 1'b0;
-						ram2_need_to_work <= 1'b0;
-					end else begin
-						work_done <= 1'b0;
-						ram1_need_to_work <= 1'b1;
-						ram2_need_to_work <= 1'b0;
-					end
+					feedback <= ram1_feedback;
+					work_done <= 1'b1;
+					ram1_need_to_work <= 1'b0;
+					ram2_need_to_work <= 1'b0;
 				end
 				else begin
 					work_done <= 1'b0;
@@ -82,16 +77,10 @@ module ram_controller(
 			end
 			else begin
 				if (ram2_work_done == 1'b1) begin
-					if (pc == done_pc2 && mem_act == done_act2) begin
-						feedback <= ram2_feedback;
-						work_done <= 1'b1;
-						ram1_need_to_work <= 1'b0;
-						ram2_need_to_work <= 1'b0;
-					end else begin
-						work_done <= 1'b0;
-						ram1_need_to_work <= 1'b0;
-						ram2_need_to_work <= 1'b1;
-					end
+					feedback <= ram2_feedback;
+					work_done <= 1'b1;
+					ram1_need_to_work <= 1'b0;
+					ram2_need_to_work <= 1'b0;
 				end
 				else begin
 					work_done <= 1'b0;
@@ -106,16 +95,6 @@ module ram_controller(
 			work_done <= 1'b1;
 		end
 	end
-
-	always @(posedge ram1_work_done) begin
-		done_pc1 <= pc;
-		done_act1 <= mem_act;
-	end
-	always @(posedge ram2_work_done) begin
-		done_pc2 <= pc;
-		done_act2 <= mem_act;
-	end
-
 endmodule
 
 

@@ -346,6 +346,9 @@ module zhxpu(
 	wire [`QueueSize] qfront;
 	wire [`QueueSize] qtail;
 	wire [`RegValue] qfrontv;
+	wire [31:0] mem_act;
+	wire [`RegValue] mem_act1;
+	wire [`RegValue] mem_act2;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
@@ -371,7 +374,9 @@ module zhxpu(
 		.front(qfront),
 		.tail(qtail),
 		.queue_front_v(qfrontv),
-		.uart_reading(uart_reading)
+		.uart_reading(uart_reading),
+		.mem_act(mem_act),
+		.mem_act_out(mem_act1)
 	);
 
 	wire [15:0] ram2_status;
@@ -397,13 +402,12 @@ module zhxpu(
 		.if_result(ram2_work_res_if),
 		.exe_result(ram2_work_res),
 		.status_out(ram2_status),
-		.cnt_out(ram2_cnt)
+		.cnt_out(ram2_cnt),
+		.mem_act(mem_act),
+		.mem_act_out(mem_act2)	
 	);
 
 	wire [`RegValue] ram_ctrl_done_pc;
-	wire [31:0] mem_act;
-	wire [`RegValue] mem_act1;
-	wire [`RegValue] mem_act2;
 	wire uart_ready;
 	assign uart_ready = qfront != qtail;
 	ram_controller __ram_controller(
@@ -422,8 +426,8 @@ module zhxpu(
 		.uart_received_data(uart_ready),
 		.done_pc_out(ram_ctrl_done_pc),
 		.mem_act(mem_act),
-		.done_act1_out(mem_act1),
-		.done_act2_out(mem_act2),
+		//.done_act1_out(mem_act1),
+		//.done_act2_out(mem_act2),
 		.uart_reading(uart_reading)
 	);
 
