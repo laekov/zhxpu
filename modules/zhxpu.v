@@ -201,8 +201,8 @@ module zhxpu(
 		.read_addr2(reg_read_addr2),
 		.read_value2(reg_read_value2),
 		.debug_out(reg_debug_out),
-		.write_RA_value(RA_value),
-		.write_RA(RA_writable)
+		.RA_value(write_RA_value),
+		.RA_writable(write_RA)
 	);
 
 // IF stage modules

@@ -77,11 +77,14 @@ module ram2(
 
 	assign cnt_out = { cnt, 7'b0, next_cnt, 7'b0 };
 
+	initial begin
+		exe_work_done <= 1'b0;
+		if_work_done <= 1'b0;
+	end
+
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
-			exe_work_done <= 1'b0;
-			if_work_done <= 1'b0;
 		end
 		else begin
 			cnt <= next_cnt;

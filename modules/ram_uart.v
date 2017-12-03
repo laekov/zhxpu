@@ -108,10 +108,13 @@ module ram_uart(
 	reg [`RamFrequency] cnt;
 	reg [`RamFrequency] next_cnt;
 
+	initial begin
+		work_done <= 1'b0;
+	end
+
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
-			work_done <= 1'b0;
 			queue_front <= 0;
 			queue_tail <= 0;
 		end
