@@ -32,7 +32,7 @@ module bootloader(
 	always @(*) begin
 		caddr = {4'b0, maddr + 18'b1};
 	end
-	
+/*	
 	always @(posedge clk) begin
 		if (!rst) begin
 			maddr <= 18'b0;
@@ -42,14 +42,17 @@ module bootloader(
 		end else if (work_done == 1'b1) begin
 			maddr <= caddr[18:1];
 			data <= flash_data;
-			write_ctrl <= 1'b1;
 			if(caddr > 22'h219)begin
 				write_ctrl <= 1'b0;
 				boot_done <= 1'b1;
+			end else begin
+				write_ctrl <= 1'b1;
 			end
 		end else begin
 			need_to_work <= 1'b1;
 		end
 	end
+	*/
+   initial boot_done = 1'b1;
 endmodule
 

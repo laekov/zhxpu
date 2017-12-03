@@ -182,6 +182,9 @@ module zhxpu(
 
 	wire [255:0] reg_debug_out;
 
+	wire write_RA;
+	wire [`RegValue] write_RA_value;
+
 	register __register(
 		.raw_clk(raw_clk),
 		.clk(clk),
@@ -197,7 +200,9 @@ module zhxpu(
 		.readable2(reg_readable2),
 		.read_addr2(reg_read_addr2),
 		.read_value2(reg_read_value2),
-		.debug_out(reg_debug_out)
+		.debug_out(reg_debug_out),
+		.write_RA_value(RA_value),
+		.write_RA(RA_writable)
 	);
 
 // IF stage modules
@@ -263,7 +268,9 @@ module zhxpu(
 		.pc_in(id_pc),
 		.opn(id_inst),
 		.set_pc(set_pc),
-		.set_pc_value(set_pc_addr)
+		.set_pc_value(set_pc_addr),
+		.write_RA(write_RA),
+		.write_RA_value(write_RA_value)
 	);
 
 // EXE stage modules
@@ -345,7 +352,7 @@ module zhxpu(
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(exe_memwr_ctrl),
+		.mem_wr(mem_wr),
 		.mem_addr({ 2'b0, ram_addr }),
 		.mem_value(ram_data),
 		.Ram1Addr(ram1_addr),
@@ -375,6 +382,7 @@ module zhxpu(
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
+		.exe_mem_wr(exe_memwr_ctrl),
 		.mem_wr(mem_wr),
 		.mem_addr_if({ 2'b0, if_pc }),
 		.mem_addr_exe({2'b0, ram_addr}),
