@@ -154,8 +154,8 @@ module ram_uart(
 									else status <= ERROR;
 								end	
 							end
+							else status <= IDLE;
 						end
-						else status <= IDLE;
 					end
 
 					UART_READ_FROM_QUEUE1: begin
@@ -184,7 +184,7 @@ module ram_uart(
 					end
 					UART_READ3: begin
 						queue_tail <= queue_tail + 1;
-						rdn = 1'b1;
+						rdn <= 1'b1;
 						status <= IDLE;
 					end
 
@@ -231,15 +231,15 @@ module ram_uart(
 					RAM1_WRITE1: begin
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b1;
-						sttus <= RAM1_WRITE2;
+						status <= RAM1_WRITE2;
 					end
 					RAM1_WRITE2: begin
-						sttus <= RAM1_WRITE3;
+						status <= RAM1_WRITE3;
 					end
 					RAM1_WRITE3: begin
 						work_done <= 1'b1;
 						local_act <= mem_act;
-						sttus <= IDLE;
+						status <= IDLE;
 					end
 				endcase
 			end
