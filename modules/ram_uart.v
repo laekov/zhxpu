@@ -125,58 +125,121 @@ module ram_uart(
 			queue_tail <= 0;
 		end
 		else begin
-			cnt <= next_cnt;
+			cnt <= cnt + 1;
 			if (cnt == 0) begin
 			//if (1'b1) begin
-				status <= next_status;
 				case (status)
-					IDLE: begin end
+					IDLE: begin
+						Ram1EN <= 1'b1;
+						Ram1OE <= 1'b1;
+						Ram1WE <= 1'b1;
+						
+						rdn <= 1'b1;
+						wrn <= 1'b1;
+
+						if (data_ready == 1'b1) begin
+							status <= UART_READ1;
+						end
+						else begin
+							if (need_to_work == 1'b1) begin
+								if (mem_act == local_act) status <= IDLE;
+								else if (mem_addr == `UartAddr) begin
+									if (mem_wr == 1'b1) status <= UART_WRITE1;
+									else if (mem_rd == 1'b1) status <= UART_READ_FROM_QUEUE1;
+									else status <= ERROR;
+								end
+								else begin
+									if (mem_wr == 1'b1) status <= RAM1_WRITE1;
+									else if (mem_rd == 1'b1) status <= RAM1_READ1;
+									else status <= ERROR;
+								end	
+							end
+						end
+						else status <= IDLE;
+					end
+
 					UART_READ_FROM_QUEUE1: begin
 						work_done <= 1'b0;
 						result <= queue[queue_front];
+						status <= UART_READ_FROM_QUEUE2;
 					end
 					UART_READ_FROM_QUEUE2: begin
 						work_done <= 1'b1;
 						queue_front <= queue_front + 1;
 						local_act <= mem_act;
+						status <= IDLE;
 					end
 
 					UART_READ1: begin
 						Ram1Writing <= 1'b0;
+						if (data_ready == 1'b1) begin
+							status <= UART_READ2;
+							rdn <= 1'b0;
+						end
+						else status <= IDLE;
+					end
+					UART_READ2: begin
+						queue[queue_tail] <= Ram1Data;
+						status <= UART_READ3;
 					end
 					UART_READ3: begin
-						queue[queue_tail] <= Ram1Data;
-					end
-					UART_READ4 :begin
 						queue_tail <= queue_tail + 1;
+						rdn = 1'b1;
+						status <= IDLE;
 					end
 
 					UART_WRITE1: begin
+						wrn <= 1'b1;
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b1;
+						status <= UART_WRITE2;
+					end
+					UART_WRITE2: begin
+						wrn <= 1'b0;
+						status <= UART_WRITE3;
+					end
+					UART_WRITE3: begin
+						wrn <= 1'b1;
+						status <= UART_WRITE4;
+					end
+					UART_WRITE4: begin
+						if (tbre == 1'b1) status <= UART_WRITE5;
 					end
 					UART_WRITE5: begin
-						work_done <= 1'b1;
-						local_act <= mem_act;
+						if (tsre == 1'b1) begin
+							work_done <= 1'b1;
+							local_act <= mem_act;
+							status <= IDLE;
+						end
 					end
 
 					RAM1_READ1: begin
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b0;
+						status <= RAM1_READ2;
+					end
+					RAM1_READ2: begin
+						status <= RAM1_READ3;
 					end
 					RAM1_READ3: begin
 						result <= Ram1Data;
 						work_done <= 1'b1;
 						local_act <= mem_act;
+						status <= IDLE;
 					end
 
 					RAM1_WRITE1: begin
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b1;
+						sttus <= RAM1_WRITE2;
+					end
+					RAM1_WRITE2: begin
+						sttus <= RAM1_WRITE3;
 					end
 					RAM1_WRITE3: begin
 						work_done <= 1'b1;
 						local_act <= mem_act;
+						sttus <= IDLE;
 					end
 				endcase
 			end
