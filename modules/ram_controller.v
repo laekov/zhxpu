@@ -19,8 +19,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module ram_controller(
-	inout mem_rd,
-	inout mem_wr,
+	input mem_rd,
+	input mem_wr,
+	input init_mem_wr,
 	input [`MemAddr] addr,
 
 	input ram1_work_done,
@@ -55,7 +56,7 @@ module ram_controller(
 	assign ram_work_done = ram1_work_done || ram2_work_done;
 
 	always @(*) begin
-		if (mem_rd == 1'b1 || mem_wr == 1'b1) begin
+		if (mem_rd == 1'b1 || mem_wr == 1'b1 || init_mem_wr == 1'b1) begin
 			if (addr == `ZhiZhangAddr) begin
 				feedback <= {12'hfff,2'b11,uart_received_data,1'b1};
 				work_done <= 1'b1;

@@ -26,7 +26,7 @@ module ram2(
 	input need_to_work_exe,
 	input mem_rd,
 	input exe_mem_wr,
-	input mem_wr,
+	input init_mem_wr,
 	
 	input [`MemAddr] mem_addr_if,
 	input [`MemAddr] mem_addr_exe,
@@ -113,7 +113,7 @@ module ram2(
 							if (mem_act !== local_act) begin
 								if (mem_rd == 1'b1) begin
 									status <= RAM2_READ1;
-								end else if (mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
+								end else if (init_mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
 									status <= RAM2_WRITE1;
 								end else begin
 									status <= IDLE;

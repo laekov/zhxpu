@@ -327,7 +327,7 @@ module zhxpu(
 	wire [15:0] ram_status;
 
 	wire mem_wr;
-	assign mem_wr= init_mem_wr || exe_memwr_ctrl;
+	assign mem_wr = init_mem_wr;
 
 	wire [`RegValue] ram_data;
 	wire [`RegValue] ram_addr;
@@ -359,7 +359,7 @@ module zhxpu(
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(mem_wr),
+		.mem_wr(exe_memwr_ctrl),
 		.mem_addr({ 2'b0, ram_addr }),
 		.mem_value(ram_data),
 		.Ram1Addr(ram1_addr),
@@ -394,7 +394,7 @@ module zhxpu(
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
 		.exe_mem_wr(exe_memwr_ctrl),
-		.mem_wr(mem_wr),
+		.init_mem_wr(init_mem_wr),
 		.mem_addr_if({ 2'b0, if_pc }),
 		.mem_addr_exe({2'b0, ram_addr}),
 		.mem_value_exe(ram_data),
@@ -418,7 +418,8 @@ module zhxpu(
 	assign uart_ready = qfront != qtail;
 	ram_controller __ram_controller(
 		.mem_rd(exe_memrd_ctrl),
-		.mem_wr(mem_wr),
+		.mem_wr(exe_memwr_ctrl),
+		.init_mem_wr(init_mem_wr),
 		.pc(ram_pc),
 		.addr({ 2'b0, ram_addr }),
 		.ram1_work_done(ram1_work_done),
