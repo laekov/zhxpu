@@ -118,8 +118,8 @@ module hja_led_ctrl(
 		input flash_controller_work_done,
 		input flash_controller_need_to_work,
 		input data_ready,
-		input [`RegValue] mem_act1,
-		input [`RegValue] mem_act2,
+		input [31:0] mem_act1,
+		input [31:0] mem_act2,
 
 		input [`QueueSize] qfront,
 		input [`QueueSize] qtail,
@@ -178,8 +178,8 @@ module hja_led_ctrl(
 			8'h2A: led_data <= { ram_ctrl_done_pc };
 			8'h2B: led_data <= { flash_done_pc };
 			8'h2C: led_data <= { flash_controller_work_done, 7'b0, flash_controller_need_to_work, 7'b0 };
-			8'h2D: led_data <= { mem_act1 };
-			8'h2E: led_data <= { mem_act2 };
+			8'h2D: led_data <= { mem_act1[15:0] };
+			8'h2E: led_data <= { mem_act2[15:0] };
 			8'h2F: led_data <= { mem_act[15:0] };
 			8'h3f: led_data <= {reg_debug_out[15:0]};
 			8'h3e: led_data <= {reg_debug_out[31:16]};

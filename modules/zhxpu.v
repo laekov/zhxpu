@@ -347,8 +347,8 @@ module zhxpu(
 	wire [`QueueSize] qtail;
 	wire [`RegValue] qfrontv;
 	wire [31:0] mem_act;
-	wire [`RegValue] mem_act1;
-	wire [`RegValue] mem_act2;
+	wire [31:0] mem_act1;
+	wire [31:0] mem_act2;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
