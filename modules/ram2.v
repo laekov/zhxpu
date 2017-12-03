@@ -98,126 +98,102 @@ module ram2(
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
-		end
-		else begin
-			cnt <= next_cnt;
-			if (cnt == 0) begin
-			// if (1'b1) begin
-				case (status)
-					RAM2_READ1: begin
-						Ram2Writing <= 1'b0;
-						exe_work_done <= 1'b0;
+		end else begin
+			case (status)
+				IDLE: begin
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+					if (need_to_work_exe == 1'b1) begin
+						if (mem_act === local_act) status <= IDLE;
+						else if (mem_rd == 1'b1) begin
+							status <= RAM2_READ1;
+						end else if (exe_mem_wr == 1'b1) begin
+							status <= RAM2_WRITE1;
+						end else begin
+							status <= IDLE;
+						end
 					end
-					RAM2_READ3: begin
-						exe_work_done <= 1'b1;
-						exe_result <= Ram2Data;
-						local_act <= mem_act;
-					end
-
-					RAM2_READ4: begin
-						Ram2Writing <= 1'b0;
-						if_work_done <= 1'b0;
-					end
-					RAM2_READ6: begin
-						if_work_done <= 1'b1;
-						if_result <= Ram2Data;
-						local_act <= mem_act;
-					end
-
-					RAM2_WRITE1: begin
-						Ram2Writing <= 1'b1;
-						exe_work_done <= 1'b0;
-					end
-					RAM2_WRITE3: begin
-						exe_work_done <= 1'b1;
-						exe_result <= Ram2Data;
-						local_act <= mem_act;
-					end
-				endcase
-			end
-		end
-	end
-	
-	always @(posedge clk) begin
-		case (status)
-			IDLE: begin
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-				if (need_to_work_exe == 1'b1) begin
-					if (mem_act == local_act) status <= IDLE;
-					else if (mem_rd == 1'b1) begin
-						status <= RAM2_READ1;
-					end else if (exe_mem_wr == 1'b1) begin
-						status <= RAM2_WRITE1;
-					end else begin
-						status <= IDLE;
+					else if (need_to_work_if == 1'b1) begin
+						if (mem_act === local_act) status <= IDLE;
+						else status <= RAM2_READ4;
 					end
 				end
-				else if (need_to_work_if == 1'b1) begin
-					if (mem_act == local_act) status <= IDLE;
-					else status <= RAM2_READ4;
+
+				RAM2_READ1: begin
+					Ram2Writing <= 1'b0;
+					exe_work_done <= 1'b0;
+					status <= RAM2_READ2;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
 				end
-			end
+				RAM2_READ2: begin
+					status <= RAM2_READ3;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b0;
+					Ram2WE <= 1'b1;
+				end
+				RAM2_READ3: begin
+					exe_work_done <= 1'b1;
+					exe_result <= Ram2Data;
+					local_act <= mem_act;
+					status <= IDLE;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+				end
 
-			RAM2_READ1: begin
-				status <= RAM2_READ2;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-			end
-			RAM2_READ2: begin
-				status <= RAM2_READ3;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b0;
-				Ram2WE <= 1'b1;
-			end
-			RAM2_READ3: begin
-				status <= IDLE;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-			end
+				RAM2_READ4: begin
+					Ram2Writing <= 1'b0;
+					if_work_done <= 1'b0;
+					status <= RAM2_READ5;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+				end
+				RAM2_READ5: begin
+					status <= RAM2_READ6;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b0;
+					Ram2WE <= 1'b1;
+				end
+				RAM2_READ6: begin
+					if_work_done <= 1'b1;
+					if_result <= Ram2Data;
+					local_act <= mem_act;
+					status <= IDLE;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+				end
 
-			RAM2_READ4: begin
-				status <= RAM2_READ5;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-			end
-			RAM2_READ5: begin
-				status <= RAM2_READ6;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b0;
-				Ram2WE <= 1'b1;
-			end
-			RAM2_READ6: begin
-				status <= IDLE;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-			end
+				RAM2_WRITE1: begin
+					Ram2Writing <= 1'b1;
+					exe_work_done <= 1'b0;
+					status <= RAM2_WRITE2;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+				end
+				RAM2_WRITE2: begin
+					status <= RAM2_WRITE3;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b0;
+				end
+				RAM2_WRITE3: begin
+					exe_work_done <= 1'b1;
+					exe_result <= Ram2Data;
+					local_act <= mem_act;
+					status <= IDLE;
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b0;
+				end
 
-			RAM2_WRITE1: begin
-				status <= RAM2_WRITE2;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b1;
-			end
-			RAM2_WRITE2: begin
-				status <= RAM2_WRITE3;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b0;
-			end
-			RAM2_WRITE3: begin
-				status <= IDLE;
-				Ram2EN <= 1'b0;
-				Ram2OE <= 1'b1;
-				Ram2WE <= 1'b0;
-			end
-
-		endcase
+			endcase
+		end
 
 	end
 

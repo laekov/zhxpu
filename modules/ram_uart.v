@@ -73,7 +73,7 @@ module ram_uart(
 
 
 	reg work_done;
-	assign uart_work_done = work_done && mem_act == local_act;
+	assign uart_work_done = work_done && mem_act === local_act;
 	reg Ram1Writing;
 	reg UartReading;
 	assign uart_reading = UartReading;
@@ -142,7 +142,7 @@ module ram_uart(
 						end
 						else begin
 							if (need_to_work == 1'b1) begin
-								if (mem_act == local_act) status <= IDLE;
+								if (mem_act === local_act) status <= IDLE;
 								else if (mem_addr == `UartAddr) begin
 									if (mem_wr == 1'b1) status <= UART_WRITE1;
 									else if (mem_rd == 1'b1) status <= UART_READ_FROM_QUEUE1;
