@@ -120,7 +120,7 @@ module ram_uart(
 
 	reg [31:0] fail_cnt;
 
-	always @(posedge clk or negedge rst) begin
+	always @(negedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
 			queue_front <= 0;
