@@ -120,6 +120,24 @@ module ram_uart(
 
 	reg [31:0] fail_cnt;
 
+	reg tbre_ass;
+	reg tsre_ass;
+
+	always @(posedge clk or posedge tbre) begin
+		if (tbre) begin
+			tbre_ass <= 1'b1;
+		end else if (status !== UART_WRITE4) begin
+			tbre_ass <= 1'b0;
+		end
+	end
+	always @(posedge clk or posedge tsre) begin
+		if (tsre) begin
+			tsre_ass <= 1'b1;
+		end else if (status === UART_WRITE5) begin
+			tsre_ass <= 1'b0;
+		end
+	end
+
 	always @(negedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
@@ -128,8 +146,8 @@ module ram_uart(
 		end
 		else begin
 			cnt <= cnt + 1;
-			if (cnt == 0) begin
-			//if (1'b1) begin
+			//if (cnt == 0) begin
+			if (1'b1) begin
 				case (status)
 					IDLE: begin
 						Ram1EN <= 1'b1;
@@ -224,20 +242,19 @@ module ram_uart(
 						status <= UART_WRITE4;
 					end
 					UART_WRITE4: begin
-						if (tbre == 1'b1) begin
-							// status <= UART_WRITE5;
-							status <= IDLE;
-							work_done <= 1'b1;
-							local_act <= mem_act;
+						if (tbre == 1'b1 || tbre_ass == 1'b1) begin
+							status <= UART_WRITE5;
 						end
 						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE5: begin
-						if (tsre == 1'b1) begin
+						if (tsre == 1'b1 || tsre_ass == 1'b1) begin
 							status <= IDLE;
+							work_done <= 1'b1;
+							local_act <= mem_act;
 						end
-						// else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
+						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 
