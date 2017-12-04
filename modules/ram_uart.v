@@ -128,8 +128,8 @@ module ram_uart(
 		end
 		else begin
 			cnt <= cnt + 1;
-			// if (cnt == 0) begin
-			if (1'b1) begin
+			if (cnt == 0) begin
+			//if (1'b1) begin
 				case (status)
 					IDLE: begin
 						Ram1EN <= 1'b1;
