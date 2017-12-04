@@ -146,17 +146,32 @@ module ram_uart(
 							if (need_to_work == 1'b1) begin
 								if (mem_act !== local_act) begin 
 									if (mem_addr == `UartAddr) begin
-										if (mem_wr == 1'b1) status <= UART_WRITE1;
-										else if (mem_rd == 1'b1) status <= UART_READ_FROM_QUEUE1;
+										if (mem_wr == 1'b1) begin
+											status <= UART_WRITE1;
+											work_done <= 1'b0;
+										end
+										else if (mem_rd == 1'b1) begin
+											status <= UART_READ_FROM_QUEUE1;
+											work_done <= 1'b0;
+										end
 										else status <= ERROR;
 									end
 									else begin
-										if (mem_wr == 1'b1) status <= RAM1_WRITE1;
-										else if (mem_rd == 1'b1) status <= RAM1_READ1;
+										if (mem_wr == 1'b1) begin
+											status <= RAM1_WRITE1;
+											work_done <= 1'b0;
+										end
+										else if (mem_rd == 1'b1) begin
+											status <= RAM1_READ1;
+											work_done <= 1'b0;
+										end
 										else status <= ERROR;
 									end	
 								end
-								else status <= IDLE;
+								else begin 
+									status <= IDLE;
+									work_done <= 1'b1;
+								end
 							end
 						end
 					end
