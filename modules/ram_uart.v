@@ -224,17 +224,20 @@ module ram_uart(
 						status <= UART_WRITE4;
 					end
 					UART_WRITE4: begin
-						if (tbre == 1'b1) status <= UART_WRITE5;
+						if (tbre == 1'b1) begin
+							// status <= UART_WRITE5;
+							status <= IDLE;
+							work_done <= 1'b1;
+							local_act <= mem_act;
+						end
 						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE5: begin
 						if (tsre == 1'b1) begin
-							work_done <= 1'b1;
-							local_act <= mem_act;
 							status <= IDLE;
 						end
-						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
+						// else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 

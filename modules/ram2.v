@@ -100,11 +100,12 @@ module ram2(
 		if (!rst) begin
 			status <= IDLE;
 			inst_read_done_pc <= 16'hffff;
+			local_act <= 32'hffffffff;
 		end
 		else begin
 			cnt <= cnt + 1;
-			if (cnt == 0) begin
-			// if (1'b1) begin
+			// if (cnt == 0) begin
+			if (1'b1) begin
 				case (status)
 					IDLE: begin
 						Ram2EN <= 1'b0;
@@ -113,15 +114,17 @@ module ram2(
 						
 						if (need_to_work_exe == 1'b1) begin
 							if (mem_act !== local_act) begin
-								if (mem_rd == 1'b1) begin
+								if (init_mem_wr == 1'b1) begin
+									status <= RAM2_WRITE1;
+								end else if (mem_rd == 1'b1) begin
 									status <= RAM2_READ1;
-								end else if (init_mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
+								end else if (exe_mem_wr == 1'b1) begin
 									status <= RAM2_WRITE1;
 								end else begin
 									status <= ERROR;
 								end
 							end
-							else status <= IDLE;
+							else begin status <= IDLE; exe_work_done <= 1'b1; end
 						end
 						else if (need_to_work_if == 1'b1) begin
 							if (mem_addr_if[15:0] !== inst_read_done_pc) status <= RAM2_READ4;

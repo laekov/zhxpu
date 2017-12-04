@@ -51,6 +51,9 @@ module bootloader(
 						boot_done<=1'b1;
 					end
 				end
+			end else begin
+				flash_need_to_work<=1'b0;
+				ram_need_to_work<=1'b0;
 			end
 		end
 	end
