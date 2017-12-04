@@ -111,6 +111,7 @@ module zhxpu(
 	bootloader __bootloader(
 		.clk(raw_clk2),
 		.rst(rst),
+		.flash_done_addr(flash_done_pc),
 		.flash_work_done(flash_controller_work_done),
 		.ram_work_done(mem_work_done),
 		.flash_data(mflash_data),

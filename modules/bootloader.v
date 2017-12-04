@@ -8,6 +8,7 @@ module bootloader(
 	input wire flash_work_done,
 	input wire ram_work_done,
 	input wire [15:0] flash_data,
+	input [15:0] flash_done_addr,
 
 	output reg flash_need_to_work,
 	output wire [22:1] flash_addr_out,
@@ -39,7 +40,7 @@ module bootloader(
 				if(flash_work_done)begin
 					flash_need_to_work<=1'b0;
 					data<=flash_data;
-					ram_addr<=ram_addr+18'b1;
+					ram_addr <= { 2'b00, fash_done_addr };
 					ram_need_to_work<=1'b1;	
 				end
 				else if(ram_work_done)begin
