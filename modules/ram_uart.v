@@ -118,7 +118,7 @@ module ram_uart(
 		work_done <= 1'b0;
 	end
 
-	reg [`RegValue] fail_cnt;
+	reg [31:0] fail_cnt;
 
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
@@ -213,7 +213,7 @@ module ram_uart(
 						Ram1Writing <= 1'b1;
 						status <= UART_WRITE2;
 
-						fail_cnt <= 16'h1;
+						fail_cnt <= 32'h1;
 					end
 					UART_WRITE2: begin
 						wrn <= 1'b0;
@@ -225,7 +225,7 @@ module ram_uart(
 					end
 					UART_WRITE4: begin
 						if (tbre == 1'b1) status <= UART_WRITE5;
-						else if (fail_cnt === 16'hffff) status <= UART_WRITE1;
+						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE5: begin
@@ -234,7 +234,7 @@ module ram_uart(
 							local_act <= mem_act;
 							status <= IDLE;
 						end
-						else if (fail_cnt === 16'hffff) status <= UART_WRITE1;
+						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 
