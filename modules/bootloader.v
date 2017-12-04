@@ -40,7 +40,7 @@ module bootloader(
 				if(flash_work_done)begin
 					flash_need_to_work<=1'b0;
 					data<=flash_data;
-					ram_addr <= { 2'b00, fash_done_addr };
+					ram_addr <= { 2'b00, flash_done_addr };
 					ram_need_to_work<=1'b1;	
 				end
 				else if(ram_work_done)begin

@@ -107,6 +107,7 @@ module zhxpu(
 	wire flash_controller_work_done;
 	wire flash_controller_need_to_work;
 	wire mem_work_done;
+	wire [`RegValue] flash_done_pc;
 	
 	bootloader __bootloader(
 		.clk(raw_clk2),
@@ -144,8 +145,6 @@ module zhxpu(
 		.flash_ready(flash_i_ready),
 		.status_out(flash_status)
 	);
-
-	wire flash_done_pc;
 
 	flash_controller __flash_controller(
 		.addr(mflash_addr),
