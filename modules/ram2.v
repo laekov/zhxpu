@@ -59,8 +59,8 @@ module ram2(
 	reg [31:0] local_act;
 	assign mem_act_out = local_act;
 	
-	assign if_work_done_out = if_work_done && mem_addr_if[15:0] === inst_read_done_pc;
-	assign exe_work_done_out = exe_work_done && local_act == mem_act;
+	assign if_work_done_out = if_work_done === 1'b1 && mem_addr_if[15:0] === inst_read_done_pc;
+	assign exe_work_done_out = exe_work_done === 1'b1 && local_act == mem_act;
 	 
 	reg Ram2Writing;
 
@@ -125,7 +125,7 @@ module ram2(
 						end
 						else if (need_to_work_if == 1'b1) begin
 							if (mem_addr_if[15:0] !== inst_read_done_pc) status <= RAM2_READ4;
-							else status <= IDLE;
+							else begin status <= IDLE; if_work_done <= 1'b1; end
 						end
 						else status <= IDLE;
 					end
@@ -187,6 +187,8 @@ module ram2(
 
 						status <= IDLE;
 					end
+
+					default: status <= ERROR;
 				endcase
 			end
 		end

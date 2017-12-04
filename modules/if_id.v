@@ -11,7 +11,9 @@ module if_id(
 );
 
 	always @(posedge clk) begin
-		if (hold) begin
+		if (hold == 1'b1) begin
+			inst_out <= inst_out;
+			pc_out <= pc_out;
 		end else begin
 			inst_out <= inst_in;
 			pc_out <= pc_in;

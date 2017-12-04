@@ -73,7 +73,7 @@ module ram_uart(
 
 
 	reg work_done;
-	assign uart_work_done = work_done && mem_act === local_act;
+	assign uart_work_done = work_done === 1'b1 && mem_act === local_act;
 	reg Ram1Writing;
 	reg UartReading;
 	assign uart_reading = UartReading;
@@ -128,8 +128,8 @@ module ram_uart(
 		end
 		else begin
 			cnt <= cnt + 1;
-			if (cnt == 0) begin
-			//if (1'b1) begin
+			// if (cnt == 0) begin
+			if (1'b1) begin
 				case (status)
 					IDLE: begin
 						Ram1EN <= 1'b1;
@@ -214,11 +214,12 @@ module ram_uart(
 						else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE5: begin
-						if (tsre == 1'b1 || fail_cnt === 16'hff) begin
+						if (tsre == 1'b1) begin
 							work_done <= 1'b1;
 							local_act <= mem_act;
 							status <= IDLE;
 						end
+						else if (fail_cnt === 16'hffff) status <= UART_WRITE1;
 						else fail_cnt <= fail_cnt + 1;
 					end
 

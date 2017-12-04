@@ -66,14 +66,22 @@ module id_exe(
 
 	always @(posedge clk) begin
 		if (hold) begin
+			opn_out <= opn_out;
+			pc_out <= pc_out;
+			mem_write_out <= mem_write_out;
+			mem_read_out <= mem_read_out;
+			reg_write_out <= reg_write_out;
+			reg_addr_out <= reg_addr_out;
+			mem_act <= mem_act;
+			read_value1_output <= read_value1_output;
+			read_value2_output <= read_value2_output;
+			op1 <= op1;
+			op2 <= op2;
 		end else begin
 			opn_out <= opn;
 			pc_out <= pc;
 			mem_write_out <= mem_write;
 			mem_read_out <= mem_read;
-			if (mem_write || mem_read) begin
-				mem_trig <= !mem_trig;
-			end
 			reg_write_out <= reg_write;
 			reg_addr_out <= reg_addr;
 			mem_act <= mem_act + 32'b1;

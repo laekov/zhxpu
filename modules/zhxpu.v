@@ -163,6 +163,8 @@ module zhxpu(
 	wire mem_op;
 
 	stall_ctrl __stall_ctrl(
+		.clk(raw_clk),
+		.rst(rst),
 		.mem_op(mem_op),
 		.initializing(initializing),
 		.mem_done(mem_work_done),
@@ -224,9 +226,7 @@ module zhxpu(
 		.hold(hold),
 		.set_pc(set_pc),
 		.set_pc_addr(set_pc_addr),
-		.pc_enabled(pc_enabled),
-		.pc(if_pc),
-		.read_done(inst_read_done)
+		.pc(if_pc)
 	);
 
 	wire [`RegValue] if_inst;
@@ -391,7 +391,7 @@ module zhxpu(
 	wire [31:0] combined_act;
 	assign combined_act = initializing ? { 16'b0, init_addr } : mem_act;
 	ram2 __ram2(
-		.clk(raw_clk2),
+		.clk(raw_clk),
 		.rst(rst),
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),

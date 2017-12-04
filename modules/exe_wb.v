@@ -30,6 +30,9 @@ module exe_wb(
 
 	always @(posedge clk) begin
 		if (hold) begin
+			write_reg_ctrl_c <= write_reg_ctrl_c;
+			write_reg_addr_c <= write_reg_addr_c;
+			write_reg_data <= write_reg_data;
 		end else begin
 			write_reg_ctrl_c <= reg_wr;
 			write_reg_addr_c <= reg_addr;

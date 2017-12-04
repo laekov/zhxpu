@@ -21,14 +21,24 @@
 `include "define.v"
 
 module stall_ctrl(
+	input clk,
+	input rst,
 	input mem_op,
 	input mem_done,
 	input initializing,
 	input inst_read_done,
-	output reg hold
+	output wire hold
 );
 
-	always@(*)begin 
-		hold = initializing || (mem_op && !mem_done) || !inst_read_done;
+	reg hold_in;
+	assign hold = hold_in;
+	// assign hold = initializing || (mem_op && !mem_done) || !inst_read_done;
+
+	always @(negedge clk or negedge rst) begin
+		if (!rst) begin
+			hold_in <= 1'b1;
+		end else begin
+			hold_in <= initializing || (mem_op && !mem_done) || !inst_read_done;
+		end
 	end
 endmodule

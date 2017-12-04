@@ -53,7 +53,7 @@ module ram_controller(
 	assign done_act1_out = done_act1[15:0];
 	assign done_act2_out = done_act2[15:0];
 	
-	assign ram_work_done = ram1_work_done || ram2_work_done;
+	// assign ram_work_done = ram1_work_done || ram2_work_done;
 
 	always @(*) begin
 		if (mem_rd == 1'b1 || mem_wr == 1'b1 || init_mem_wr == 1'b1) begin

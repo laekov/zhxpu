@@ -26,25 +26,20 @@ module pc_reg(
 		input set_pc,
 		input [15:0] set_pc_addr,
 		input pc_enabled,
-		input read_done,
 		output reg [`RegValue] pc
     );
-
-	reg [`RegValue] new_pc;
-
-	always @(*) begin
-		new_pc <= pc + 16'b1;
-	end
 
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			pc <= 16'b0;
-		end else if (!hold) begin
+		end else if (hold === 1'b0) begin
 			if (set_pc) begin
 				pc <= set_pc_addr;
-			end else if (read_done) begin
-				pc <= new_pc;
+			end else  begin
+				pc <= pc + 1;
 			end
+		end else begin
+			pc <= pc;
 		end
 	end
 
