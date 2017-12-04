@@ -118,6 +118,8 @@ module ram_uart(
 	end
 
 	reg [31:0] fail_cnt;
+	
+	assign uart_work_done = mem_act == local_act;
 
 	always @(negedge clk or negedge rst) begin
 		if (!rst) begin
@@ -127,7 +129,6 @@ module ram_uart(
 		end
 		else begin
 			cnt <= cnt + 1;
-			uart_work_done = mem_act === local_act;
 			if (1'b1) begin
 				case (status)
 					IDLE: begin
