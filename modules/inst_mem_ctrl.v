@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 `include "define.v"
-// A version for demonstration 
+// Not a version for demonstration 
 module inst_mem_ctrl(
 	input [`RegValue]addr,
 	output reg [`RegValue] data,
@@ -9,6 +9,8 @@ module inst_mem_ctrl(
 
 	input ram_work_done,
 	input [`MemValue] ram_feed_back,
+
+	input [`RegValue] inst_read_done_pc,
 	
 	output reg work_done,
 	output reg [`RegValue] right,
@@ -532,26 +534,31 @@ module inst_mem_ctrl(
 
 	always @(*) begin
 		if (ram_work_done == 1'b1) begin
-			data <= ram_feed_back;
-			if (addr[15:12] == 4'b0) begin
-				if (data != suppose) begin
-					right <= 16'hffff;
-				end
-				else right <= 16'b0;
+			if (addr === inst_read_done_pc) begin
+				ram_need_to_work <= 1'b0;
+				work_done <= 1'b1;
+			end else begin
+				ram_need_to_work <= 1'b1;
+				work_done <= 1'b0;
 			end
-			else right <= 16'b0;
-			ram_need_to_work <= 1'b0;
-			work_done <= 1'b1;
+			if (addr[15:12] == 4'b0) begin
+				data <= ram_feed_back;
+			end begin
+				data <= ram_feed_back;
+			end
 		end
 		else begin
 			ram_need_to_work <= 1'b1;
 			data <= 16'h0800;
 			work_done <= 1'b0;
-			right <= 16'b0;
 		end
 	end
 
 	always @(posedge ram_work_done) begin
-		done_pc <= addr;
+		if (addr === inst_read_done_pc) begin
+			if (addr[15:12] == 4'b0 && ram_feed_back !== suppose) begin
+				right <= right + 1;
+			end
+		end
 	end
-endmodule
+	endmodule

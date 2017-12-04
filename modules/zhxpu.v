@@ -216,6 +216,8 @@ module zhxpu(
 	reg pc_enabled = 1'b1;
 	wire [`RegValue] if_pc;
 
+	wire [`RegValue] inst_read_done_pc;
+
 	pc_reg __pc_reg(	
 		.clk(clk),
 		.rst(rst),
@@ -240,6 +242,7 @@ module zhxpu(
 		.ram_work_done(ram2_work_done_if),
 		.ram_feed_back(ram2_work_res_if),
 		.work_done(inst_read_done),
+		.inst_read_done_pc(inst_read_done_pc),
 		.done_pc_out(inst_done_pc),
 		.right(right)
 	);
@@ -410,7 +413,8 @@ module zhxpu(
 		.status_out(ram2_status),
 		.cnt_out(ram2_cnt),
 		.mem_act(combined_act),
-		.mem_act_out(mem_act2)	
+		.mem_act_out(mem_act2),
+		.inst_read_done_pc(inst_read_done_pc)
 	);
 
 	wire [`RegValue] ram_ctrl_done_pc;
@@ -600,7 +604,8 @@ module zhxpu(
 		.flash_i_ready(flash_i_ready),
 		.flash_status(flash_status),
 		.ram1_work_res(ram1_work_res),
-		.ram2_work_res(ram2_work_res)
+		.ram2_work_res(ram2_work_res),
+		.inst_read_done_pc(inst_read_done_pc)
 	);
 
 endmodule

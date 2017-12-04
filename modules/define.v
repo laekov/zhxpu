@@ -13,7 +13,7 @@
 `define ZhiZhangAddr 18'b001011111100000001
 `define UartValue 7:0
 
-`define RamFrequency 0:0
+`define RamFrequency 4:0
 
 `define QueueSize 7:0
 `define QueueSizeH 0:255

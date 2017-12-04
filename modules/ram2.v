@@ -47,7 +47,8 @@ module ram2(
 	output [31:0] mem_act_out,
 
 	output wire [15:0] status_out,
-	output wire [15:0] cnt_out
+	output wire [15:0] cnt_out,
+	output reg [15:0] inst_read_done_pc
 
     );
 
@@ -58,7 +59,7 @@ module ram2(
 	reg [31:0] local_act;
 	assign mem_act_out = local_act;
 	
-	assign if_work_done_out = if_work_done && local_act == mem_act;
+	assign if_work_done_out = if_work_done && mem_addr_if[15:0] === inst_read_done_pc;
 	assign exe_work_done_out = exe_work_done && local_act == mem_act;
 	 
 	reg Ram2Writing;
@@ -98,6 +99,7 @@ module ram2(
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
+			inst_read_done_pc <= 16'hffff;
 		end
 		else begin
 			cnt <= cnt + 1;
@@ -116,13 +118,13 @@ module ram2(
 								end else if (init_mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
 									status <= RAM2_WRITE1;
 								end else begin
-									status <= IDLE;
+									status <= ERROR;
 								end
 							end
 							else status <= IDLE;
 						end
 						else if (need_to_work_if == 1'b1) begin
-							if (mem_act !== local_act) status <= RAM2_READ4;
+							if (mem_addr_if[15:0] !== inst_read_done_pc) status <= RAM2_READ4;
 							else status <= IDLE;
 						end
 						else status <= IDLE;
@@ -161,7 +163,7 @@ module ram2(
 					RAM2_READ6: begin
 						if_work_done <= 1'b1;
 						if_result <= Ram2Data;
-						local_act <= mem_act;
+						inst_read_done_pc <= mem_addr_if[15:0];
 
 						status <= IDLE;
 					end
