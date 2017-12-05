@@ -164,6 +164,7 @@ module zhxpu(
 
 	stall_ctrl __stall_ctrl(
 		.clk(raw_clk),
+		.clk2(raw_clk2),
 		.rst(rst),
 		.mem_op(mem_op),
 		.initializing(initializing),
@@ -356,12 +357,14 @@ module zhxpu(
 	wire [31:0] mem_act;
 	wire [31:0] mem_act1;
 	wire [31:0] mem_act2;
+	wire [31:0] fail_cnt;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.clk2(raw_clk2),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
+		.fail_cnt_out(fail_cnt),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
 		.mem_addr({ 2'b0, ram_addr }),
@@ -606,7 +609,8 @@ module zhxpu(
 		.flash_status(flash_status),
 		.ram1_work_res(ram1_work_res),
 		.ram2_work_res(ram2_work_res),
-		.inst_read_done_pc(inst_read_done_pc)
+		.inst_read_done_pc(inst_read_done_pc),
+		.fail_cnt(fail_cnt)
 	);
 
 endmodule

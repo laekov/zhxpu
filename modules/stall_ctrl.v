@@ -22,6 +22,7 @@
 
 module stall_ctrl(
 	input clk,
+	input clk2,
 	input rst,
 	input mem_op,
 	input mem_done,
@@ -34,7 +35,7 @@ module stall_ctrl(
 	assign hold = hold_in;
 	// assign hold = initializing || (mem_op && !mem_done) || !inst_read_done;
 
-	always @(negedge clk or negedge rst) begin
+	always @(negedge clk or posedge clk2 or negedge rst) begin
 		if (!rst) begin
 			hold_in <= 1'b1;
 		end else begin
