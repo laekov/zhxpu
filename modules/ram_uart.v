@@ -59,8 +59,9 @@ module ram_uart(
 	output wire [15:0] status_out,
 	output wire uart_reading,
 
-	output wire [31:0] fail_cnt_out
+	output wire [31:0] fail_cnt_out,
 
+	output wire [15:0] send_count_out
     );
 
 	reg [31:0] local_act;
@@ -73,6 +74,9 @@ module ram_uart(
 	assign front = queue_front;
 	assign tail = queue_tail;
 	assign queue_front_v = queue[queue_front];
+
+	reg [15:0] send_count;
+	assign send_count_out = send_count;
 
 
 	reg work_done;
@@ -119,6 +123,8 @@ module ram_uart(
 
 	initial begin
 		work_done <= 1'b0;
+		status <= IDLE;
+		send_count <= 16'b0;
 	end
 
 	reg [31:0] fail_cnt;
@@ -127,7 +133,7 @@ module ram_uart(
 	reg tbre_ass;
 	reg tsre_ass;
 
-	always @(posedge clk or posedge tbre) begin
+/*	always @(posedge clk or posedge tbre) begin
 		if (tbre) begin
 			tbre_ass <= 1'b1;
 		end else if (status !== UART_WRITE4) begin
@@ -141,17 +147,18 @@ module ram_uart(
 			tsre_ass <= 1'b0;
 		end
 	end
-
+*/
 	always @(negedge clk2 or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
 			queue_front <= 0;
 			queue_tail <= 0;
+			send_count <= 0;
 		end
 		else begin
 			cnt <= cnt + 1;
-			if (cnt == 0) begin
-			//if (1'b1) begin
+			//if (cnt == 0) begin
+			if (1'b1) begin
 				case (status)
 					IDLE: begin
 						Ram1EN <= 1'b1;
@@ -165,29 +172,27 @@ module ram_uart(
 							status <= UART_READ1;
 						end
 						else begin
-							if (need_to_work == 1'b1) begin
+							if (mem_wr == 1'b1 || mem_rd == 1'b1) begin
 								if (mem_act !== local_act) begin 
 									if (mem_addr == `UartAddr) begin
 										if (mem_wr == 1'b1) begin
 											status <= UART_WRITE1;
 											work_done <= 1'b0;
 										end
-										else if (mem_rd == 1'b1) begin
+										else begin
 											status <= UART_READ_FROM_QUEUE1;
 											work_done <= 1'b0;
 										end
-										else status <= ERROR;
 									end
 									else begin
 										if (mem_wr == 1'b1) begin
 											status <= RAM1_WRITE1;
 											work_done <= 1'b0;
 										end
-										else if (mem_rd == 1'b1) begin
+										else begin
 											status <= RAM1_READ1;
 											work_done <= 1'b0;
 										end
-										else status <= ERROR;
 									end	
 								end
 								else begin 
@@ -195,6 +200,7 @@ module ram_uart(
 									work_done <= 1'b1;
 								end
 							end
+							else status <= IDLE;
 						end
 					end
 
@@ -230,33 +236,34 @@ module ram_uart(
 
 						work_done <= 1'b0;
 						Ram1Writing <= 1'b1;
+						//if (tbre == 1'b0) status <= UART_WRITE2;
+						//else status <= UART_WRITE1;
 						status <= UART_WRITE2;
 
 						fail_cnt <= 32'h1;
 					end
 					UART_WRITE2: begin
 						wrn <= 1'b0;
-						status <= UART_WRITE3;
+						//status <= UART_WRITE3;
+						if (tbre == 1'b0) status <= UART_WRITE3;
+						else status <= UART_WRITE2;
 					end
 					UART_WRITE3: begin
 						wrn <= 1'b1;
 						status <= UART_WRITE4;
 					end
 					UART_WRITE4: begin
-						if (1'b1 || tbre == 1'b1 || tbre_ass == 1'b1) begin
+						if (tbre == 1'b1) begin
 							status <= UART_WRITE5;
 						end
-						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-						else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE5: begin
-						if (1'b1 || tsre == 1'b1 || tsre_ass == 1'b1) begin
+						if (tsre == 1'b1) begin
 							status <= IDLE;
 							work_done <= 1'b1;
 							local_act <= mem_act;
+							send_count <= send_count + 1;
 						end
-						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-						else fail_cnt <= fail_cnt + 1;
 					end
 
 					RAM1_READ1: begin

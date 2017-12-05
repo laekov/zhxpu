@@ -24,15 +24,14 @@ module ram_controller(
 	input init_mem_wr,
 	input [`MemAddr] addr,
 
-	input ram1_work_done,
+	input [31:0] mem_act,
+	input [31:0] ram1_mem_act,
 	input [`MemValue] ram1_feedback,
-	input ram2_work_done,
+	input [31:0] ram2_mem_act,
 	input [`MemValue] ram2_feedback,
 
 	input [`RegValue] pc,
 	input uart_received_data,
-
-	input [31:0] mem_act,
 
 	output reg ram1_need_to_work,
 	output reg ram2_need_to_work,
@@ -64,7 +63,7 @@ module ram_controller(
 				ram2_need_to_work <= 1'b0;
 			end else
 			if (addr[15:15] == 1'b1) begin
-				if (ram1_work_done == 1'b1) begin
+				if (ram1_mem_act === mem_act) begin
 					feedback <= ram1_feedback;
 					work_done <= 1'b1;
 					ram1_need_to_work <= 1'b0;
@@ -77,7 +76,7 @@ module ram_controller(
 				end
 			end
 			else begin
-				if (ram2_work_done == 1'b1) begin
+				if (ram2_mem_act === mem_act) begin
 					feedback <= ram2_feedback;
 					work_done <= 1'b1;
 					ram1_need_to_work <= 1'b0;

@@ -94,6 +94,7 @@ module ram2(
 	initial begin
 		exe_work_done <= 1'b0;
 		if_work_done <= 1'b0;
+		status <= IDLE;
 	end
 
 	always @(posedge clk or negedge rst) begin

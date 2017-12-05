@@ -133,7 +133,11 @@ module hja_led_ctrl(
 		input uart_reading,
 		input flash_status,
 		input [`RegValue] inst_read_done_pc,
-		input [31:0] fail_cnt
+		input [31:0] fail_cnt,
+		input tbre,
+		input tsre,
+
+		input [15:0] send_count
     );
 
 	always @(*) begin
@@ -211,6 +215,8 @@ module hja_led_ctrl(
 			8'h47: led_data <= { inst_read_done_pc };
 			8'h48: led_data <= { fail_cnt[15:0] };
 			8'h49: led_data <= { fail_cnt[31:16] };
+			8'h4a: led_data <= {tbre,7'b0,tsre,7'b0};
+			8'h4b: led_data <= {send_count};
 			default: led_data <= sw;
 		endcase
 	end

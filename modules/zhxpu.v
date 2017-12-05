@@ -57,6 +57,7 @@ module zhxpu(
 	input tsre,
 	output wrn
 );
+	
 // Flags
 	wire [`RegValue] right;
 
@@ -358,11 +359,15 @@ module zhxpu(
 	wire [31:0] mem_act1;
 	wire [31:0] mem_act2;
 	wire [31:0] fail_cnt;
+	wire [15:0] send_count;
+
+	wire fake_rst;
+	assign fake_rst = 1'b1;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.clk2(raw_clk2),
-		.rst(rst),
+		.rst(fake_rst),
 		.need_to_work(ram1_need_to_work),
 		.fail_cnt_out(fail_cnt),
 		.mem_rd(exe_memrd_ctrl),
@@ -387,16 +392,17 @@ module zhxpu(
 		.queue_front_v(qfrontv),
 		.uart_reading(uart_reading),
 		.mem_act(mem_act),
-		.mem_act_out(mem_act1)
+		.mem_act_out(mem_act1),
+		.send_count_out(send_count)
 	);
 
 	wire [15:0] ram2_status;
 	wire [15:0] ram2_cnt;
 	wire [31:0] combined_act;
-	assign combined_act = initializing ? { 16'b0, init_addr } : mem_act;
+	assign combined_act = initializing ? { 16'h1234, init_addr } : mem_act;
 	ram2 __ram2(
 		.clk(raw_clk2),
-		.rst(rst),
+		.rst(fake_rst),
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
 		.mem_rd(exe_memrd_ctrl),
@@ -430,17 +436,17 @@ module zhxpu(
 		.init_mem_wr(init_mem_wr),
 		.pc(ram_pc),
 		.addr({ 2'b0, ram_addr }),
-		.ram1_work_done(ram1_work_done),
+		.ram1_mem_act(mem_act1),
+		.ram2_mem_act(mem_act2),
+		.mem_act(combined_act),
 		.ram1_feedback(ram1_work_res),
 		.ram1_need_to_work(ram1_need_to_work),
-		.ram2_work_done(ram2_work_done),
 		.ram2_feedback(ram2_work_res),
 		.ram2_need_to_work(ram2_need_to_work),
 		.work_done(mem_work_done),
 		.feedback(mem_work_res),
 		.uart_received_data(uart_ready),
 		.done_pc_out(ram_ctrl_done_pc),
-		.mem_act(mem_act),
 		//.done_act1_out(mem_act1),
 		//.done_act2_out(mem_act2),
 		.uart_reading(uart_reading)
@@ -610,7 +616,10 @@ module zhxpu(
 		.ram1_work_res(ram1_work_res),
 		.ram2_work_res(ram2_work_res),
 		.inst_read_done_pc(inst_read_done_pc),
-		.fail_cnt(fail_cnt)
+		.fail_cnt(fail_cnt),
+		.tbre(tbre),
+		.tsre(tsre),
+		.send_count(send_count)
 	);
 
 endmodule
