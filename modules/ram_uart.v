@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module ram_uart(
 	input clk,
+	input clk2,
 	input rst,
 
 	input need_to_work,
@@ -133,7 +134,7 @@ module ram_uart(
 	always @(posedge clk or posedge tsre) begin
 		if (tsre) begin
 			tsre_ass <= 1'b1;
-		end else if (status === UART_WRITE5) begin
+		end else if (status !== UART_WRITE5) begin
 			tsre_ass <= 1'b0;
 		end
 	end
