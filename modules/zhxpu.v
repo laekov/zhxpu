@@ -408,7 +408,7 @@ module zhxpu(
 	wire [`ActBit] combined_act;
 	assign combined_act = initializing ? init_addr : mem_act;
 	ram2 __ram2(
-		.clk(raw_clk2),
+		.clk(raw_clk),
 		.rst(fake_rst),
 		.need_to_work_if(ram2_need_to_work_if),
 		.need_to_work_exe(ram2_need_to_work),
