@@ -119,6 +119,7 @@ module ram_uart(
 	localparam ERROR = 8'b11110101;
 
 	reg [7:0] status;
+	initial status = IDLE;
 	reg [7:0] next_status;
 	assign status_out = { status, next_status };
 

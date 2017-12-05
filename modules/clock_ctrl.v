@@ -34,6 +34,8 @@ module clock_ctrl(
 	wire cur_status;
 	assign cur_status = !clk;
 
+	initial clk = 1'b0;
+
 	wire [31:0] tmp;
 	assign tmp = cur_cnt + 32'h00000001;
 

@@ -543,7 +543,7 @@ module inst_mem_ctrl(
 			end
 			if (addr[15:12] == 4'b0) begin
 				data <= ram_feed_back;
-			end begin
+			end else begin
 				data <= ram_feed_back;
 			end
 		end

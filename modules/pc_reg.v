@@ -30,6 +30,8 @@ module pc_reg(
 		output reg [`ActBit] pc_hold_cnt = 0
     );
 
+	initial pc = 16'b0;
+
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			pc <= 16'b0;
