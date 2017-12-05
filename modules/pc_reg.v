@@ -26,7 +26,8 @@ module pc_reg(
 		input set_pc,
 		input [15:0] set_pc_addr,
 		input pc_enabled,
-		output reg [`RegValue] pc
+		output reg [`RegValue] pc,
+		output reg [`ActBit] pc_hold_cnt = 0
     );
 
 	always @(posedge clk or negedge rst) begin
@@ -40,6 +41,7 @@ module pc_reg(
 			end
 		end else begin
 			pc <= pc;
+			pc_hold_cnt <= pc_hold_cnt + 1;
 		end
 	end
 

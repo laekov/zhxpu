@@ -222,13 +222,16 @@ module zhxpu(
 
 	wire [`RegValue] inst_read_done_pc;
 
+	wire [`ActBit] pc_hold_cnt;
+
 	pc_reg __pc_reg(	
 		.clk(clk),
 		.rst(rst),
 		.hold(hold),
 		.set_pc(set_pc),
 		.set_pc_addr(set_pc_addr),
-		.pc(if_pc)
+		.pc(if_pc),
+		.pc_hold_cnt(pc_hold_cnt)
 	);
 
 	wire [`RegValue] if_inst;
@@ -619,7 +622,8 @@ module zhxpu(
 		.tbre(tbre),
 		.tsre(tsre),
 		.send_count(send_count),
-		.ram1_goal_act(ram1_goal_act)
+		.ram1_goal_act(ram1_goal_act),
+		.pc_hold_cnt(pc_hold_cnt)
 	);
 
 endmodule

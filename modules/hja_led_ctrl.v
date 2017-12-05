@@ -137,7 +137,8 @@ module hja_led_ctrl(
 
 		input [15:0] send_count,
 
-		input [`ActBit] ram1_goal_act
+		input [`ActBit] ram1_goal_act,
+		input [`ActBit] pc_hold_cnt
     );
 
 	always @(*) begin
@@ -218,6 +219,7 @@ module hja_led_ctrl(
 			8'h4a: led_data <= {tbre,7'b0,tsre,7'b0};
 			8'h4b: led_data <= {send_count};
 			8'h4c: led_data <= { ram1_goal_act };
+			8'h4d: led_data <= { pc_hold_cnt };
 			default: led_data <= sw;
 		endcase
 	end
