@@ -53,7 +53,7 @@ module id_exe(
 
 	output reg [`RegValue] read_value1_output,
 	output reg [`RegValue] read_value2_output,
-	output reg [31:0] mem_act,
+	output reg [`ActBit] mem_act,
 
 	output reg mem_trig
     );
@@ -84,7 +84,9 @@ module id_exe(
 			mem_read_out <= mem_read;
 			reg_write_out <= reg_write;
 			reg_addr_out <= reg_addr;
-			mem_act <= mem_act + 32'b1;
+			if (mem_write_out || mem_read_out) begin
+				mem_act <= mem_act + 1;
+			end
 			read_value1_output <= read_value1;
 			read_value2_output <= read_value2;
 			case (opn[15:11])

@@ -94,15 +94,13 @@ module hja_led_ctrl(
 		input [`MemValue] mem_work_res,
 
 		input ram1_need_to_work,
-		input [31:0] mem_act,
+		input [`ActBit] mem_act,
 		input ram2_need_to_work,
 		input [`MemValue] ram1_work_res,
 		input [`MemValue] ram2_work_res,
 
 		input [15:0] ram_status,
 		
-		input mem_wr,
-
 		input [`RegValue] ram_data,
 		input [`RegValue] ram_addr,
 		input [`RegValue] ram_pc,
@@ -119,8 +117,8 @@ module hja_led_ctrl(
 		input flash_controller_work_done,
 		input flash_controller_need_to_work,
 		input data_ready,
-		input [31:0] mem_act1,
-		input [31:0] mem_act2,
+		input [`ActBit] mem_act1,
+		input [`ActBit] mem_act2,
 
 		input [`QueueSize] qfront,
 		input [`QueueSize] qtail,
@@ -137,7 +135,9 @@ module hja_led_ctrl(
 		input tbre,
 		input tsre,
 
-		input [15:0] send_count
+		input [15:0] send_count,
+
+		input [`ActBit] ram1_goal_act
     );
 
 	always @(*) begin
@@ -171,7 +171,7 @@ module hja_led_ctrl(
 			8'h1B: led_data <= {alu_res};
 			8'h1C: led_data <= {exe_read_value1};
 			8'h1D: led_data <= {exe_read_value2};
-			8'h1E: led_data <= {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,mem_wr,1'b0,flush,1'b0, data_ready, 1'b0};
+			8'h1E: led_data <= {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,init_mem_wr,1'b0,flush,1'b0, data_ready, 1'b0};
 			8'h1F: led_data <= {exe_mem_data};
 			8'h20: led_data <= {wb_res};
 			8'h21: led_data <= {mem_work_res};
@@ -217,6 +217,7 @@ module hja_led_ctrl(
 			8'h49: led_data <= { fail_cnt[31:16] };
 			8'h4a: led_data <= {tbre,7'b0,tsre,7'b0};
 			8'h4b: led_data <= {send_count};
+			8'h4c: led_data <= { ram1_goal_act };
 			default: led_data <= sw;
 		endcase
 	end

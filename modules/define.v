@@ -28,3 +28,4 @@
 `define ZeroReg 4'b1011
 
 `define IntVal 31:0
+`define ActBit 15:0

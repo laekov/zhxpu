@@ -331,9 +331,6 @@ module zhxpu(
 
 	wire [15:0] ram_status;
 
-	wire mem_wr;
-	assign mem_wr = init_mem_wr;
-
 	wire [`RegValue] ram_data;
 	wire [`RegValue] ram_addr;
 	wire [`RegValue] ram_pc;
@@ -355,14 +352,16 @@ module zhxpu(
 	wire [`QueueSize] qfront;
 	wire [`QueueSize] qtail;
 	wire [`RegValue] qfrontv;
-	wire [31:0] mem_act;
-	wire [31:0] mem_act1;
-	wire [31:0] mem_act2;
+	wire [`ActBit] mem_act;
+	wire [`ActBit] mem_act1;
+	wire [`ActBit] mem_act2;
 	wire [31:0] fail_cnt;
 	wire [15:0] send_count;
 
 	wire fake_rst;
 	assign fake_rst = 1'b1;
+
+	wire [`ActBit] ram1_goal_act;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
@@ -393,13 +392,14 @@ module zhxpu(
 		.uart_reading(uart_reading),
 		.mem_act(mem_act),
 		.mem_act_out(mem_act1),
-		.send_count_out(send_count)
+		.send_count_out(send_count),
+		.goal_act(ram1_goal_act)
 	);
 
 	wire [15:0] ram2_status;
 	wire [15:0] ram2_cnt;
-	wire [31:0] combined_act;
-	assign combined_act = initializing ? { 16'h1234, init_addr } : mem_act;
+	wire [`ActBit] combined_act;
+	assign combined_act = initializing ? init_addr : mem_act;
 	ram2 __ram2(
 		.clk(raw_clk2),
 		.rst(fake_rst),
@@ -586,7 +586,6 @@ module zhxpu(
 		.ram1_need_to_work(ram1_need_to_work),
 		.ram2_need_to_work(ram2_need_to_work),
 		.ram_status(ram_status),
-		.mem_wr(mem_wr),
 		.ram_data(ram_data),
 		.ram_addr(ram_addr),
 		.ram_pc(ram_pc),
@@ -619,7 +618,8 @@ module zhxpu(
 		.fail_cnt(fail_cnt),
 		.tbre(tbre),
 		.tsre(tsre),
-		.send_count(send_count)
+		.send_count(send_count),
+		.ram1_goal_act(ram1_goal_act)
 	);
 
 endmodule
