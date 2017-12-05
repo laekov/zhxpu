@@ -85,7 +85,7 @@ module ram_uart(
 	reg work_done;
 	assign uart_work_done = work_done === 1'b1 && mem_act === local_act;
 	reg Ram1Writing;
-	assign ram1_writing_out = ram1_writing;
+	assign ram1_writing_out = Ram1Writing;
 	reg UartReading;
 	assign uart_reading = UartReading;
 	

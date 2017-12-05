@@ -399,7 +399,7 @@ module zhxpu(
 		.mem_act(mem_act),
 		.mem_act_out(mem_act1),
 		.send_count_out(send_count),
-		.goal_act(ram1_goal_act).
+		.goal_act(ram1_goal_act),
 		.ram1_writing_out(ram1_writing_out)
 	);
 
