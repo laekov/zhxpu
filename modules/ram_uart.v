@@ -62,7 +62,9 @@ module ram_uart(
 	output wire [31:0] fail_cnt_out,
 
 	output wire [15:0] send_count_out,
-	output wire [`ActBit] goal_act
+	output wire [`ActBit] goal_act,
+
+	output wire ram1_writing_out
     );
 
 	reg [`ActBit] local_act;
@@ -83,6 +85,7 @@ module ram_uart(
 	reg work_done;
 	assign uart_work_done = work_done === 1'b1 && mem_act === local_act;
 	reg Ram1Writing;
+	assign ram1_writing_out = ram1_writing;
 	reg UartReading;
 	assign uart_reading = UartReading;
 	

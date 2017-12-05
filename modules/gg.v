@@ -43,14 +43,12 @@ module ram2(
 	output reg [`MemValue] if_result,
 	output reg [`MemValue] exe_result,
 
-	input wire [`ActBit] mem_act,
-	output [`ActBit] mem_act_out,
+	input wire [31:0] mem_act,
+	output [31:0] mem_act_out,
 
 	output wire [15:0] status_out,
 	output wire [15:0] cnt_out,
-	output reg [15:0] inst_read_done_pc,
-
-	output wire ram2_writing_out
+	output reg [15:0] inst_read_done_pc
 
     );
 
@@ -58,14 +56,13 @@ module ram2(
 	reg exe_work_done;
 
 
-	reg [`ActBit] local_act;
+	reg [31:0] local_act;
 	assign mem_act_out = local_act;
 	
 	assign if_work_done_out = if_work_done === 1'b1 && mem_addr_if[15:0] === inst_read_done_pc;
 	assign exe_work_done_out = exe_work_done === 1'b1 && local_act == mem_act;
 	 
 	reg Ram2Writing;
-	assign ram2_writing_out = Ram2Writing;
 
 	assign Ram2Data = Ram2Writing?mem_value_exe:16'bz;
 	assign Ram2Addr = need_to_work_exe?mem_addr_exe:mem_addr_if;
@@ -97,19 +94,17 @@ module ram2(
 	initial begin
 		exe_work_done <= 1'b0;
 		if_work_done <= 1'b0;
-		status <= IDLE;
 	end
 
 	always @(posedge clk or negedge rst) begin
 		if (!rst) begin
 			status <= IDLE;
 			inst_read_done_pc <= 16'hffff;
-			local_act <= 32'hffffffff;
 		end
 		else begin
 			cnt <= cnt + 1;
-			// if (cnt == 0) begin
-			if (1'b1) begin
+			if (cnt == 0) begin
+			// if (1'b1) begin
 				case (status)
 					IDLE: begin
 						Ram2EN <= 1'b0;
@@ -118,17 +113,15 @@ module ram2(
 						
 						if (need_to_work_exe == 1'b1) begin
 							if (mem_act !== local_act) begin
-								if (init_mem_wr == 1'b1) begin
-									status <= RAM2_WRITE1;
-								end else if (mem_rd == 1'b1) begin
+								if (mem_rd == 1'b1) begin
 									status <= RAM2_READ1;
-								end else if (exe_mem_wr == 1'b1) begin
+								end else if (init_mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
 									status <= RAM2_WRITE1;
 								end else begin
 									status <= ERROR;
 								end
 							end
-							else begin status <= IDLE; exe_work_done <= 1'b1; end
+							else status <= IDLE;
 						end
 						else if (need_to_work_if == 1'b1) begin
 							if (mem_addr_if[15:0] !== inst_read_done_pc) status <= RAM2_READ4;
@@ -203,5 +196,4 @@ module ram2(
 	
 
 endmodule
-
 

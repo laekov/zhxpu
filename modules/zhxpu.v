@@ -366,6 +366,9 @@ module zhxpu(
 
 	wire [`ActBit] ram1_goal_act;
 
+	wire ram1_writing_out;
+	wire ram2_writing_out;
+
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.clk2(raw_clk2),
@@ -396,7 +399,8 @@ module zhxpu(
 		.mem_act(mem_act),
 		.mem_act_out(mem_act1),
 		.send_count_out(send_count),
-		.goal_act(ram1_goal_act)
+		.goal_act(ram1_goal_act).
+		.ram1_writing_out(ram1_writing_out)
 	);
 
 	wire [15:0] ram2_status;
@@ -427,7 +431,8 @@ module zhxpu(
 		.cnt_out(ram2_cnt),
 		.mem_act(combined_act),
 		.mem_act_out(mem_act2),
-		.inst_read_done_pc(inst_read_done_pc)
+		.inst_read_done_pc(inst_read_done_pc),
+		.ram2_writing_out(ram2_writing_out)
 	);
 
 	wire [`RegValue] ram_ctrl_done_pc;
@@ -623,7 +628,9 @@ module zhxpu(
 		.tsre(tsre),
 		.send_count(send_count),
 		.ram1_goal_act(ram1_goal_act),
-		.pc_hold_cnt(pc_hold_cnt)
+		.pc_hold_cnt(pc_hold_cnt),
+		.ram1_writing_out(ram1_writing_out),
+		.ram2_writing_out(ram2_writing_out)
 	);
 
 endmodule
