@@ -32,7 +32,7 @@ module stall_ctrl(
 
 	reg hold_in;
 	// assign hold = hold_in;
-    assign hold = !rst || initializing || (mem_op && !mem_done) || !inst_read_done;
+    assign hold = (mem_op && !mem_done) || !inst_read_done;
 
 	always @(negedge clk or negedge rst) begin
 		if (!rst) begin

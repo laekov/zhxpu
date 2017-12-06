@@ -104,7 +104,6 @@ module ram_uart(
 			//queue_front <= 0;
 			//queue_tail <= 0;
 		end else begin
-			status <= next_status | 5'b00000;
 			case (status)
 				IDLE: begin
 					Ram1EN <= 1'b1;
@@ -117,15 +116,13 @@ module ram_uart(
 					if (need_to_work && !act_done) begin
 						status <= STG1;
 						work_done <= 1'b0;
-						if (uart_opt && mem_wr) begin
-							{ add_flag, send_cnt } <= send_cnt + 1;
-						end
 					end
 				end
 
 				STG1: begin
 					if (uart_opt) begin
 						if (mem_wr) begin
+							{ add_flag, send_cnt } <= send_cnt + 1;
 							wrn <= 1'b0;
 							status <= STG2;
 						end

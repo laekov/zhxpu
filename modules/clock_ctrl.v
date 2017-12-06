@@ -24,8 +24,7 @@ module clock_ctrl(
 	input hold,
 	input auto_en,
 	input [15:0] sw,
-	output reg clk,
-	output reg pclk
+	output wire clk
     );
 
 	wire [31:0] clk_interval;
@@ -38,8 +37,10 @@ module clock_ctrl(
 	wire [31:0] tmp;
 	assign tmp = cur_cnt + 32'h00000001;
 
-	always @(posedge raw_clk) begin
-		if (!auto_en && !hold) begin
+	assign clk = raw_clk && auto_en;
+
+/*	always @(posedge raw_clk) begin
+		if (!auto_en) begin
 			if (tmp >= clk_interval) begin
 				cur_cnt = 32'h0;
 				clk = cur_status;
@@ -47,6 +48,6 @@ module clock_ctrl(
 				cur_cnt = tmp;
 			end
 		end 
-	end
+	end*/
 
 endmodule
