@@ -26,3 +26,5 @@
 `define RAReg 4'b1101
 `define IHReg 4'b1100
 `define ZeroReg 4'b1011
+
+`define ActBit 15:0

@@ -84,38 +84,34 @@ module ram_uart(
 	assign Ram1Addr = mem_addr;
 	assign Ram1Data = Ram1Writing?mem_value:16'bz;
 
-	localparam IDLE = 8'b00001111;
+	localparam IDLE = 5'b11000;
 	
-	localparam UART_READ1 = 8'b11010001;
-	localparam UART_READ2 = 8'b11010010;
-	localparam UART_READ3 = 8'b11010011;
-	localparam UART_READ4 = 8'b11010100;
+	localparam UART_READ1 = 5'b00001;
+	localparam UART_READ2 = 5'b00010;
+	localparam UART_READ3 = 5'b00011;
+	localparam UART_READ4 = 5'b00100;
 
-	localparam UART_WRITE1 = 8'b11100001;
-	localparam UART_WRITE2 = 8'b11100010;
-	localparam UART_WRITE3 = 8'b11100011;
-	localparam UART_WRITE4 = 8'b11100100;
-	localparam UART_WRITE5 = 8'b11100101;
+	localparam UART_WRITE1 = 5'b00101;
+	localparam UART_WRITE2 = 5'b00110;
+	localparam UART_WRITE3 = 5'b00111;
+	localparam UART_WRITE4 = 5'b01000;
+	localparam UART_WRITE5 = 5'b01001;
 
-	localparam RAM1_READ1 = 8'b01010001;
-	localparam RAM1_READ2 = 8'b01010010;
-	localparam RAM1_READ3 = 8'b01010011;
+	localparam RAM1_READ1 = 5'b01010;
+	localparam RAM1_READ2 = 5'b01011;
+	localparam RAM1_READ3 = 5'b01100;
 	
-	localparam RAM1_WRITE1 = 8'b01100001;
-	localparam RAM1_WRITE2 = 8'b01100010;
-	localparam RAM1_WRITE3 = 8'b01100011;
+	localparam RAM1_WRITE1 = 5'b01101;
+	localparam RAM1_WRITE2 = 5'b01110;
+	localparam RAM1_WRITE3 = 5'b01111;
 	
-	localparam UART_READ_FROM_QUEUE1 = 8'b10000011;
-	localparam UART_READ_FROM_QUEUE2 = 8'b10000111;
+	localparam UART_READ_FROM_QUEUE1 = 5'b10000;
+	localparam UART_READ_FROM_QUEUE2 = 5'b10001;
 
-	localparam ERROR = 8'b11110000;
+	localparam ERROR = 5'b11110;
 
-	reg [7:0] status;
-	reg [7:0] next_status;
-	assign status_out = { status, next_status };
-
-	reg [`RamFrequency] cnt;
-	reg [`RamFrequency] next_cnt;
+	reg [4:0] status;
+	assign status_out = { status, 11'b0 };
 
 	initial begin
 		work_done <= 1'b0;
@@ -123,10 +119,7 @@ module ram_uart(
 		uart_operating = 16'h1234;
 	end
 
-	reg [31:0] fail_cnt;
-	assign send_cnt = fail_cnt[15:0];
-
-	initial fail_cnt = 0;
+	assign send_cnt = { 15'b0 };
 
 	wire [3:0] work_flags;
 
@@ -137,6 +130,7 @@ module ram_uart(
 
 	assign flags_out = { act_done, work_flags };
 
+	reg add_flag;
 
 	always @(posedge clk) begin
 		case (status)
@@ -200,7 +194,7 @@ module ram_uart(
 			end
 			UART_READ_FROM_QUEUE2: begin
 				work_done <= 1'b1;
-				queue_front <= queue_front + 1;
+				{ add_flag, queue_front } <= queue_front + 1;
 				local_act <= mem_act;
 				status <= IDLE;
 				uart_operating[15:8] <= 8'h02;
@@ -224,7 +218,7 @@ module ram_uart(
 			end
 			UART_READ3: begin
 				uart_operating[15:8] <= 8'h13;
-				queue_tail <= queue_tail + 1;
+				{ add_flag, queue_tail } <= queue_tail + 1;
 				rdn <= 1'b1;
 				status <= IDLE;
 			end
@@ -261,7 +255,7 @@ module ram_uart(
 					work_done <= 1'b1;
 					local_act <= mem_act;
 					status <= IDLE;
-					fail_cnt <= fail_cnt + 1;
+					//fail_cnt <= fail_cnt + 1;
 				end else begin
 					status <= UART_WRITE5;
 				end
