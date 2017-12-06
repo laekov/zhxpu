@@ -83,8 +83,7 @@ module zhxpu(
 		.hold(hold),
 		//.manual_clk(manual_clk),
 		.auto_en(manual_clk),
-		.clk(clk),
-		.pclk(pclk)
+		.clk(clk)
 	);
 
 // Dig 
