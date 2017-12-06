@@ -135,7 +135,8 @@ module hja_led_ctrl(
 		input [31:0] combined_act,
 		input [`RegValue] inst_read_done_pc,
 		input [`RegValue] send_cnt,
-		input [`RegValue] uart_operating
+		input [`RegValue] uart_operating,
+		input [3:0] ram1_flags
     );
 
 	always @(*) begin
@@ -214,6 +215,7 @@ module hja_led_ctrl(
 			8'h48: led_data <= { combined_act[15:0] };
 			8'h49: led_data <= { send_cnt };
 			8'h4a: led_data <= { uart_operating };
+			8'h4b: led_data <= { ram1_flags, 12'b0 };
 			default: led_data <= sw;
 		endcase
 	end

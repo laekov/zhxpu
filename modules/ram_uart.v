@@ -59,7 +59,8 @@ module ram_uart(
 	output wire uart_reading,
 
 	output wire [`RegValue] send_cnt,
-	output reg [15:0] uart_operating
+	output reg [15:0] uart_operating,
+	output reg [3:0] flags_out
     );
 
 	reg [31:0] local_act;
@@ -127,6 +128,15 @@ module ram_uart(
 
 	initial fail_cnt = 0;
 
+	wire [3:0] work_flags;
+
+	assign work_flags = { mem_addr == `UartAddr, mem_wr, mem_rd };
+
+	wire act_done;
+	assign act_done = mem_act == local_act;
+
+	assign flags_out = { act_done, work_flags };
+
 
 	always @(negedge clk) begin
 		case (status)
@@ -142,50 +152,41 @@ module ram_uart(
 					status <= UART_READ1;
 					uart_operating <= 16'hf000;
 				end
-				else begin
-					if (need_to_work == 1'b1) begin
-						if (mem_act !== local_act) begin 
-							if (mem_addr == `UartAddr) begin
-								if (mem_wr == 1'b1) begin
-									uart_operating <= 16'h0001;
-									status <= UART_WRITE1;
-									work_done <= 1'b0;
-								end
-								else if (mem_rd == 1'b1) begin
-									uart_operating <= 16'h0002;
-									status <= UART_READ_FROM_QUEUE1;
-									work_done <= 1'b0;
-								end
-								else begin 
-									status <= ERROR;
-									uart_operating <= 16'h0004;
-								end
+				else if (need_to_work == 1'b1) begin
+					if (act_done) begin
+						uart_operating <= 16'h0f00;
+					end 
+					else begin
+						case (work_flags)
+							3'b110: begin
+								uart_operating <= 16'h0001;
+								status <= UART_WRITE1;
+								work_done <= 1'b0;
 							end
-							else begin
-								if (mem_wr == 1'b1) begin
-									uart_operating <= 16'h0011;
-									status <= RAM1_WRITE1;
-									work_done <= 1'b0;
-								end
-								else if (mem_rd == 1'b1) begin
-									uart_operating <= 16'h0012;
-									status <= RAM1_READ1;
-									work_done <= 1'b0;
-								end
-								else begin 
-									status <= ERROR;
-									uart_operating <= 16'h0014;
-								end
-							end	
-						end
-						else begin 
-							uart_operating <= 16'h0f02;
-							status <= IDLE;
-							work_done <= 1'b1;
-						end
-					end else begin
-						uart_operating <= 16'h0ff2;
+							3'b101: begin
+								uart_operating <= 16'h0002;
+								status <= UART_READ_FROM_QUEUE1;
+								work_done <= 1'b0;
+							end
+							3'b010: begin
+								uart_operating <= 16'h0011;
+								status <= RAM1_WRITE1;
+								work_done <= 1'b0;
+							end
+							3'b001: begin
+								uart_operating <= 16'h0012;
+								status <= RAM1_READ1;
+								work_done <= 1'b0;
+							end
+							default: begin
+								uart_operating <= 16'h0f0f;
+								status <= ERROR;
+							end
+						endcase
 					end
+				end 
+				else begin
+					uart_operating <= 16'h0ff2;
 				end
 			end
 

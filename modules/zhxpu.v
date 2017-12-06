@@ -358,11 +358,13 @@ module zhxpu(
 	wire [31:0] mem_act2;
 	wire [`RegValue] send_cnt;
 	wire [15:0] uart_operating;
+	wire [3:0] ram1_flags;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
+		.flags_out(ram1_flags),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
 		.mem_addr({ 2'b0, ram_addr }),
@@ -612,7 +614,8 @@ module zhxpu(
 		.inst_read_done_pc(inst_read_done_pc),
 		.combined_act(combined_act),
 		.uart_operating(uart_operating),
-		.send_cnt(send_cnt)
+		.send_cnt(send_cnt),
+		.ram1_flags(ram1_flags)
 	);
 
 endmodule
