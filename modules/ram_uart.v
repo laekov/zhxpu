@@ -52,8 +52,8 @@ module ram_uart(
 	output wire [`QueueSize] tail,
 	output wire [`RegValue] queue_front_v,
 
-	input wire [31:0] mem_act,
-	output [31:0] mem_act_out,
+	input wire [`ActBit] mem_act,
+	output [`ActBit] mem_act_out,
 
 	output wire [15:0] status_out,
 	output wire uart_reading,
@@ -63,7 +63,7 @@ module ram_uart(
 	output wire [3:0] flags_out
     );
 
-	reg [31:0] local_act;
+	reg [`ActBit] local_act;
 	assign mem_act_out = local_act;
 
 	reg [`QueueSize] queue_front;

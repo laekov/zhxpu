@@ -94,7 +94,7 @@ module hja_led_ctrl(
 		input [`MemValue] mem_work_res,
 
 		input ram1_need_to_work,
-		input [31:0] mem_act,
+		input [`ActBit] mem_act,
 		input ram2_need_to_work,
 		input [`MemValue] ram1_work_res,
 		input [`MemValue] ram2_work_res,
@@ -119,8 +119,8 @@ module hja_led_ctrl(
 		input flash_controller_work_done,
 		input flash_controller_need_to_work,
 		input data_ready,
-		input [31:0] mem_act1,
-		input [31:0] mem_act2,
+		input [`ActBit] mem_act1,
+		input [`ActBit] mem_act2,
 
 		input [`QueueSize] qfront,
 		input [`QueueSize] qtail,
@@ -132,7 +132,7 @@ module hja_led_ctrl(
 
 		input uart_reading,
 		input flash_status,
-		input [31:0] combined_act,
+		input [`ActBit] combined_act,
 		input [`RegValue] inst_read_done_pc,
 		input [`RegValue] send_cnt,
 		input [`RegValue] uart_operating,

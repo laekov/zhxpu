@@ -353,9 +353,9 @@ module zhxpu(
 	wire [`QueueSize] qfront;
 	wire [`QueueSize] qtail;
 	wire [`RegValue] qfrontv;
-	wire [31:0] mem_act;
-	wire [31:0] mem_act1;
-	wire [31:0] mem_act2;
+	wire [`ActBit] mem_act;
+	wire [`ActBit] mem_act1;
+	wire [`ActBit] mem_act2;
 	wire [`RegValue] send_cnt;
 	wire [15:0] uart_operating;
 	wire [3:0] ram1_flags;
@@ -394,7 +394,7 @@ module zhxpu(
 
 	wire [15:0] ram2_status;
 	wire [15:0] ram2_cnt;
-	wire [31:0] combined_act;
+	wire [`ActBit] combined_act;
 	assign combined_act = initializing ? { 16'b0, init_addr } : mem_act;
 	ram2 __ram2(
 		.clk(raw_clk),

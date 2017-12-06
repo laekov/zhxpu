@@ -43,8 +43,8 @@ module ram2(
 	output reg [`MemValue] if_result,
 	output reg [`MemValue] exe_result,
 
-	input wire [31:0] mem_act,
-	output [31:0] mem_act_out,
+	input wire [`ActBit] mem_act,
+	output [`ActBit] mem_act_out,
 
 	output wire [15:0] status_out,
 	output wire [15:0] cnt_out,
@@ -56,7 +56,7 @@ module ram2(
 	reg exe_work_done;
 
 
-	reg [31:0] local_act;
+	reg [`ActBit] local_act;
 	assign mem_act_out = local_act;
 	
 	assign if_work_done_out = if_work_done === 1'b1 && mem_addr_if[15:0] === inst_read_done_pc;
