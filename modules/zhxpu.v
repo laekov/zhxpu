@@ -380,7 +380,7 @@ module zhxpu(
 		.flags_out(ram1_flags),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
-		.mem_addr({ 2'b0, ram_addr }),
+		.mem_addr_in({ 2'b0, ram_addr }),
 		.mem_value(ram_data),
 		.Ram1Addr(ram1_addr),
 		.Ram1Data(ram1_data),
