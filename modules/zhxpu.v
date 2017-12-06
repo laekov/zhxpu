@@ -101,7 +101,7 @@ module zhxpu(
 	wire [15:0] mflash_data;
 	wire [22:1] mflash_addr;
 	wire [15:0] init_data;
-	wire [15:0] init_addr;
+	wire [`MemAddr] init_addr;
 	wire flash_read_ctrl;
 	wire init_mem_wr;
 	wire flash_controller_work_done;

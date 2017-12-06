@@ -59,7 +59,7 @@ module ram_uart(
 	output wire uart_reading,
 
 	output wire [`RegValue] send_cnt,
-	output reg uart_operating
+	output reg [15:0] uart_operating
     );
 
 	reg [31:0] local_act;
@@ -146,12 +146,13 @@ module ram_uart(
 
 						if (data_ready === 1'b1) begin
 							status <= UART_READ1;
+							uart_operating = 16'hf000;
 						end
 						else begin
 							if (need_to_work == 1'b1) begin
 								if (mem_act !== local_act) begin 
 									if (mem_addr == `UartAddr) begin
-										uart_operating = 1'b1;
+										uart_operating = 16'h0001;
 										if (mem_wr == 1'b1) begin
 											status <= UART_WRITE1;
 											work_done <= 1'b0;
@@ -163,7 +164,7 @@ module ram_uart(
 										else status <= ERROR;
 									end
 									else begin
-										uart_operating = 1'b0;
+										uart_operating = 16'h0002;
 										if (mem_wr == 1'b1) begin
 											status <= RAM1_WRITE1;
 											work_done <= 1'b0;
@@ -176,9 +177,12 @@ module ram_uart(
 									end	
 								end
 								else begin 
+									uart_operating = 16'h0f02;
 									status <= IDLE;
 									work_done <= 1'b1;
 								end
+							end else begin
+								uart_operating = 16'h0ff2;
 							end
 						end
 					end

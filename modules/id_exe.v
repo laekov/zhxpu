@@ -62,6 +62,7 @@ module id_exe(
 		mem_write_out = 1'b0;
 		mem_read_out = 1'b0;
 		mem_trig = 1'b0;
+		mem_act = 32'b0;
 	end
 
 	always @(posedge clk) begin

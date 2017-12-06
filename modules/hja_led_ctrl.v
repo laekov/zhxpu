@@ -135,7 +135,7 @@ module hja_led_ctrl(
 		input [31:0] combined_act,
 		input [`RegValue] inst_read_done_pc,
 		input [`RegValue] send_cnt,
-		input uart_operating
+		input [`RegValue] uart_operating
     );
 
 	always @(*) begin
@@ -145,7 +145,7 @@ module hja_led_ctrl(
 			8'h02: led_data <= {mflash_addr[16:1]};
 			8'h03: led_data <= {init_data};
 			8'h04: led_data <= {init_addr};
-			8'h05: led_data <= {flash_read_ctrl,1'b0,init_mem_wr,1'b0,hold,1'b0,ram1_work_done,1'b0,ram2_work_done,1'b0,mem_work_done,1'b0,mem_op,1'b0, uart_operating};
+			8'h05: led_data <= {flash_read_ctrl,1'b0,init_mem_wr,1'b0,hold,1'b0,ram1_work_done,1'b0,ram2_work_done,1'b0,mem_work_done,1'b0,mem_op,1'b0, 1'b0, 1'b0};
 			8'h06: led_data <= {reg_write_addr,reg_read_addr1,reg_read_addr2,alu_write_addr};
 			8'h07: led_data <= {reg_write_value};
 			8'h08: led_data <= {reg_read_value1};
@@ -213,6 +213,7 @@ module hja_led_ctrl(
 			8'h47: led_data <= { inst_read_done_pc };
 			8'h48: led_data <= { combined_act[15:0] };
 			8'h49: led_data <= { send_cnt };
+			8'h4a: led_data <= { uart_operating };
 			default: led_data <= sw;
 		endcase
 	end
