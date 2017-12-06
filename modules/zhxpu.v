@@ -374,7 +374,7 @@ module zhxpu(
 	wire [3:0] ram1_flags;
 
 	ram_uart __ram_uart(
-		.clk(raw_clk),
+		.clk(raw_clk2),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.flags_out(ram1_flags),
@@ -539,7 +539,7 @@ module zhxpu(
 
 	vga __vga(
 		.clk(raw_clk),
-		.rst(rst),
+		.rst(1'b1),
 		.data(vga_data),
 		.space(vga_space),
 		.row_out(row),

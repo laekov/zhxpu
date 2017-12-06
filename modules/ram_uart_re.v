@@ -39,7 +39,7 @@ module ram_uart(
 	output wire [15:0] status_out,
 	output wire uart_reading,
 
-	output wire [`RegValue] send_cnt,
+	output reg [`RegValue] send_cnt,
 	output reg [15:0] uart_operating,
 	output wire [3:0] flags_out
 );
@@ -55,7 +55,9 @@ module ram_uart(
 	initial begin
 		queue_front = 0;
 		queue_tail = 0;
+		send_cnt = 0;
 		local_act = 16'hffff;
+		uart_operating = 16'b0;
 	end
 
 	assign front = queue_front;
@@ -113,6 +115,9 @@ module ram_uart(
 					if (data_ready || (need_to_work && !act_done)) begin
 						status <= STG1;
 						work_done <= 1'b0;
+						if (uart_opt && mem_wr) begin
+							{ add_flag, send_cnt } <= send_cnt + 1;
+						end
 					end
 				end
 
@@ -160,22 +165,35 @@ module ram_uart(
 				STG3: begin
 					if (read_data) begin
 						{ add_flag, queue_tail } <= queue_tail + 1;
+						status <= IDLE;
 					end
 					else if (uart_opt) begin
 						if (mem_wr) begin
 							wrn <= 1'b1;
+							if (tbre && tsre) begin
+								local_act <= mem_act;
+								work_done <= 1'b1;
+								status <= IDLE;
+								{ add_flag, uart_operating } <= uart_operating + 1;
+							end 
+							else begin
+								status <= STG3;
+							end
 						end
 						else begin
+							local_act <= mem_act;
+							work_done <= 1'b1;
+							status <= IDLE;
 						end
 					end
 					else begin
 						if (mem_rd) begin
 							result <= Ram1Data;
 						end
+						local_act <= mem_act;
+						work_done <= 1'b1;
+						status <= IDLE;
 					end
-					local_act <= mem_act;
-					work_done <= 1'b1;
-					status <= IDLE;
 				end
 			endcase
 		end
