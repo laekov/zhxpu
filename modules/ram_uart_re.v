@@ -48,9 +48,9 @@ module ram_uart(
 	wire act_done;
 	assign act_done = mem_act == local_act;
 
-	reg [`QueueSize] queue_front;
+	/*reg [`QueueSize] queue_front;
 	reg [`QueueSize] queue_tail;
-	reg [`RegValue] queue [`QueueSizeH];
+	reg [`RegValue] queue [`QueueSizeH];*/
 
 	initial begin
 		queue_front = 0;
@@ -60,9 +60,9 @@ module ram_uart(
 		uart_operating = 16'b0;
 	end
 
-	assign front = queue_front;
-	assign tail = queue_tail;
-	assign queue_front_v = queue[queue_front];
+	assign front = 16'b0;
+	assign tail = { 15'b0, data_ready };
+	// assign queue_front_v = queue[queue_front];
 
 	reg work_done;
 	assign uart_work_done = work_done && act_done;
@@ -112,7 +112,7 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b1;
 					read_data <= data_ready;
-					if (data_ready || (need_to_work && !act_done)) begin
+					if (need_to_work && !act_done) begin
 						status <= STG1;
 						work_done <= 1'b0;
 						if (uart_opt && mem_wr) begin
@@ -122,33 +122,32 @@ module ram_uart(
 				end
 
 				STG1: begin
-					if (read_data) begin
-						rdn <= 1'b0;
-					end
-					else if (uart_opt) begin
+					if (uart_opt) begin
 						if (mem_wr) begin
 							wrn <= 1'b0;
+							status <= STG2;
 						end
+						else if (data_ready) begin
+							rdn <= 1'b0;
+							status <= STG2;
+						end 
 						else begin
-							result <= queue[queue_front];
+							status <= STG1;
 						end
 					end 
 					else begin
 						Ram1EN <= 1'b0;
+						status <= STG2;
 					end
-					status <= STG2;
 				end
 
 				STG2: begin
-					if (read_data) begin
-						queue[queue_tail] <= Ram1Data;
-					end
-					else if (uart_opt) begin
+					if (uart_opt) begin
 						if (mem_wr) begin
 							wrn <= 1'b0;
 						end
 						else begin
-							{ add_flag, queue_front } <= queue_front + 1;
+							result <= Ram1Data;
 						end
 					end
 					else begin
@@ -163,11 +162,7 @@ module ram_uart(
 				end
 
 				STG3: begin
-					if (read_data) begin
-						{ add_flag, queue_tail } <= queue_tail + 1;
-						status <= IDLE;
-					end
-					else if (uart_opt) begin
+					if (uart_opt) begin
 						if (mem_wr) begin
 							wrn <= 1'b1;
 							if (tbre && tsre) begin
@@ -181,6 +176,7 @@ module ram_uart(
 							end
 						end
 						else begin
+							rdn <= 1'b1;
 							local_act <= mem_act;
 							work_done <= 1'b1;
 							status <= IDLE;
