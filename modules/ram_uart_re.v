@@ -8,7 +8,7 @@ module ram_uart(
 	input mem_rd,
 	input mem_wr,
 
-	input [`MemAddr] mem_addr,
+	input [`MemAddr] mem_addr_in,
 	input [`MemValue] mem_value,
 
 	output wire [`MemAddr] Ram1Addr,
@@ -43,6 +43,7 @@ module ram_uart(
 	output reg [15:0] uart_operating,
 	output wire [3:0] flags_out
 );
+	reg [`MemAddr] mem_addr;
 	reg [`ActBit] local_act;
 	assign mem_act_out = local_act;
 	wire act_done;
@@ -112,6 +113,7 @@ module ram_uart(
 					rdn <= 1'b1;
 					wrn <= 1'b1;
 					read_data <= data_ready;
+					mem_addr <= mem_addr_in;
 					if (need_to_work && !act_done) begin
 						status <= STG1;
 						work_done <= 1'b0;
