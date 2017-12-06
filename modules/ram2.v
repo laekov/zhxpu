@@ -94,16 +94,17 @@ module ram2(
 	initial begin
 		exe_work_done <= 1'b0;
 		if_work_done <= 1'b0;
+		local_act <= 32'hffffffff;
 	end
 
-	always @(posedge clk or negedge rst) begin
+	always @(posedge clk) begin
 		if (!rst) begin
 			status <= IDLE;
 			inst_read_done_pc <= 16'hffff;
 		end
 		else begin
-			cnt <= cnt + 1;
-			if (cnt == 0) begin
+			// cnt <= cnt + 1;
+			// if (cnt == 0) begin
 			// if (1'b1) begin
 				case (status)
 					IDLE: begin
@@ -190,7 +191,7 @@ module ram2(
 
 					default: status <= ERROR;
 				endcase
-			end
+			// end
 		end
 	end
 	

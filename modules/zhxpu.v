@@ -605,7 +605,8 @@ module zhxpu(
 		.flash_status(flash_status),
 		.ram1_work_res(ram1_work_res),
 		.ram2_work_res(ram2_work_res),
-		.inst_read_done_pc(inst_read_done_pc)
+		.inst_read_done_pc(inst_read_done_pc),
+		.combined_act(combined_act)
 	);
 
 endmodule
