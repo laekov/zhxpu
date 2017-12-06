@@ -60,7 +60,7 @@ module ram_uart(
 
 	output wire [`RegValue] send_cnt,
 	output reg [15:0] uart_operating,
-	output reg [3:0] flags_out
+	output wire [3:0] flags_out
     );
 
 	reg [31:0] local_act;
@@ -84,7 +84,7 @@ module ram_uart(
 	assign Ram1Addr = mem_addr;
 	assign Ram1Data = Ram1Writing?mem_value:16'bz;
 
-	localparam IDLE = 8'b00000000;
+	localparam IDLE = 8'b11111111;
 	
 	localparam UART_READ1 = 8'b11010001;
 	localparam UART_READ2 = 8'b11010010;
@@ -108,7 +108,7 @@ module ram_uart(
 	localparam UART_READ_FROM_QUEUE1 = 8'b10000011;
 	localparam UART_READ_FROM_QUEUE2 = 8'b10000111;
 
-	localparam ERROR = 8'b11110101;
+	localparam ERROR = 8'b00000000;
 
 	reg [7:0] status;
 	reg [7:0] next_status;
@@ -150,43 +150,43 @@ module ram_uart(
 
 				if (data_ready === 1'b1) begin
 					status <= UART_READ1;
-					uart_operating <= 16'hf000;
+					uart_operating[7:0] <= 8'hf0;
 				end
 				else if (need_to_work == 1'b1) begin
 					if (act_done) begin
-						uart_operating <= 16'h0f00;
+						uart_operating[7:0] <= 8'ha0;
 					end 
 					else begin
 						case (work_flags)
 							3'b110: begin
-								uart_operating <= 16'h0001;
+								uart_operating[7:0] <= 8'h01;
 								status <= UART_WRITE1;
 								work_done <= 1'b0;
 							end
 							3'b101: begin
-								uart_operating <= 16'h0002;
+								uart_operating[7:0] <= 8'h02;
 								status <= UART_READ_FROM_QUEUE1;
 								work_done <= 1'b0;
 							end
 							3'b010: begin
-								uart_operating <= 16'h0011;
+								uart_operating[7:0] <= 8'h11;
 								status <= RAM1_WRITE1;
 								work_done <= 1'b0;
 							end
 							3'b001: begin
-								uart_operating <= 16'h0012;
+								uart_operating[7:0] <= 8'h12;
 								status <= RAM1_READ1;
 								work_done <= 1'b0;
 							end
 							default: begin
-								uart_operating <= 16'h0f0f;
+								uart_operating[7:0] <= 8'h0f;
 								status <= ERROR;
 							end
 						endcase
 					end
 				end 
 				else begin
-					uart_operating <= 16'h0ff2;
+					uart_operating[7:0] <= 8'hd0;
 				end
 			end
 
@@ -194,16 +194,19 @@ module ram_uart(
 				work_done <= 1'b0;
 				result <= queue[queue_front];
 				status <= UART_READ_FROM_QUEUE2;
+				uart_operating[15:8] <= 8'h01;
 			end
 			UART_READ_FROM_QUEUE2: begin
 				work_done <= 1'b1;
 				queue_front <= queue_front + 1;
 				local_act <= mem_act;
 				status <= IDLE;
+				uart_operating[15:8] <= 8'h02;
 			end
 
 			UART_READ1: begin
 				Ram1Writing <= 1'b0;
+				uart_operating[15:8] <= 8'h11;
 				if (data_ready == 1'b1) begin
 					status <= UART_READ2;
 					rdn <= 1'b0;
@@ -213,16 +216,19 @@ module ram_uart(
 				end
 			end
 			UART_READ2: begin
+				uart_operating[15:8] <= 8'h12;
 				queue[queue_tail] <= Ram1Data;
 				status <= UART_READ3;
 			end
 			UART_READ3: begin
+				uart_operating[15:8] <= 8'h13;
 				queue_tail <= queue_tail + 1;
 				rdn <= 1'b1;
 				status <= IDLE;
 			end
 
 			UART_WRITE1: begin
+				uart_operating[15:8] <= 8'h21;
 				wrn <= 1'b1;
 
 				work_done <= 1'b0;
@@ -232,76 +238,81 @@ module ram_uart(
 				// fail_cnt <= 32'h1;
 			end
 			UART_WRITE2: begin
+				uart_operating[15:8] <= 8'h22;
 				wrn <= 1'b0;
 				if (tbre == 1'b0) status <= UART_WRITE3;
 				else status <= UART_WRITE2;
-				//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-					//else fail_cnt <= fail_cnt + 1;
-					end
-					UART_WRITE3: begin
-						wrn <= 1'b1;
-						status <= UART_WRITE4;
-					end
-					UART_WRITE4: begin
-						if (tbre == 1'b1) status <= UART_WRITE5;
-						else status <= UART_WRITE4;
-						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-							//else fail_cnt <= fail_cnt + 1;
-							end
-							UART_WRITE5: begin
-								if (tsre == 1'b1) begin
-									work_done <= 1'b1;
-									local_act <= mem_act;
-									status <= IDLE;
-									fail_cnt <= fail_cnt + 1;
-								end else begin
-									status <= UART_WRITE5;
-								end
-								//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-									//else fail_cnt <= fail_cnt + 1;
-									end
+			end
+			UART_WRITE3: begin
+				uart_operating[15:8] <= 8'h23;
+				wrn <= 1'b1;
+				status <= UART_WRITE4;
+			end
+			UART_WRITE4: begin
+				uart_operating[15:8] <= 8'h24;
+				if (tbre == 1'b1) status <= UART_WRITE5;
+				else status <= UART_WRITE4;
+			end
+			UART_WRITE5: begin
+				uart_operating[15:8] <= 8'h25;
+				if (tsre == 1'b1) begin
+					work_done <= 1'b1;
+					local_act <= mem_act;
+					status <= IDLE;
+					fail_cnt <= fail_cnt + 1;
+				end else begin
+					status <= UART_WRITE5;
+				end
+			end
 
-									RAM1_READ1: begin
-										Ram1EN <= 1'b0;
+			RAM1_READ1: begin
+				uart_operating[15:8] <= 8'h31;
+				Ram1EN <= 1'b0;
 
-										work_done <= 1'b0;
-										Ram1Writing <= 1'b0;
-										status <= RAM1_READ2;
-									end
-									RAM1_READ2: begin
-										Ram1OE <= 1'b0;
-										status <= RAM1_READ3;
-									end
-									RAM1_READ3: begin
-										result <= Ram1Data;
-										work_done <= 1'b1;
-										local_act <= mem_act;
-										status <= IDLE;
-									end
+				work_done <= 1'b0;
+				Ram1Writing <= 1'b0;
+				status <= RAM1_READ2;
+			end
+			RAM1_READ2: begin
+				uart_operating[15:8] <= 8'h32;
+				Ram1OE <= 1'b0;
+				status <= RAM1_READ3;
+			end
+			RAM1_READ3: begin
+				uart_operating[15:8] <= 8'h33;
+				result <= Ram1Data;
+				work_done <= 1'b1;
+				local_act <= mem_act;
+				status <= IDLE;
+			end
 
-									RAM1_WRITE1: begin
-										Ram1EN <= 1'b0;
+			RAM1_WRITE1: begin
+				uart_operating[15:8] <= 8'h41;
+				Ram1EN <= 1'b0;
 
-										work_done <= 1'b0;
-										Ram1Writing <= 1'b1;
-										status <= RAM1_WRITE2;
-									end
-									RAM1_WRITE2: begin
-										Ram1WE <= 1'b0;
+				work_done <= 1'b0;
+				Ram1Writing <= 1'b1;
+				status <= RAM1_WRITE2;
+			end
+			RAM1_WRITE2: begin
+				uart_operating[15:8] <= 8'h42;
+				Ram1WE <= 1'b0;
 
-										status <= RAM1_WRITE3;
-									end
-									RAM1_WRITE3: begin
-										Ram1WE <= 1'b1;
+				status <= RAM1_WRITE3;
+			end
+			RAM1_WRITE3: begin
+				uart_operating[15:8] <= 8'h43;
+				Ram1WE <= 1'b1;
 
-										work_done <= 1'b1;
-										local_act <= mem_act;
-										status <= IDLE;
-									end
-									default: begin
-										status <= ERROR;
-									end
-								endcase
-							end
+				work_done <= 1'b1;
+				local_act <= mem_act;
+				status <= IDLE;
+			end
+			default: begin
+				uart_operating[15:8] <= 8'hf1;
+				status <= ERROR;
+			end
+		endcase
+	end
 
-							endmodule
+	endmodule
