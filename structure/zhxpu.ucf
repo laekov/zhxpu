@@ -186,6 +186,12 @@ NET "ram2_addr[17]" LOC = U15;
 NET "manual_clk" LOC = U9;
 NET "rst" LOC = U10;
 
+NET "data_ready" LOC = A16;
+NET "rdn" LOC = C14;
+NET "tbre" LOC = D14;
+NET "tsre" LOC = N9;
+NET "wrn" LOC = U5;
+
 NET "b0" LOC = D5;
 NET "b1" LOC = A6;
 NET "b2" LOC = B6;
