@@ -357,7 +357,7 @@ module zhxpu(
 	wire [31:0] mem_act1;
 	wire [31:0] mem_act2;
 	wire [`RegValue] send_cnt;
-	wire uart_operating;
+	wire [15:0] uart_operating;
 
 	ram_uart __ram_uart(
 		.clk(raw_clk),
