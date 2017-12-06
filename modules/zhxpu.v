@@ -361,7 +361,7 @@ module zhxpu(
 	wire [3:0] ram1_flags;
 
 	ram_uart __ram_uart(
-		.clk(raw_clk),
+		.clk(raw_clk2),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.flags_out(ram1_flags),

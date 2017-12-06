@@ -84,7 +84,7 @@ module ram_uart(
 	assign Ram1Addr = mem_addr;
 	assign Ram1Data = Ram1Writing?mem_value:16'bz;
 
-	localparam IDLE = 8'b11111111;
+	localparam IDLE = 8'b00001111;
 	
 	localparam UART_READ1 = 8'b11010001;
 	localparam UART_READ2 = 8'b11010010;
@@ -108,7 +108,7 @@ module ram_uart(
 	localparam UART_READ_FROM_QUEUE1 = 8'b10000011;
 	localparam UART_READ_FROM_QUEUE2 = 8'b10000111;
 
-	localparam ERROR = 8'b00000000;
+	localparam ERROR = 8'b11110000;
 
 	reg [7:0] status;
 	reg [7:0] next_status;
@@ -119,7 +119,7 @@ module ram_uart(
 
 	initial begin
 		work_done <= 1'b0;
-		status <= 0;
+		status <= IDLE;
 		uart_operating = 16'h1234;
 	end
 
@@ -138,7 +138,7 @@ module ram_uart(
 	assign flags_out = { act_done, work_flags };
 
 
-	always @(negedge clk) begin
+	always @(posedge clk) begin
 		case (status)
 			IDLE: begin
 				Ram1EN <= 1'b1;
@@ -155,6 +155,7 @@ module ram_uart(
 				else if (need_to_work == 1'b1) begin
 					if (act_done) begin
 						uart_operating[7:0] <= 8'ha0;
+						status <= IDLE;
 					end 
 					else begin
 						case (work_flags)
@@ -187,6 +188,7 @@ module ram_uart(
 				end 
 				else begin
 					uart_operating[7:0] <= 8'hd0;
+					status <= IDLE;
 				end
 			end
 
