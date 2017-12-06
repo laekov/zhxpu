@@ -18,9 +18,14 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module hja_led_ctrl(
+module hja_led_vga_ctrl(
 		input [15:0] sw,
 		output reg [15:0] led_data,
+
+		input [7:0] row,
+		input [7:0] col,
+		output reg vga_space,
+		output reg [3:0] vga_data,
 
 		input clk,
 		input pclk,
@@ -220,6 +225,103 @@ module hja_led_ctrl(
 		endcase
 	end
 
+	reg [15:0] data;
+
+	always @(*) begin
+		if (col[3:2] == 0) vga_space = 1'b1;
+		else begin
+			vga_space = 1'b0;
+			if (col < 4) data = {8'b0,row};
+			else begin
+				if (row == 1) begin
+					data = {12'b0,col[7:4]};
+				end
+				else begin
+					if (row == 2 && col[7:4]==0) data = {clk,1'b0,pclk,1'b0,initializing,1'b0,boot_done_out,1'b0,flash_ready,7'b0};
+					if (row == 2 && col[7:4]==1) data = {mflash_data};
+					if (row == 2 && col[7:4]==2) data = {mflash_addr[16:1]};
+					if (row == 2 && col[7:4]==3) data = {init_data};
+					if (row == 2 && col[7:4]==4) data = {init_addr};
+					if (row == 2 && col[7:4]==5) data = {flash_read_ctrl,1'b0,init_mem_wr,1'b0,hold,1'b0,ram1_work_done,1'b0,ram2_work_done,1'b0,mem_work_done,1'b0,mem_op,1'b0, 1'b0, 1'b0};
+					if (row == 2 && col[7:4]==6) data =  {reg_write_addr,reg_read_addr1,reg_read_addr2,alu_write_addr};
+					if (row == 2 && col[7:4]==7) data = {reg_write_value};
+					if (row == 2 && col[7:4]==8) data = {reg_read_value1};
+					if (row == 2 && col[7:4]==9) data = {reg_read_value2};
+					if (row == 2 && col[7:4]==10) data =  {alu_write_value};
+					if (row == 2 && col[7:4]==12) data = {reg_writable,3'b0,reg_readable1,3'b0,reg_readable2,3'b0,alu_writable,1'b0,flash_i_ready,1'b0};
+					if (row == 2 && col[7:4]==13) data = {set_pc,7'b0,inst_read_done,7'b0};
+					if (row == 2 && col[7:4]==14) data = led_data <= {set_pc_addr};
+					if (row == 2 && col[7:4]==15) data = led_data <= {if_pc};
+					if (row == 3 && col[7:4]==0) data =  led_data <= {if_inst};
+					if (row == 3 && col[7:4]==1) data = {ram2_need_to_work_if,7'b0,ram2_work_done_if,7'b0};
+					if (row == 3 && col[7:4]==2) data = {ram2_work_res_if};
+					if (row == 3 && col[7:4]==3) data = {id_inst};
+					if (row == 3 && col[7:4]==4) data = {id_pc};
+					if (row == 3 && col[7:4]==5) data ={id_mem_read,3'b0,id_mem_write,3'b0,id_reg_addr,3'b0,decoder_error, 1'b0, id_reg_write, 1'b0 };
+					if (row == 3 && col[7:4]==6) data = {exe_pc};
+					if (row == 3 && col[7:4]==7) data = {exe_inst};
+					if (row == 3 && col[7:4]==8) data = {exe_reg_write,3'b0,alu_flag,3'b0,exe_reg_addr,4'b0};
+					if (row == 3 && col[7:4]==9) data = {alu_op1};
+					if (row == 3 && col[7:4]==10) data = {alu_op2};
+					if (row == 3 && col[7:4]==11) data = {alu_res};
+					if (row == 3 && col[7:4]==12) data = {exe_read_value1};
+					if (row == 3 && col[7:4]==13) data = {exe_read_value2};
+					if (row == 3 && col[7:4]==14) data = {exe_memwr_ctrl,1'b0,exe_memrd_ctrl,1'b0,wb_flag,1'b0,ram1_need_to_work,1'b0,ram2_need_to_work,1'b0,mem_wr,1'b0,flush,1'b0, data_ready, 1'b0};
+					if (row == 3 && col[7:4]==15) data = {exe_mem_data};
+					if (row == 4 && col[7:4]==0) data = {wb_res};
+					if (row == 4 && col[7:4]==1) data = {mem_work_res};
+					if (row == 4 && col[7:4]==2) data = {ram1_work_res};
+					if (row == 4 && col[7:4]==3) data = {ram2_work_res};
+					if (row == 4 && col[7:4]==4) data = {ram_status};
+					if (row == 4 && col[7:4]==5) data = {ram_data};
+					if (row == 4 && col[7:4]==6) data = {ram_addr};
+					if (row == 4 && col[7:4]==7) data = {ram_pc};
+					if (row == 4 && col[7:4]==8) data = {ram2_status};
+					if (row == 4 && col[7:4]==9) data = { inst_done_pc };
+					if (row == 4 && col[7:4]==10) data = { ram_ctrl_done_pc };
+					if (row == 4 && col[7:4]==11) data = { flash_done_pc };
+					if (row == 4 && col[7:4]==12) data = { flash_controller_work_done, 7'b0, flash_controller_need_to_work, 7'b0 };
+					if (row == 4 && col[7:4]==13) data = { mem_act1[15:0] };
+					if (row == 4 && col[7:4]==14) data = { mem_act2[15:0] };
+					if (row == 4 && col[7:4]==15) data = { mem_act[15:0] };
+					if (row == 5 && col[7:4]==15) data = {reg_debug_out[15:0]};
+					if (row == 5 && col[7:4]==14) data = {reg_debug_out[31:16]};
+					if (row == 5 && col[7:4]==13) data = {reg_debug_out[47:32]};
+					if (row == 5 && col[7:4]==12) data = {reg_debug_out[63:48]};
+					if (row == 5 && col[7:4]==11) data = {reg_debug_out[79:64]};
+					if (row == 5 && col[7:4]==10) data = {reg_debug_out[95:80]};
+					if (row == 5 && col[7:4]==9) data = {reg_debug_out[111:96]};
+					if (row == 5 && col[7:4]==8) data = {reg_debug_out[127:112]};
+					if (row == 5 && col[7:4]==7) data = {reg_debug_out[143:128]};
+					if (row == 5 && col[7:4]==6) data = {reg_debug_out[159:144]};
+					if (row == 5 && col[7:4]==5) data = {reg_debug_out[175:160]};
+					if (row == 5 && col[7:4]==4) data = {reg_debug_out[191:176]};
+					if (row == 5 && col[7:4]==3) data = {reg_debug_out[207:192]};
+					if (row == 5 && col[7:4]==2) data = {reg_debug_out[223:208]};
+					if (row == 5 && col[7:4]==1) data = {reg_debug_out[239:224]};
+					if (row == 5 && col[7:4]==0) data = {reg_debug_out[255:240]};
+					if (row == 6 && col[7:4]==0) data = { qfront, qtail };
+					if (row == 6 && col[7:4]==1) data = qfrontv;
+					if (row == 6 && col[7:4]==2) data = { uart_ready, 3'b0, uart_reading, 7'b0, flash_i_ready, 3'b0 };
+					if (row == 6 && col[7:4]==3) data = led_data <= { uart_flags };
+					if (row == 6 && col[7:4]==4) data = led_data <= { ram2_cnt };
+					if (row == 6 && col[7:4]==5) data = led_data <= { flash_status };
+					if (row == 6 && col[7:4]==6) data = led_data <= { right };
+					if (row == 6 && col[7:4]==7) data = led_data <= { inst_read_done_pc };
+					if (row == 6 && col[7:4]==8) data = led_data <= { combined_act[15:0] };
+					if (row == 6 && col[7:4]==9) data = led_data <= { send_cnt };
+					if (row == 6 && col[7:4]==10) data = led_data <= { uart_operating };
+					if (row == 6 && col[7:4]==11) data = led_data <= { ram1_flags, 12'b0 };
+				end
+			end
+		end
+		case (col[1:0])
+			2'b00: vga_data = data[15:12];
+			2'b01: vga_data = data[11:8];
+			2'b10: vga_data = data[7:4];
+			2'b11: vga_data = data[3:0];
+		endcase
+	end
 
 endmodule
 

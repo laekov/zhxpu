@@ -21,7 +21,7 @@
 `include "ram_uart.v"
 `include "ram2.v"
 `include "ram_sel.v"
-`include "hja_led_ctrl.v"
+`include "hja_led_vga_ctrl.v"
 
 module zhxpu(
     input raw_clk,
@@ -55,7 +55,19 @@ module zhxpu(
 	output rdn,
 	input tbre,
 	input tsre,
-	output wrn
+	output wrn,
+	
+	output wire r0,
+	output wire r1,
+	output wire r2,
+	output wire g0,
+	output wire g1,
+	output wire g2,
+	output wire b0,
+	output wire b1,
+	output wire b2,
+	output wire hs,
+	output wire vs
 );
 // Flags
 	wire [`RegValue] right;
@@ -517,8 +529,38 @@ module zhxpu(
 	//
 	wire [15:0] uart_flags;
 	assign uart_flags = { rdn, 3'b0, wrn, 3'b0, tbre, 3'b0, tsre, 3'b0 };
+
+	wire [7:0] row;
+	wire [7:0] col;
+
+	wire [3:0] vga_data;
+	wire vga_space;
+
+	vga __vga(
+		.clk(raw_clk),
+		.rst(rst),
+		.data(vga_data),
+		.space(vga_space),
+		.row_out(row),
+		.col_out(col),
+		.r0(r0),
+		.r1(r1),
+		.r2(r2),
+		.g0(g0),
+		.g1(g1),
+		.g2(g2),
+		.b0(b0),
+		.b1(b1),
+		.b2(b2),
+		.hs(hs),
+		.vs(vs)
+	);
 	
-	hja_led_ctrl __hja_led_ctrl(
+	hja_led_vga_ctrl __hja_led_vga_ctrl(
+		.row(row),
+		.col(col),
+		.vga_space(vga_space),
+		.vga_data(vga_data),
 		.sw(sw),
 		.led_data(led_data),
 		.clk(clk),
