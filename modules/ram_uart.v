@@ -56,8 +56,10 @@ module ram_uart(
 	output [31:0] mem_act_out,
 
 	output wire [15:0] status_out,
-	output wire uart_reading
+	output wire uart_reading,
 
+	output wire [`RegValue] send_cnt,
+	output reg uart_operating
     );
 
 	reg [31:0] local_act;
@@ -119,6 +121,9 @@ module ram_uart(
 	end
 
 	reg [31:0] fail_cnt;
+	assign send_cnt = fail_cnt[15:0];
+
+	initial fail_cnt = 0;
 
 	always @(negedge clk or negedge rst) begin
 		if (!rst) begin
@@ -128,7 +133,7 @@ module ram_uart(
 		end
 		else begin
 			cnt <= cnt + 1;
-			if (cnt == 0) begin
+			// if (cnt == 0) begin
 			//if (1'b1) begin
 				case (status)
 					IDLE: begin
@@ -139,13 +144,14 @@ module ram_uart(
 						rdn <= 1'b1;
 						wrn <= 1'b1;
 
-						if (data_ready == 1'b1) begin
+						if (data_ready === 1'b1) begin
 							status <= UART_READ1;
 						end
 						else begin
 							if (need_to_work == 1'b1) begin
 								if (mem_act !== local_act) begin 
 									if (mem_addr == `UartAddr) begin
+										uart_operating = 1'b1;
 										if (mem_wr == 1'b1) begin
 											status <= UART_WRITE1;
 											work_done <= 1'b0;
@@ -157,6 +163,7 @@ module ram_uart(
 										else status <= ERROR;
 									end
 									else begin
+										uart_operating = 1'b0;
 										if (mem_wr == 1'b1) begin
 											status <= RAM1_WRITE1;
 											work_done <= 1'b0;
@@ -213,11 +220,12 @@ module ram_uart(
 						Ram1Writing <= 1'b1;
 						status <= UART_WRITE2;
 
-						fail_cnt <= 32'h1;
+						// fail_cnt <= 32'h1;
 					end
 					UART_WRITE2: begin
 						wrn <= 1'b0;
 						if (tbre == 1'b0) status <= UART_WRITE3;
+						else status <= UART_WRITE2;
 						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						//else fail_cnt <= fail_cnt + 1;
 					end
@@ -227,6 +235,7 @@ module ram_uart(
 					end
 					UART_WRITE4: begin
 						if (tbre == 1'b1) status <= UART_WRITE5;
+						else status <= UART_WRITE4;
 						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						//else fail_cnt <= fail_cnt + 1;
 					end
@@ -235,6 +244,9 @@ module ram_uart(
 							work_done <= 1'b1;
 							local_act <= mem_act;
 							status <= IDLE;
+							fail_cnt <= fail_cnt + 1;
+						end else begin
+							status <= UART_WRITE5;
 						end
 						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
 						//else fail_cnt <= fail_cnt + 1;
@@ -278,7 +290,7 @@ module ram_uart(
 						status <= IDLE;
 					end
 				endcase
-			end
+			// end
 		end
 	end
 
