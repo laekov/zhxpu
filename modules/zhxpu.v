@@ -18,7 +18,7 @@
 `include "register.v"
 `include "stall_ctrl.v"
 `include "ram_controller.v"
-`include "ram_uart.v"
+`include "ram_uart_re.v"
 `include "ram2.v"
 `include "ram_sel.v"
 `include "hja_led_ctrl.v"
@@ -62,11 +62,13 @@ module zhxpu(
 
 // Clock module
 	wire clk;
+	wire hold;
 	wire pclk;
 
 	clock_ctrl __clock_ctrl(
 		.sw(sw),
 		.raw_clk(raw_clk),
+		.hold(hold),
 		//.manual_clk(manual_clk),
 		.auto_en(manual_clk),
 		.clk(clk),
@@ -156,7 +158,6 @@ module zhxpu(
 	);
 
 // Stall ctrl module
-	wire hold;
 	wire ram1_work_done;
 	wire ram2_work_done;
 	wire inst_read_done;
@@ -361,7 +362,7 @@ module zhxpu(
 	wire [3:0] ram1_flags;
 
 	ram_uart __ram_uart(
-		.clk(raw_clk2),
+		.clk(raw_clk),
 		.rst(rst),
 		.need_to_work(ram1_need_to_work),
 		.flags_out(ram1_flags),
