@@ -217,7 +217,9 @@ module ram_uart(
 					end
 					UART_WRITE2: begin
 						wrn <= 1'b0;
-						status <= UART_WRITE3;
+						if (tbre == 1'b0) status <= UART_WRITE3;
+						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
+						//else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE3: begin
 						wrn <= 1'b1;
@@ -225,8 +227,8 @@ module ram_uart(
 					end
 					UART_WRITE4: begin
 						if (tbre == 1'b1) status <= UART_WRITE5;
-						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-						else fail_cnt <= fail_cnt + 1;
+						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
+						//else fail_cnt <= fail_cnt + 1;
 					end
 					UART_WRITE5: begin
 						if (tsre == 1'b1) begin
@@ -234,8 +236,8 @@ module ram_uart(
 							local_act <= mem_act;
 							status <= IDLE;
 						end
-						else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
-						else fail_cnt <= fail_cnt + 1;
+						//else if (fail_cnt === 32'hffffffff) status <= UART_WRITE1;
+						//else fail_cnt <= fail_cnt + 1;
 					end
 
 					RAM1_READ1: begin
