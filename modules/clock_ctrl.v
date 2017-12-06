@@ -38,7 +38,7 @@ module clock_ctrl(
 	assign tmp = cur_cnt + 32'h00000001;
 
 	always @(posedge raw_clk) begin
-		if (!auto_en) begin
+		if (1'b1==1'b1) begin
 			if (tmp >= clk_interval) begin
 				cur_cnt = 32'h0;
 				clk = cur_status;
