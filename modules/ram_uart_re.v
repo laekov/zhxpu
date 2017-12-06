@@ -53,8 +53,8 @@ module ram_uart(
 	reg [`RegValue] queue [`QueueSizeH];*/
 
 	initial begin
-		queue_front = 0;
-		queue_tail = 0;
+//		queue_front = 0;
+//		queue_tail = 0;
 		send_cnt = 0;
 		local_act = 16'hffff;
 		uart_operating = 16'b0;
@@ -100,8 +100,8 @@ module ram_uart(
 		if (!rst) begin
 			local_act <= mem_act;
 			status <= IDLE;
-			queue_front <= 0;
-			queue_tail <= 0;
+			//queue_front <= 0;
+			//queue_tail <= 0;
 		end else begin
 			status <= next_status | 5'b00000;
 			case (status)
