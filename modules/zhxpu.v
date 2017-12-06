@@ -22,7 +22,7 @@
 `include "ram2.v"
 `include "ram_sel.v"
 `include "hja_led_vga_ctrl.v"
-
+`include "vga.v"
 module zhxpu(
     input raw_clk,
     input raw_clk2,
