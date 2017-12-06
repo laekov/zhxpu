@@ -72,36 +72,27 @@ module ram_uart(
 
 	reg add_flag;
 
-	localparam IDLE = 5'b11110;
-	localparam ERROR = 5'b11101;
-	localparam UART_READ1 = 5'b00001;
-	localparam UART_READ2 = 5'b00010;
-	localparam UART_READ3 = 5'b00011;
-	localparam UART_WRITE1 = 5'b00100;
-	localparam UART_WRITE2 = 5'b00101;
-	localparam UART_WRITE3 = 5'b00110;
-	localparam UART_WRITE4 = 5'b00111;
-	localparam UART_WRITE5 = 5'b01100;
-	localparam RAM1_READ1 = 5'b01001;
-	localparam RAM1_READ2 = 5'b01010;
-	localparam RAM1_READ3 = 5'b01011;
-	localparam RAM1_WRITE1 = 5'b01101;
-	localparam RAM1_WRITE2 = 5'b01110;
-	localparam RAM1_WRITE3 = 5'b01111;
-	localparam UART_READ_QUEUE1 = 5'b10001;
-	localparam UART_READ_QUEUE2 = 5'b10000;
+	localparam IDLE = 2'b00;
+	localparam STG1 = 2'b01;
+	localparam STG2 = 2'b10;
+	localparam STG3 = 2'b11;
 
-	reg [4:0] next_status;
-	reg [4:0] status;
+	reg [1:0] next_status;
+	reg [1:0] status;
 
-	assign Ram1Data = status[4:4] == 1'b0 && status[2:2] == 1'b0 ? 16'bZZZZZZZZZZZZZZZZ : mem_value;
+	assign Ram1Data = mem_rd ? 16'bZZZZZZZZZZZZZZZZ : mem_value;
 	assign Ram1Addr = mem_addr;
+
+	wire uart_opt;
+	assign uart_opt = mem_addr == `UartAddr;
 
 	initial begin
 		status <= IDLE;
 	end
 
-	assign status_out = { status, next_status, 4'b0, status == 5'bZZZZZ, status == 5'b00000 };
+	reg read_data;
+
+	assign status_out = { status, 14'b0 };
 
 	always @(negedge rst or posedge clk) begin
 		if (!rst) begin
@@ -118,105 +109,76 @@ module ram_uart(
 					Ram1WE <= 1'b1;
 					rdn <= 1'b1;
 					wrn <= 1'b1;
+					read_data <= data_ready;
+					if (data_ready || (need_to_work && !act_done)) begin
+						status <= STG1;
+						work_done <= 1'b0;
+					end
 				end
 
-				UART_READ1: begin
-					rdn <= 1'b0;
-				end
-				UART_READ2: begin
-					queue[queue_tail] <= Ram1Data;
-				end
-				UART_READ3: begin
-					{ add_flag, queue_tail } <= queue_tail + 1;
+				STG1: begin
+					if (read_data) begin
+						rdn <= 1'b0;
+					end
+					else if (uart_opt) begin
+						if (mem_wr) begin
+							wrn <= 1'b0;
+						end
+						else begin
+							result <= queue[queue_front];
+						end
+					end 
+					else begin
+						Ram1EN <= 1'b0;
+					end
+					status <= STG2;
 				end
 
-				UART_WRITE1: begin
-					work_done <= 1'b0;
-					wrn <= 1'b1;
+				STG2: begin
+					if (read_data) begin
+						queue[queue_tail] <= Ram1Data;
+					end
+					else if (uart_opt) begin
+						if (mem_wr) begin
+							wrn <= 1'b0;
+						end
+						else begin
+							{ add_flag, queue_front } <= queue_front + 1;
+						end
+					end
+					else begin
+						if (mem_wr) begin
+							Ram1WE <= 1'b0;
+						end
+						else begin
+							Ram1OE <= 1'b0;
+						end
+					end
+					status <= STG3;
 				end
-				UART_WRITE2: begin
-					wrn <= 1'b0;
-				end
-				UART_WRITE3: begin
-					work_done <= 1'b1;
-					wrn <= 1'b1;
+
+				STG3: begin
+					if (read_data) begin
+						{ add_flag, queue_tail } <= queue_tail + 1;
+					end
+					else if (uart_opt) begin
+						if (mem_wr) begin
+							wrn <= 1'b1;
+						end
+						else begin
+						end
+					end
+					else begin
+						if (mem_rd) begin
+							result <= Ram1Data;
+						end
+					end
 					local_act <= mem_act;
-				end
-
-				RAM1_READ1: begin
-					work_done <= 1'b0;
-					Ram1EN <= 1'b0;
-				end
-				RAM1_READ2: begin
-					Ram1OE <= 1'b0;
-				end
-				RAM1_READ3: begin
 					work_done <= 1'b1;
-					result <= Ram1Data;
-					local_act <= mem_act;
-				end
-
-				RAM1_WRITE1: begin
-					work_done <= 1'b0;
-					Ram1EN <= 1'b0;
-				end
-				RAM1_WRITE2: begin
-					Ram1WE <= 1'b0;
-				end
-				RAM1_WRITE3: begin
-					work_done <= 1'b1;
-					Ram1WE <= 1'b1;
-					local_act <= mem_act;
-				end
-
-				UART_READ_QUEUE1: begin
-					result <= queue[queue_front];
-					work_done <= 1'b0;
-					local_act <= mem_act;
-				end
-				UART_READ_QUEUE2: begin
-					work_done <= 1'b1;
-					{ add_flag, queue_front } <= queue_front + 1;
+					status <= IDLE;
 				end
 			endcase
 		end
-	end
-
-	always @(*) begin
-		case (status)
-			IDLE: begin
-				if (data_ready) begin
-					next_status <= UART_READ1;
-				end
-				else if (act_done || !need_to_work) begin
-					next_status <= IDLE;
-				end 
-				else if (mem_addr == `UartAddr) begin
-					next_status <= mem_wr ? UART_WRITE1 : UART_READ_QUEUE1;
-				end
-				else begin
-					next_status <= mem_wr ? RAM1_WRITE1 : RAM1_READ1;
-				end
-			end
-			ERROR: next_status <= ERROR;
-			UART_READ1: next_status <= UART_READ2;
-			UART_READ2: next_status <= UART_READ3;
-			UART_READ3: next_status <= IDLE;
-			UART_WRITE1: next_status <= UART_WRITE2;
-			UART_WRITE2: next_status <= tbre ? UART_WRITE2 : UART_WRITE3;
-			UART_WRITE3: next_status <= UART_WRITE4;
-			UART_WRITE4: next_status <= tbre ? UART_WRITE5 : UART_WRITE4;
-			UART_WRITE5: next_status <= tsre ? IDLE : UART_WRITE5;
-			RAM1_READ1: next_status <= RAM1_READ2;
-			RAM1_READ2: next_status <= RAM1_READ3;
-			RAM1_READ3: next_status <= IDLE;
-			RAM1_WRITE1: next_status <= RAM1_WRITE2;
-			RAM1_WRITE2: next_status <= RAM1_WRITE3;
-			RAM1_WRITE3: next_status <= IDLE;
-			UART_READ_QUEUE1: next_status <= UART_READ_QUEUE2;
-			UART_READ_QUEUE2: next_status <= RAM1_WRITE2;
-			default: next_status <= ERROR;
-		endcase
 	end
 endmodule
 
