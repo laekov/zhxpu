@@ -18,6 +18,8 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "cache.v"
+
 module ram2(
 	input clk,
 	input rst,
@@ -32,7 +34,7 @@ module ram2(
 	input [`MemAddr] mem_addr_exe,
 	input [`MemValue] mem_value_exe,
 
-	output wire [`MemAddr] Ram2Addr,
+	output reg [`MemAddr] Ram2Addr,
 	inout wire [`MemValue] Ram2Data,
 	output reg Ram2OE,
 	output reg Ram2WE,
@@ -52,48 +54,65 @@ module ram2(
 
     );
 
-	reg if_work_done;
-	reg exe_work_done;
-
-
 	reg [`ActBit] local_act;
 	assign mem_act_out = local_act;
+
+	reg work_done_if;
+	reg work_done_exe;
+
+	wire act_exe;
+	assign act_exe = mem_act !== local_act;
+	wire act_if;
+	assign act_if = mem_addr_if[15:0] !== inst_read_done_pc;
+
 	
-	assign if_work_done_out = if_work_done === 1'b1 && mem_addr_if[15:0] === inst_read_done_pc;
-	assign exe_work_done_out = exe_work_done === 1'b1 && local_act == mem_act;
+	assign if_work_done_out = work_done_if && !act_if;
+	assign exe_work_done_out = work_done_exe && !act_exe;
 	 
-	reg Ram2Writing;
 
-	assign Ram2Data = Ram2Writing?mem_value_exe:16'bz;
-	assign Ram2Addr = need_to_work_exe?mem_addr_exe:mem_addr_if;
+	reg [`MemValue] cache_write_value;
+	reg cache_wr;
+	wire [`MemValue] cache_res;
+	wire present;
+	wire dirty;
+	wire [`MemAddr] wb_addr;
+	wire [`MemValue] wb_value;
+	wire wb_need;
+	wire [`MemAddr] cache_addr;
+	reg work_on_exe = 1'b0;
+	assign cache_addr = (work_on_exe || (status == IDLE && need_to_work_exe && act_exe)) ? mem_addr_exe : mem_addr_if;
+	assign Ram2Data = wb_need?wb_value:16'bz;
 
-	localparam IDLE = 8'b00000000;
+	cache __cache(
+		.clk(clk),
+		.rst(rst),
+		.addr(cache_addr),
+		.write_value(cache_write_value),
+		.wr_ctrl(cache_wr),
+		.feedback(cache_res),
+		.present(present),
+		.dirty(dirty),
+		.wb_addr(wb_addr),
+		.wb_value(wb_value),
+		.wb_need(wb_need)
+	);
 
-	localparam RAM2_READ1 = 8'b10010001;
-	localparam RAM2_READ2 = 8'b10010010;
-	localparam RAM2_READ3 = 8'b10010011;
-
-	localparam RAM2_READ4 = 8'b10010100;
-	localparam RAM2_READ5 = 8'b10010101;
-	localparam RAM2_READ6 = 8'b10010110;
+	localparam IDLE = 3'b000;
+	localparam RD1 = 3'b001;
+	localparam RD2 = 3'b010;
+	localparam RD3 = 3'b011;
+	localparam RD4 = 3'b100;
+	localparam WB1 = 3'b101;
+	localparam WB2 = 3'b110;
+	localparam WB3 = 3'b111;
 	
-	localparam RAM2_WRITE1 = 8'b10100001;
-	localparam RAM2_WRITE2 = 8'b10100010;
-	localparam RAM2_WRITE3 = 8'b10100011;
-	localparam ERROR = 8'b11111101;
-	
-	reg [7:0] status;
-	reg [7:0] next_status;
-	assign status_out = { status, next_status };
+	reg [3:0] status;
 
-	reg [`RamFrequency] cnt;
-	reg [`RamFrequency] next_cnt;
-
-	assign cnt_out = { cnt, 7'b0, next_cnt, 7'b0 };
+	assign status_out = { status, 13'b0 };
 
 	initial begin
-		exe_work_done <= 1'b0;
-		if_work_done <= 1'b0;
+		work_done_exe <= 1'b0;
+		work_done_if <= 1'b0;
 		local_act <= 32'hffffffff;
 	end
 
@@ -103,99 +122,104 @@ module ram2(
 			inst_read_done_pc <= 16'hffff;
 		end
 		else begin
-			// cnt <= cnt + 1;
-			// if (cnt == 0) begin
-			// if (1'b1) begin
-				case (status)
-					IDLE: begin
-						Ram2EN <= 1'b0;
-						Ram2OE <= 1'b1;
-						Ram2WE <= 1'b1;
-						
-						if (need_to_work_exe == 1'b1) begin
-							if (mem_act !== local_act) begin
-								if (mem_rd == 1'b1) begin
-									status <= RAM2_READ1;
-								end else if (init_mem_wr == 1'b1 || exe_mem_wr == 1'b1) begin
-									status <= RAM2_WRITE1;
-								end else begin
-									status <= ERROR;
-								end
+			case (status)
+				IDLE: begin
+					Ram2EN <= 1'b0;
+					Ram2OE <= 1'b1;
+					Ram2WE <= 1'b1;
+					if (need_to_work_exe && act_exe) begin
+						work_on_exe <= 1'b1;
+						Ram2Addr <= mem_addr_exe;
+						if (mem_rd) begin
+							if (present) begin
+								exe_result <= cache_res;
+								cache_wr <= 1'b0;
+								work_done_exe <= 1'b1;
+								local_act <= mem_act;
+								status <= IDLE;
 							end
-							else status <= IDLE;
+							else begin
+								cache_wr <= 1'b0;
+								work_done_exe <= 1'b0;
+								status <= RD1;
+							end
 						end
-						else if (need_to_work_if == 1'b1) begin
-							if (mem_addr_if[15:0] !== inst_read_done_pc) status <= RAM2_READ4;
-							else begin status <= IDLE; if_work_done <= 1'b1; end
+						else begin
+							cache_wr <= 1'b1;
+							cache_write_value <= mem_value_exe;
+							work_done_exe <= 1'b0;
+							status <= WB1;
 						end
-						else status <= IDLE;
 					end
-
-					RAM2_READ1: begin
-						Ram2Writing <= 1'b0;
-						exe_work_done <= 1'b0;
-
-						status <= RAM2_READ2;
+					else if (need_to_work_if && act_if) begin
+						work_on_exe <= 1'b0;
+						Ram2Addr <= mem_addr_if;
+						if (present) begin
+							if_result <= cache_res;
+							cache_wr <= 1'b0;
+							inst_read_done_pc <= mem_addr_if[15:0];
+							work_done_if <= 1'b1;
+							status <= IDLE;
+						end
+						else begin
+							work_done_if <= 1'b0;
+							cache_wr <= 1'b0;
+							status <= RD1;
+						end
 					end
-					RAM2_READ2: begin
-						Ram2OE <= 1'b0;
-						
-						status <= RAM2_READ3;
-					end
-					RAM2_READ3: begin
-						exe_work_done <= 1'b1;
+				end
+				RD1: begin
+					Ram2OE <= 1'b0;
+					status <= RD2;
+				end
+				RD2: begin
+					Ram2OE <= 1'b1;
+					if (need_to_work_exe) begin
 						exe_result <= Ram2Data;
-						local_act <= mem_act;
-						
-						status <= IDLE;
-					end
-
-					RAM2_READ4: begin
-						Ram2Writing <= 1'b0;
-						if_work_done <= 1'b0;
-						
-						status <= RAM2_READ5;
-					end
-					RAM2_READ5: begin
-						Ram2OE <= 1'b0;
-						
-						status <= RAM2_READ6;
-					end
-					RAM2_READ6: begin
-						if_work_done <= 1'b1;
+					end else begin
 						if_result <= Ram2Data;
-						inst_read_done_pc <= mem_addr_if[15:0];
-
-						status <= IDLE;
 					end
-
-					RAM2_WRITE1: begin
-						Ram2Writing <= 1'b1;
-						exe_work_done <= 1'b0;
-
-						status <= RAM2_WRITE2;
-					end
-					RAM2_WRITE2: begin
+					cache_wr <= 1'b1;
+					cache_write_value <= Ram2Data;
+					status <= WB1;
+				end
+				WB1: begin
+					cache_wr <= 1'b0;
+					if (wb_need) begin
+						Ram2Addr <= wb_addr;
 						Ram2WE <= 1'b0;
-
-						status <= RAM2_WRITE3;
-					end
-					RAM2_WRITE3: begin
-						Ram2WE <= 1'b1;
-
-						exe_work_done <= 1'b1;
-						local_act <= mem_act;
-
+						status <= WB2;
+					end 
+					else begin
+						if (need_to_work_exe) begin
+							work_done_exe <= 1'b1;
+							local_act <= mem_act;
+						end
+						else begin
+							inst_read_done_pc <= mem_addr_if[15:0];
+							work_done_if <= 1'b1;
+						end
 						status <= IDLE;
 					end
-
-					default: status <= ERROR;
-				endcase
+				end
+				WB2: begin
+					if (need_to_work_exe) begin
+						work_done_exe <= 1'b1;
+						local_act <= mem_act;
+					end
+					else begin
+						inst_read_done_pc <= mem_addr_if[15:0];
+						work_done_if <= 1'b1;
+					end
+					status <= IDLE;
+					Ram2WE <= 1'b1;
+				end
+			endcase
 			// end
 		end
 	end
-	
 
-endmodule
+
+	endmodule
 
 

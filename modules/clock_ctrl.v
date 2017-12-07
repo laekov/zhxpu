@@ -39,7 +39,7 @@ module clock_ctrl(
 
 	assign clk = raw_clk && auto_en;
 
-/*	always @(posedge raw_clk) begin
+	/*always @(posedge raw_clk) begin
 		if (!auto_en) begin
 			if (tmp >= clk_interval) begin
 				cur_cnt = 32'h0;

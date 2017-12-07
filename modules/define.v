@@ -28,3 +28,6 @@
 `define ZeroReg 4'b1011
 
 `define ActBit 15:0
+
+`define CacheSize 9:0
+
