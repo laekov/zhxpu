@@ -79,7 +79,7 @@ module ram2(
 	wire [`MemValue] wb_value;
 	wire wb_need;
 	wire [`MemAddr] cache_addr;
-	reg work_on_exe = 1'b0;
+	reg work_on_if = 1'b0;
 	assign Ram2Data = wb_need?wb_value:16'bz;
 
 	localparam IDLE = 3'b000;
@@ -92,7 +92,7 @@ module ram2(
 	localparam WB3 = 3'b111;
 	
 	reg [3:0] status;
-	assign cache_addr = need_to_work_exe ? mem_addr_exe : mem_addr_if;
+	assign cache_addr = need_to_work_exe && !work_on_if ? mem_addr_exe : mem_addr_if;
 
 	assign status_out = { status, 13'b0 };
 
@@ -128,7 +128,7 @@ module ram2(
 					Ram2OE <= 1'b1;
 					Ram2WE <= 1'b1;
 					if (need_to_work_exe && act_exe) begin
-						work_on_exe <= 1'b1;
+						work_on_if <= 1'b0;
 						Ram2Addr <= mem_addr_exe;
 						if (mem_rd) begin
 							if (present) begin
@@ -152,7 +152,7 @@ module ram2(
 						end
 					end
 					else if (need_to_work_if && act_if) begin
-						work_on_exe <= 1'b0;
+						work_on_if <= 1'b1;
 						Ram2Addr <= mem_addr_if;
 						if (present) begin
 							if_result <= cache_res;
@@ -166,6 +166,9 @@ module ram2(
 							cache_wr <= 1'b0;
 							status <= RD1;
 						end
+					end
+					else begin
+						work_on_if <= 1'b0;
 					end
 				end
 				RD1: begin
