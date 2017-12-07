@@ -186,17 +186,18 @@ module ram2(
 					cache_write_value <= Ram2Data;
 					status <= WB1;
 				end
-				WB1: begin
+				/*WB1: begin
 					status <= WB2;
-				end
-				WB2: begin
-					cache_wr <= 1'b0;
+				end*/
+				WB1: begin
 					if (wb_need) begin
+						cache_wr <= 1'b0;
 						Ram2Addr <= wb_addr;
 						Ram2WE <= 1'b0;
-						status <= WB3;
+						status <= WB2;
 					end 
 					else begin
+						cache_wr <= 1'b0;
 						if (need_to_work_exe) begin
 							work_done_exe <= 1'b1;
 							local_act <= mem_act;
@@ -208,7 +209,7 @@ module ram2(
 						status <= IDLE;
 					end
 				end
-				WB3: begin
+				WB2: begin
 					if (need_to_work_exe) begin
 						work_done_exe <= 1'b1;
 						local_act <= mem_act;
