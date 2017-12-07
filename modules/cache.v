@@ -25,17 +25,16 @@ module cache(
 
 	always @(posedge clk) begin
 		if (wr_ctrl) begin
+			cache[hash_addr] <= write_value;
 			if (!fpre[hash_addr] || addr != caddr[hash_addr]) begin
 				wb_need <= fpre[hash_addr] && fdir[hash_addr];
 				wb_addr <= caddr[hash_addr];
 				wb_value <= cache[hash_addr];
-				cache[hash_addr] <= write_value;
 				caddr[hash_addr] <= addr;
 				fpre[hash_addr] <= 1'b1;
 				fdir[hash_addr] <= 1'b0;
 			end 
 			else begin
-				cache[hash_addr] <= write_value;
 				fdir[hash_addr] <= 1'b1;
 			end
 		end

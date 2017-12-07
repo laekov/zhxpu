@@ -80,8 +80,21 @@ module ram2(
 	wire wb_need;
 	wire [`MemAddr] cache_addr;
 	reg work_on_exe = 1'b0;
-	assign cache_addr = (work_on_exe || (status == IDLE && need_to_work_exe && act_exe)) ? mem_addr_exe : mem_addr_if;
 	assign Ram2Data = wb_need?wb_value:16'bz;
+
+	localparam IDLE = 3'b000;
+	localparam RD1 = 3'b001;
+	localparam RD2 = 3'b010;
+	localparam RD3 = 3'b011;
+	localparam RD4 = 3'b100;
+	localparam WB1 = 3'b101;
+	localparam WB2 = 3'b110;
+	localparam WB3 = 3'b111;
+	
+	reg [3:0] status;
+	assign cache_addr = need_to_work_exe ? mem_addr_exe : mem_addr_if;
+
+	assign status_out = { status, 13'b0 };
 
 	cache __cache(
 		.clk(clk),
@@ -96,19 +109,6 @@ module ram2(
 		.wb_value(wb_value),
 		.wb_need(wb_need)
 	);
-
-	localparam IDLE = 3'b000;
-	localparam RD1 = 3'b001;
-	localparam RD2 = 3'b010;
-	localparam RD3 = 3'b011;
-	localparam RD4 = 3'b100;
-	localparam WB1 = 3'b101;
-	localparam WB2 = 3'b110;
-	localparam WB3 = 3'b111;
-	
-	reg [3:0] status;
-
-	assign status_out = { status, 13'b0 };
 
 	initial begin
 		work_done_exe <= 1'b0;
@@ -184,11 +184,14 @@ module ram2(
 					status <= WB1;
 				end
 				WB1: begin
+					status <= WB2;
+				end
+				WB2: begin
 					cache_wr <= 1'b0;
 					if (wb_need) begin
 						Ram2Addr <= wb_addr;
 						Ram2WE <= 1'b0;
-						status <= WB2;
+						status <= WB3;
 					end 
 					else begin
 						if (need_to_work_exe) begin
@@ -202,7 +205,7 @@ module ram2(
 						status <= IDLE;
 					end
 				end
-				WB2: begin
+				WB3: begin
 					if (need_to_work_exe) begin
 						work_done_exe <= 1'b1;
 						local_act <= mem_act;
