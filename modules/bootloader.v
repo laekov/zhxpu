@@ -25,13 +25,14 @@ module bootloader(
 	reg [`MemValue] data;
 	assign data_out=data;
 	reg boot_done;
-	assign boot_done_out=boot_done;
+	assign boot_done_out=1'b1;//boot_done;
 
 	always @(posedge clk)begin
 		if (!rst)begin
 			flash_addr<=22'b1;
 			ram_addr<=18'b0;
-			boot_done<=1'b0;
+			//boot_done<=1'b0;
+			boot_done<=1'b1;
 			flash_need_to_work<=1'b1;
 			ram_need_to_work<=1'b0;
 		end

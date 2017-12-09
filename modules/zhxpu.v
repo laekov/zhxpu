@@ -18,11 +18,11 @@
 `include "register.v"
 `include "stall_ctrl.v"
 `include "ram_controller.v"
-`include "ram_uart.v"
+`include "ram_uart_re.v"
 `include "ram2.v"
 `include "ram_sel.v"
-`include "hja_led_ctrl.v"
-
+`include "hja_led_vga_ctrl.v"
+`include "vga.v"
 module zhxpu(
     input raw_clk,
     input raw_clk2,
@@ -55,7 +55,19 @@ module zhxpu(
 	output rdn,
 	input tbre,
 	input tsre,
-	output wrn
+	output wrn,
+	
+	output wire r0,
+	output wire r1,
+	output wire r2,
+	output wire g0,
+	output wire g1,
+	output wire g2,
+	output wire b0,
+	output wire b1,
+	output wire b2,
+	output wire hs,
+	output wire vs
 );
 	
 // Flags
@@ -63,15 +75,16 @@ module zhxpu(
 
 // Clock module
 	wire clk;
+	wire hold;
 	wire pclk;
 
 	clock_ctrl __clock_ctrl(
 		.sw(sw),
 		.raw_clk(raw_clk),
+		.hold(hold),
 		//.manual_clk(manual_clk),
 		.auto_en(manual_clk),
-		.clk(clk),
-		.pclk(pclk)
+		.clk(clk)
 	);
 
 // Dig 
@@ -102,7 +115,7 @@ module zhxpu(
 	wire [15:0] mflash_data;
 	wire [22:1] mflash_addr;
 	wire [15:0] init_data;
-	wire [15:0] init_addr;
+	wire [`MemAddr] init_addr;
 	wire flash_read_ctrl;
 	wire init_mem_wr;
 	wire flash_controller_work_done;
@@ -157,7 +170,6 @@ module zhxpu(
 	);
 
 // Stall ctrl module
-	wire hold;
 	wire ram1_work_done;
 	wire ram2_work_done;
 	wire inst_read_done;
@@ -358,26 +370,18 @@ module zhxpu(
 	wire [`ActBit] mem_act;
 	wire [`ActBit] mem_act1;
 	wire [`ActBit] mem_act2;
-	wire [31:0] fail_cnt;
-	wire [15:0] send_count;
-
-	wire fake_rst;
-	assign fake_rst = 1'b1;
-
-	wire [`ActBit] ram1_goal_act;
-
-	wire ram1_writing_out;
-	wire ram2_writing_out;
+	wire [`RegValue] send_cnt;
+	wire [15:0] uart_operating;
+	wire [3:0] ram1_flags;
 
 	ram_uart __ram_uart(
-		.clk(raw_clk),
-		.clk2(raw_clk2),
-		.rst(fake_rst),
+		.clk(clk),
+		.rst(rst),
 		.need_to_work(ram1_need_to_work),
-		.fail_cnt_out(fail_cnt),
+		.flags_out(ram1_flags),
 		.mem_rd(exe_memrd_ctrl),
 		.mem_wr(exe_memwr_ctrl),
-		.mem_addr({ 2'b0, ram_addr }),
+		.mem_addr_in({ 2'b0, ram_addr }),
 		.mem_value(ram_data),
 		.Ram1Addr(ram1_addr),
 		.Ram1Data(ram1_data),
@@ -398,15 +402,14 @@ module zhxpu(
 		.uart_reading(uart_reading),
 		.mem_act(mem_act),
 		.mem_act_out(mem_act1),
-		.send_count_out(send_count),
-		.goal_act(ram1_goal_act),
-		.ram1_writing_out(ram1_writing_out)
+		.uart_operating(uart_operating),
+		.send_cnt(send_cnt)
 	);
 
 	wire [15:0] ram2_status;
 	wire [15:0] ram2_cnt;
 	wire [`ActBit] combined_act;
-	assign combined_act = initializing ? init_addr : mem_act;
+	assign combined_act = initializing ? { 16'b0, init_addr } : mem_act;
 	ram2 __ram2(
 		.clk(raw_clk2),
 		.rst(fake_rst),
@@ -529,8 +532,38 @@ module zhxpu(
 	//
 	wire [15:0] uart_flags;
 	assign uart_flags = { rdn, 3'b0, wrn, 3'b0, tbre, 3'b0, tsre, 3'b0 };
+
+	wire [7:0] row;
+	wire [7:0] col;
+
+	wire [3:0] vga_data;
+	wire vga_space;
+
+	vga __vga(
+		.clk(raw_clk),
+		.rst(1'b1),
+		.data(vga_data),
+		.space(vga_space),
+		.row_out(row),
+		.col_out(col),
+		.r0(r0),
+		.r1(r1),
+		.r2(r2),
+		.g0(g0),
+		.g1(g1),
+		.g2(g2),
+		.b0(b0),
+		.b1(b1),
+		.b2(b2),
+		.hs(hs),
+		.vs(vs)
+	);
 	
-	hja_led_ctrl __hja_led_ctrl(
+	hja_led_vga_ctrl __hja_led_vga_ctrl(
+		.row(row),
+		.col(col),
+		.vga_space(vga_space),
+		.vga_data(vga_data),
 		.sw(sw),
 		.led_data(led_data),
 		.clk(clk),
@@ -623,14 +656,10 @@ module zhxpu(
 		.ram1_work_res(ram1_work_res),
 		.ram2_work_res(ram2_work_res),
 		.inst_read_done_pc(inst_read_done_pc),
-		.fail_cnt(fail_cnt),
-		.tbre(tbre),
-		.tsre(tsre),
-		.send_count(send_count),
-		.ram1_goal_act(ram1_goal_act),
-		.pc_hold_cnt(pc_hold_cnt),
-		.ram1_writing_out(ram1_writing_out),
-		.ram2_writing_out(ram2_writing_out)
+		.combined_act(combined_act),
+		.uart_operating(uart_operating),
+		.send_cnt(send_cnt),
+		.ram1_flags(ram1_flags)
 	);
 
 endmodule

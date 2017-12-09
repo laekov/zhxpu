@@ -65,6 +65,8 @@ module id_exe(
 		mem_act = 0;
 	end
 
+	reg add_flag;
+
 	always @(posedge clk) begin
 		if (hold) begin
 			opn_out <= opn_out;
@@ -85,8 +87,8 @@ module id_exe(
 			mem_read_out <= mem_read;
 			reg_write_out <= reg_write;
 			reg_addr_out <= reg_addr;
-			if (mem_write || mem_read) begin
-				mem_act <= mem_act + 1;
+			if (mem_read || mem_write) begin
+				{ add_flag, mem_act } <= mem_act + 1;
 			end
 			read_value1_output <= read_value1;
 			read_value2_output <= read_value2;

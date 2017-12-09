@@ -191,3 +191,15 @@ NET "rdn" LOC = C14;
 NET "tbre" LOC = D14;
 NET "tsre" LOC = N9;
 NET "wrn" LOC = U5;
+
+NET "b0" LOC = D5;
+NET "b1" LOC = A6;
+NET "b2" LOC = B6;
+NET "g0" LOC = B4;
+NET "g1" LOC = C4;
+NET "g2" LOC = C5;
+NET "hs" LOC = D6;
+NET "r0" LOC = A7;
+NET "r1" LOC = C3;
+NET "r2" LOC = A4;
+NET "vs" LOC = E6;
